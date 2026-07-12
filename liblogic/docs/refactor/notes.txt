@@ -5,4 +5,4 @@
 - need to create a development container to create a common environment for development
 - The liblogic protocol is going to be based around the idea of the client controlling the pace of each operation (see Networking.png)
 - the communication is going to be based around JSON-RPC version 2.0
-- no automatic schema generation has been found so far. Will continue to look
+- no automatic schema generation has been found so far. Will continue to monitor the situation
