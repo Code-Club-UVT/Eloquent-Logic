@@ -1,0 +1,2 @@
+- it might not be important to add a generalized feedback interrface as we can just force LibLogic to communicate via JSON-RPC
+- actually, we should add some abstractions over the output location to ensure future flexibility regarding ways of connecting to LogicServe
