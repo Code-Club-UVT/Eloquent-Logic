@@ -1,0 +1,1 @@
+target_sources(eloquent_logic PRIVATE de_morgan.cpp double_negation.cpp equivalence_reduction.cpp implication_reduction.cpp inverter.cpp n-ization.cpp neutral_elements.cpp)

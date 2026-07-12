@@ -1,0 +1,7 @@
+set(ELOQUENT_LOGIC_VERSION @ELOQUENT_LOGIC_VERSION@ )
+
+@PACKAGE_INIT@
+
+set_and_check(ELOQUENT_LOGIC_INCLUDE_DIR "@INCLUDE_INSTALL_DIR@")
+
+check_required_components(Eloquent::Logic)
