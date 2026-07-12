@@ -1,2 +1,8 @@
-- it might not be important to add a generalized feedback interrface as we can just force LibLogic to communicate via JSON-RPC
+- it might not be important to add a generalized feedback interface as we can just force LibLogic to communicate via JSON-RPC
 - actually, we should add some abstractions over the output location to ensure future flexibility regarding ways of connecting to LogicServe
+- the major blocker for a thorough refactoring is the new lexer and parser
+- some tests seem to be broken. This is due to a faulty parser. Won't fix since that parser is being replaced soon
+- need to create a development container to create a common environment for development
+- The liblogic protocol is going to be based around the idea of the client controlling the pace of each operation (see Networking.png)
+- the communication is going to be based around JSON-RPC version 2.0
+- no automatic schema generation has been found so far. Will continue to look
