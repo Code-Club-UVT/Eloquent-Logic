@@ -12,6 +12,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_subdirectory(src/tree_utils)
 add_subdirectory(src/parser)
 add_subdirectory(src)
+add_subdirectory(src/sat)
 
 target_sources(eloquent_logic
         PUBLIC

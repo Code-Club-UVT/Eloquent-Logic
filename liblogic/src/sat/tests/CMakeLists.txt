@@ -1,35 +1,23 @@
-include(FetchContent)
-FetchContent_Declare(
-        googletest
-        GIT_REPOSITORY https://github.com/google/googletest.git
-        GIT_TAG        release-1.12.1
-)
-set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest)
-
 add_executable(TestDP
         dp_naive.cpp
-        ../dp_naive/dp_naive.cpp
-        ../Heuristics/HeuristicEntryDP.cpp
-        ../Heuristics/HeuristicsDB_DP.cpp
 )
+target_link_libraries(TestDP PRIVATE dp_naive)
 
 add_executable(TestDPLL_RAND
         dpll_rand.cpp
-        ../dpll_rand/dpll_rand.cpp
 )
+target_link_libraries(TestDPLL_RAND PRIVATE dpll_rand)
+
 
 add_executable(TestDPLL_MCL
         dpll_mcl.cpp
-        ../dpll_mcl/dpll_mcl.cpp
-        ../dpll_mcl/dpll_utils.cpp
 )
+target_link_libraries(TestDPLL_MCL PRIVATE dpll_mcl)
 
 add_executable(TestResolution
         resolution_naive_first_fit.cpp
-        ../resolution_naive_first_fit/resolution_naive_first_fit.cpp
 )
-
+target_link_libraries(TestResolution PRIVATE resolution_naive_first_fit)
 target_include_directories(TestDP PRIVATE
         ../utilities
         ../dp_naive

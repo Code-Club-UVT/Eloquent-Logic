@@ -9,22 +9,12 @@
 #include <csignal>
 #include "resolution_naive_first_fit.h"
 
-#pragma GCC optimize("O3,fast-math,unroll-loops")
 
 ClauseSet clauses;
 
 constexpr std::size_t THRESHOLD = 71000000;
 namespace fs = std::filesystem;
 
-void onCtrlC(int sig) {
-    std::cerr<<"Programul a primit semnalul "<<sig<<"\n Rezultat: UNKNOWN.\n Nr. de clauze totale: "<<clauses.size()<<'\n';
-    size_t peakSize    = getPeakRSS( );
-    std::cerr<<"Memorie consumată: "<< peakSize<<"B."<<'\n';
-    std::cerr<<"Memorie consumată: "<< peakSize/1024<<"KB."<<'\n';
-    std::cerr<<"Memorie consumată: "<< peakSize/1024/1024<<"MB."<<'\n';
-    std::cerr<<"Memorie consumată: "<< peakSize/1024/1024/1024<<"GB."<<'\n';
-    exit(1);
-}
 [[nodiscard]] ClauseSet read_clauses(const char *file) {
     std::ifstream f(file);
     f.tie(nullptr);
@@ -113,49 +103,3 @@ Clause join(const Clause& c1, const Clause& c2, const Literal l) {
 SatState res(ClauseSet c) {
     return resolution(c);
 }
-/*
-int main(int argc, const char* argv[]) {
-    std::ios::sync_with_stdio(false);
-    signal(SIGINT, &onCtrlC);
-    signal(9, &onCtrlC);
-    signal(SIGABRT, &onCtrlC);
-    signal(SIGTERM, &onCtrlC);
-    if (argc != 3) {
-        std::cerr<<"Wrong input. Usage ./resolution_naive_first_fit <path_to_cnf_file> <path_to_log_file>";
-        return 1;
-    }
-    if (!fs::exists(argv[1])) {
-        std::cerr<<"File "<<argv[1]<<" does not exist\n";
-        return 1;
-    }
-    clauses = read_clauses(argv[1]);
-    std::ofstream g(argv[2]);
-    g<<"Start SAT. Result: ";
-    g.flush();
-    auto start = std::chrono::high_resolution_clock::now();
-    auto result = res(clauses);
-    auto end = std::chrono::high_resolution_clock::now();
-    size_t peakSize    = getPeakRSS( );
-    switch (result) {
-        case SatState::SAT:
-            g<<"SAT";
-            break;
-        case SatState::UNSAT:
-            g<<"UNSAT";
-            break;
-        case SatState::UNKNOWN:
-            g<<"UNKNOWN";
-            break;
-    }
-    g<<'\n';
-    g<<"Clauze totale: "<<(result==SatState::UNSAT ? clauses.size()+1 : clauses.size())<<'\n';
-    auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end-start).count();
-    g<<"Timp de execuție: "<<elapsed<<"μs"<<'\n';
-    g<<"Memorie consumată: "<< peakSize<<"B."<<'\n';
-    g<<"Memorie consumată: "<< peakSize/1024<<"KB."<<'\n';
-    g<<"Memorie consumată: "<< peakSize/1024/1024<<"MB."<<'\n';
-    g<<"Memorie consumată: "<< peakSize/1024/1024/1024<<"GB."<<'\n';
-    g.close();
-    return 0;
-}
-*/

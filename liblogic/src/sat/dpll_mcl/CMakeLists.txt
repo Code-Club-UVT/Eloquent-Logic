@@ -1,4 +1,4 @@
-add_executable(dpll_mcl dpll_mcl.cpp
+add_library(dpll_mcl dpll_mcl.cpp
         dpll_mcl.h)
 target_sources(dpll_mcl PRIVATE dpll_utils.cpp)
 target_sources(dpll_mcl PRIVATE FILE_SET HEADERS FILES dpll_utils.h)

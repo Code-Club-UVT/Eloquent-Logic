@@ -8,6 +8,7 @@ find_package(antlr4-runtime REQUIRED)
 
 target_link_libraries(liblogic_tests PRIVATE eloquent_logic eloquent_logic_parser)
 target_include_directories(liblogic_tests PRIVATE ${ANTLR4_INCLUDE_DIR})
+
 target_sources(liblogic_tests PRIVATE
         FILE_SET test_headers
         TYPE HEADERS
