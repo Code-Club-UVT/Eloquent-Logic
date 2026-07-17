@@ -2,7 +2,7 @@
 #include <iostream>
 #include <LogicLex.h>
 #include <LogicParse.h>
-#include <liblogic/tree_sanitizer.h>
+#include <tree_sanitizer.h>
 #include <vector>
 #include <string>
 

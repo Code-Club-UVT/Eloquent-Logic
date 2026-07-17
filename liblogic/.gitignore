@@ -39,5 +39,5 @@ build/
 .vscode/
 _deps/
 gen/
-parser_generator/antlr*
+src/parser/antlr*
 dist/
