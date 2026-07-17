@@ -3,15 +3,19 @@ add_executable(liblogic_tests main.cpp
         transformations.cpp
         traversal_tests.cpp)
 
+
+find_package(antlr4-runtime REQUIRED)
+
+target_link_libraries(liblogic_tests PRIVATE eloquent_logic eloquent_logic_parser)
+target_include_directories(liblogic_tests PRIVATE ${ANTLR4_INCLUDE_DIR})
 target_sources(liblogic_tests PRIVATE
-                FILE_SET test_headers
-                TYPE HEADERS
-                FILES headers/test_wrapper_functions.h
-                BASE_DIRS headers)
+        FILE_SET test_headers
+        TYPE HEADERS
+        FILES headers/test_wrapper_functions.h
+        BASE_DIRS headers)
 
 add_subdirectory(headers)
 
-target_link_libraries(liblogic_tests PRIVATE eloquent_logic)
 target_compile_definitions(liblogic_tests PRIVATE GTEST_COLOR=yes)
 
 

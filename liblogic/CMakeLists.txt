@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.25)
 
 project(EloquentLogic VERSION 1.0.0 LANGUAGES CXX)
 
-add_subdirectory(extern/antlr_cpp_runtime)
 
 
 option(LIBLOGIC_BUILD_TESTS "Whether to build tests for LibLogic" ON)
@@ -10,6 +9,8 @@ option(LIBLOGIC_BUILD_TESTS "Whether to build tests for LibLogic" ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+add_subdirectory(src/tree_utils)
+add_subdirectory(src/parser)
 add_subdirectory(src)
 
 target_sources(eloquent_logic
@@ -17,13 +18,11 @@ target_sources(eloquent_logic
         FILE_SET HEADERS
         BASE_DIRS
         include
-        ${CMAKE_CURRENT_BINARY_DIR}/include
-        parser_generator/generated)
+        ${CMAKE_CURRENT_BINARY_DIR}/include)
 
 add_library(Eloquent::Logic ALIAS eloquent_logic)
 
 
-add_subdirectory(parser_generator/generated)
 
 
 if(LIBLOGIC_BUILD_TESTS)
@@ -32,7 +31,7 @@ if(LIBLOGIC_BUILD_TESTS)
 endif ()
 include(GNUInstallDirs)
 
-install(TARGETS eloquent_logic antlr4_shared
+install(TARGETS eloquent_logic eloquent_logic_parser treelib
         EXPORT eloquent_logic_targets
         PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}"
         LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
@@ -40,6 +39,10 @@ install(TARGETS eloquent_logic antlr4_shared
         RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
         FILE_SET HEADERS
         FILE_SET generated_parser_headers
+        FILE_SET sanitizer_headers
+        FILE_SET tree_utilities
+        FILE_SET transformation_headers
+        FILE_SET operations_headers
 
 )
 install(EXPORT eloquent_logic_targets

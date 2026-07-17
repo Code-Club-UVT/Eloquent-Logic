@@ -1,8 +1,8 @@
-#include <liblogic/private/operation_private.h>
+#include "operation_private.h"
 
 #include <utility>
 
-#include "liblogic/private/execution_stack.h"
+#include <execution_stack.h>
 
 namespace eloquent::logic {
     operation_private::operation_private(NodeObsPtr _node, std::weak_ptr<execution_stack> _estack,std::string  node_text, const std::optional<result_position_t> &rpos) : result_position(rpos), node_text(std::move(node_text)),estack(_estack){

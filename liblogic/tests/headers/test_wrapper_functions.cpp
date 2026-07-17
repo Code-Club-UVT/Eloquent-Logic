@@ -6,7 +6,7 @@
 #include <ANTLRInputStream.h>
 #include <LogicLex.h>
 #include <LogicParse.h>
-#include <liblogic/private/transformations/n-ization.h>
+#include <../../src/transformations/n-ization.h>
 
 namespace eloquent::logic::tests{
     // NOW: with optional argument to N-ize the expression out of the box!

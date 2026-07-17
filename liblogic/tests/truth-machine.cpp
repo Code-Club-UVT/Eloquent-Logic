@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
-#include <liblogic/private/cursor.h>
-#include <liblogic/private/tree_builder.h>
-#include <liblogic/private/execution_stack.h>
-#include <liblogic/private/operation_private.h>
+#include <../parser/util/cursor.h>
+#include </IdeaProjects/liblogic/liblogic/src/tree_utils/tree_builder.h>
+#include <../src/parser/util/execution_stack.h>
+#include <../src/operation_private.h>
 namespace eloquent::logic {
     TEST(TruthMachineTest, BasicStackTest) {
         CursorPrivate cursor;
