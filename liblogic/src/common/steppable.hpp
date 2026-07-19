@@ -11,7 +11,7 @@
 #include "steppable_result.hpp"
 #include "type_definitions.hpp"
 
-template<Feedback U, ResultType T>
+template<Feedback U, ResultType T=std::monostate>
 class steppable {
 
 protected:
