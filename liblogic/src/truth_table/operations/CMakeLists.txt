@@ -1,5 +1,5 @@
-target_sources(eloquent_logic PRIVATE and_op.cpp iff_op.cpp implies_op.cpp not_op.cpp or_op.cpp val_op.cpp)
-target_sources(eloquent_logic
+target_sources(liblogicTruthTable PRIVATE and_op.cpp iff_op.cpp implies_op.cpp not_op.cpp or_op.cpp val_op.cpp)
+target_sources(liblogicTruthTable
         PUBLIC
         FILE_SET operations_headers
         TYPE HEADERS

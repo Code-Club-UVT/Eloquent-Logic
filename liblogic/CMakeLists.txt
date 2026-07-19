@@ -33,7 +33,7 @@ if(LIBLOGIC_BUILD_TESTS)
 endif ()
 include(GNUInstallDirs)
 
-install(TARGETS eloquent_logic eloquent_logic_parser treelib liblogicCommon
+install(TARGETS eloquent_logic eloquent_logic_parser treelib liblogicCommon liblogicTruthTable
         EXPORT eloquent_logic_targets
         PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}"
         LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"

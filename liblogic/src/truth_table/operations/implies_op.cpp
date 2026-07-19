@@ -1,6 +1,6 @@
 #include <implies_op.h>
 
-#include "../parser/util/execution_stack.h"
+#include <execution_stack.h>
 #include "../operation_private.h"
 
 namespace eloquent::logic {

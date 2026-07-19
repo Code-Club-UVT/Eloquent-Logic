@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "../../operation_private.h"
+#include "../../truth_table/operation_private.h"
 #include <tree_walker.h>
 #include <breath_first_traversal.h>
 

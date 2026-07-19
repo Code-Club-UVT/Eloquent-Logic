@@ -3,8 +3,8 @@
 #include <optional>
 #include <utility>
 #include <vector>
-#include "parser/util/interpretation.h"
-#include "tree_utils/tree_builder.h"
+#include <interpretation.h>
+#include <tree_builder.h>
 #include "operations/operations.h"
 
 namespace eloquent::logic {

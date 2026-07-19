@@ -1,4 +1,4 @@
-add_library(liblogicCommon INTERFACE steppable.cpp
+add_library(liblogicCommon steppable.cpp
         feedback_base.cpp
         steppable_result.cpp
 )
