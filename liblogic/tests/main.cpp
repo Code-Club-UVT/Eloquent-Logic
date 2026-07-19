@@ -29,8 +29,7 @@ namespace eloquent::logic {
 
         // Begin parsing at startRule
         antlr4::tree::ParseTree *tree = parser.program();
-
-
+        
         antlr4::tree::ParseTreeWalker walker;
         // Create and use your custom visitor
         TreeSanitizer listener;
