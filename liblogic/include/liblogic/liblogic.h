@@ -4,5 +4,5 @@
 
 #ifndef LIBLOGIC_H
 #define LIBLOGIC_H
-
+namespace eloquent::logic {}
 #endif //LIBLOGIC_H

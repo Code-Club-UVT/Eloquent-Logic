@@ -6,9 +6,10 @@ project(EloquentLogic VERSION 1.0.0 LANGUAGES CXX)
 
 option(LIBLOGIC_BUILD_TESTS "Whether to build tests for LibLogic" ON)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+add_subdirectory(src/common)
 add_subdirectory(src/tree_utils)
 add_subdirectory(src/parser)
 add_subdirectory(src)
@@ -32,7 +33,7 @@ if(LIBLOGIC_BUILD_TESTS)
 endif ()
 include(GNUInstallDirs)
 
-install(TARGETS eloquent_logic eloquent_logic_parser treelib
+install(TARGETS eloquent_logic eloquent_logic_parser treelib liblogicCommon
         EXPORT eloquent_logic_targets
         PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}"
         LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"

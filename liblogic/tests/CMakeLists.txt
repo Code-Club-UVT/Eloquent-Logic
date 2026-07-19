@@ -1,7 +1,8 @@
 add_executable(liblogic_tests main.cpp
         truth-machine.cpp
         transformations.cpp
-        traversal_tests.cpp)
+        traversal_tests.cpp
+        execution-context.cpp)
 
 
 find_package(antlr4-runtime REQUIRED)

@@ -3,7 +3,8 @@ add_library(eloquent_logic liblogic.cpp)
 target_sources(eloquent_logic PRIVATE parser/util/execution_stack.cpp
         operation_private.cpp)
 add_dependencies(eloquent_logic treelib)
-target_link_libraries(eloquent_logic PUBLIC treelib)
+add_dependencies(eloquent_logic liblogicCommon)
+target_link_libraries(eloquent_logic PUBLIC treelib liblogicCommon)
 
 add_dependencies(eloquent_logic eloquent_logic_parser)
 target_link_libraries(eloquent_logic PUBLIC eloquent_logic_parser)
