@@ -14,7 +14,7 @@ namespace eloquent::logic {
         using enum lexeme_type;
         return is_nary_operator(node_type) ||
                 node_type == NotOp;
-            
+
     }
     bool is_nary_operator(lexeme_type node_type)
     {

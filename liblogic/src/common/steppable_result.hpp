@@ -21,11 +21,20 @@ class steppable_result {
     std::shared_ptr<U> m_feedback;
     bool m_has_result;
     bool m_has_feedback;
-    public:
     steppable_result(T result, U feedback):m_result(std::move(result)), m_feedback(std::move(feedback)), m_has_result(true), m_has_feedback(true) {}
     steppable_result(U feedback):m_result(std::move(feedback)), m_has_result(false), m_has_feedback(true) {}
     steppable_result(T result):m_result(std::move(result)), m_has_result(true), m_has_feedback(false) {}
+    public:
 
+    static steppable_result with_result(T result) {
+        return steppable_result(std::move(result));
+    }
+    static steppable_result with_feedback(U feedback) {
+        return steppable_result(std::move(feedback));
+    }
+    static steppable_result with_result_and_feedback(T result, U feedback) {
+        return steppable_result(std::move(result), std::move(feedback));
+    }
     [[nodiscard]] bool has_result() const { return m_has_result; }
     [[nodiscard]] bool has_feedback() const { return m_has_feedback; }
     [[nodiscard]] auto feedback() const { return m_feedback; }
