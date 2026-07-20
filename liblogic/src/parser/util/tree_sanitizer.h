@@ -27,6 +27,7 @@ namespace eloquent::logic{
         void enterStrict(LogicParse::StrictContext *) override;
 
         void enterRelaxed(LogicParse::RelaxedContext *) override;
+        explicit TreeSanitizer(std::shared_ptr<syntax_tree> tree);
     };
 
 

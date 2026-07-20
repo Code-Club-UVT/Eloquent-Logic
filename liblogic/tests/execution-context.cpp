@@ -6,8 +6,4 @@
 
 using namespace eloquent::logic;
 
-TEST(tree_builder_tests, tree_cleanup) {
-    tree_builder tree_builder;
-
-
-}
+TEST()

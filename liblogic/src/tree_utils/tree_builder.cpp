@@ -2,7 +2,7 @@
 // Created by thonkdifferent on 11.12.24.
 //
 #include <tree_builder.h>
-
+#include <sstream>
 namespace eloquent::logic {
 
     NodePtr NodeBuilder::makeNewAtomicNode(const std::string& text) {
@@ -40,4 +40,24 @@ namespace eloquent::logic {
         children[children.size()-1]->index = children.size()-1;
     }
 
+    std::string Node::to_string() {
+        if (this->isAtom()) return this->text;
+        if (this->isBlank()) return R"(\\blank)";
+        std::ostringstream ss;
+        ss<<'(';
+        if (this->type == NodeType::NotOp) {
+            ss<<this->text;
+            ss<<children[children.size()-1]->to_string();
+        }
+        else {
+            for (auto it = children.begin(); it != children.end(); it++) {
+                ss<<it->get()->to_string();
+                if (it+1 != children.end()) {
+                    ss<<this->text;
+                }
+            }
+        }
+        ss<<')';
+        return ss.str();
+    }
 };

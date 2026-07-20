@@ -77,17 +77,14 @@ namespace eloquent::logic {
             }
             bool response =  lhs.type == rhs.type
                    && lhs.text == rhs.text;
-            for (size_t i = 0; i < lhs.children.size(); i++) {
-                response &= *lhs.children[i] == *rhs.children[i];
-            }
             return response;
         }
 
         friend bool operator!=(const Node &lhs, const Node &rhs) {
             return !(lhs == rhs);
         }
+        std::string to_string();
 
-        friend struct NodeBuilder;
     };
 
 

@@ -5,6 +5,7 @@
 #include "tree_sanitizer.h"
 #include <LogicParse.h>
 #include <iostream>
+#include <utility>
 
 
 namespace eloquent::logic {
@@ -88,4 +89,6 @@ namespace eloquent::logic {
         cursor.spawn_new_child_node();
     }
 
+    TreeSanitizer::TreeSanitizer(std::shared_ptr<syntax_tree> tree): cursor(std::move(tree)){
+    }
 };

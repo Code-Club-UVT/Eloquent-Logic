@@ -22,23 +22,21 @@ namespace eloquent::logic {
     }
 
     void CursorPrivate::spawn_new_child_node() {
-        if (root == nullptr)
-            make_root();
-        else {
-            NodePtr c_sharednode = c_node.lock();
-            c_sharednode->spawn_new_child();
-            c_sharednode->children.back()->parent = c_node;
-            down();
+        if (c_node.expired()) {
+            tree->set_root(NodeBuilder::makeNewBlankNode());
+            c_node = tree->root();
+            return;
         }
+        NodePtr c_sharednode = c_node.lock();
+        c_sharednode->spawn_new_child();
+        c_sharednode->children.back()->parent = c_node;
+        move_to_first_blank_child();
+
     }
 
-    void CursorPrivate::down() {
+    void CursorPrivate::move_to_first_blank_child() {
         NodePtr c_sharednode = c_node.lock();
         c_node = c_sharednode->children.at(find_first_blank_child());
-    }
-    void CursorPrivate::make_root() {
-        root = NodeBuilder::makeNewBlankNode();
-        c_node = root;
     }
 
     void CursorPrivate::set_node(const NodePtr n) {
