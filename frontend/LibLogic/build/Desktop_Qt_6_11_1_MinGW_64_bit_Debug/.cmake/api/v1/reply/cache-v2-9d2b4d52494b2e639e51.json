@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "c:/Users/gvend/OneDrive/Documente/LibLogic/build/Desktop_Qt_6_11_1_MinGW_64_bit_Debug"
+			"value" : "c:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/build/Desktop_Qt_6_11_1_MinGW_64_bit_Debug"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -467,7 +467,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/gvend/OneDrive/Documente/LibLogic/build/Desktop_Qt_6_11_1_MinGW_64_bit_Debug/CMakeFiles/pkgRedirects"
+			"value" : "C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/build/Desktop_Qt_6_11_1_MinGW_64_bit_Debug/CMakeFiles/pkgRedirects"
 		},
 		{
 			"name" : "CMAKE_GENERATOR",
@@ -551,7 +551,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "C:/Users/gvend/OneDrive/Documente/LibLogic"
+			"value" : "C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic"
 		},
 		{
 			"name" : "CMAKE_INSTALL_BINDIR",
@@ -755,7 +755,7 @@
 				}
 			],
 			"type" : "PATH",
-			"value" : "C:/Program Files (x86)/test_project1"
+			"value" : "C:/Program Files (x86)/LibLogic"
 		},
 		{
 			"name" : "CMAKE_INSTALL_RUNSTATEDIR",
@@ -1051,7 +1051,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "C:/Users/gvend/OneDrive/Documente/LibLogic/build/Desktop_Qt_6_11_1_MinGW_64_bit_Debug/.qtcreator/cmake-helper/qtcreator-project.cmake"
+			"value" : "C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/build/Desktop_Qt_6_11_1_MinGW_64_bit_Debug/.qtcreator/cmake-helper/qtcreator-project.cmake"
 		},
 		{
 			"name" : "CMAKE_PROJECT_NAME",
@@ -1063,7 +1063,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "test_project1"
+			"value" : "LibLogic"
 		},
 		{
 			"name" : "CMAKE_PROJECT_VERSION",
@@ -1542,6 +1542,42 @@
 			"value" : "1"
 		},
 		{
+			"name" : "LibLogic_BINARY_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Value Computed by CMake"
+				}
+			],
+			"type" : "STATIC",
+			"value" : "C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/build/Desktop_Qt_6_11_1_MinGW_64_bit_Debug"
+		},
+		{
+			"name" : "LibLogic_IS_TOP_LEVEL",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Value Computed by CMake"
+				}
+			],
+			"type" : "STATIC",
+			"value" : "ON"
+		},
+		{
+			"name" : "LibLogic_SOURCE_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Value Computed by CMake"
+				}
+			],
+			"type" : "STATIC",
+			"value" : "C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic"
+		},
+		{
 			"name" : "QTCREATOR_CMAKE_HELPER_DIRECTORY",
 			"properties" : 
 			[
@@ -1551,7 +1587,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "C:/Users/gvend/OneDrive/Documente/LibLogic/build/Desktop_Qt_6_11_1_MinGW_64_bit_Debug/.qtcreator/cmake-helper"
+			"value" : "C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/build/Desktop_Qt_6_11_1_MinGW_64_bit_Debug/.qtcreator/cmake-helper"
 		},
 		{
 			"name" : "QT_ADDITIONAL_HOST_PACKAGES_PREFIX_PATH",
@@ -6859,43 +6895,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "C:/Program Files (x86)/test_project1"
-		},
-		{
-			"name" : "test_project1_BINARY_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "C:/Users/gvend/OneDrive/Documente/LibLogic/build/Desktop_Qt_6_11_1_MinGW_64_bit_Debug"
-		},
-		{
-			"name" : "test_project1_IS_TOP_LEVEL",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "ON"
-		},
-		{
-			"name" : "test_project1_SOURCE_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "C:/Users/gvend/OneDrive/Documente/LibLogic"
+			"value" : "C:/Program Files (x86)/LibLogic"
 		}
 	],
 	"kind" : "cache",

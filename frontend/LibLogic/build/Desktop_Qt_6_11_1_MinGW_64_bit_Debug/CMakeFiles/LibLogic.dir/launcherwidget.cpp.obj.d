@@ -1,6 +1,6 @@
 CMakeFiles/LibLogic.dir/launcherwidget.cpp.obj: \
- C:\Users\gvend\OneDrive\Documente\LibLogic\launcherwidget.cpp \
- C:\Users\gvend\OneDrive\Documente\LibLogic\LauncherWidget.h \
+ C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\launcherwidget.cpp \
+ C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\LauncherWidget.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/QWidget \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qwidget.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qtwidgetsglobal.h \
@@ -403,7 +403,7 @@ CMakeFiles/LibLogic.dir/launcherwidget.cpp.obj: \
  C:/Qt/6.11.1/mingw_64/include/QtGui/qpen.h \
  C:/Qt/6.11.1/mingw_64/include/QtGui/qtextoption.h \
  C:/Qt/6.11.1/mingw_64/include/QtGui/QKeySequence \
- C:\Users\gvend\OneDrive\Documente\LibLogic\TruthTableViewer.h \
+ C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\TruthTableViewer.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/QTableWidget \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qtablewidget.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qtableview.h \
@@ -424,8 +424,7 @@ CMakeFiles/LibLogic.dir/launcherwidget.cpp.obj: \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qtabwidget.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qrubberband.h \
  C:/Qt/6.11.1/mingw_64/include/QtCore/QStringList \
- C:/Qt/6.11.1/mingw_64/include/QtCore/QList \
- C:\Users\gvend\OneDrive\Documente\LibLogic\syntactictreeviewer.h \
+ C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\syntactictreeviewer.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/QGraphicsView \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qgraphicsview.h \
  C:/Qt/6.11.1/mingw_64/include/QtGui/qpainter.h \

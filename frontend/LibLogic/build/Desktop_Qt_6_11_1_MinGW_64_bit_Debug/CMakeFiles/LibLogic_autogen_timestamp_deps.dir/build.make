@@ -52,10 +52,10 @@ RM = C:\Qt\Tools\CMake_64\bin\cmake.exe -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = C:\Users\gvend\OneDrive\Documente\LibLogic
+CMAKE_SOURCE_DIR = C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug
+CMAKE_BINARY_DIR = C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug
 
 # Utility rule file for LibLogic_autogen_timestamp_deps.
 
@@ -77,6 +77,6 @@ CMakeFiles/LibLogic_autogen_timestamp_deps.dir/clean:
 .PHONY : CMakeFiles/LibLogic_autogen_timestamp_deps.dir/clean
 
 CMakeFiles/LibLogic_autogen_timestamp_deps.dir/depend:
-	$(CMAKE_COMMAND) -E cmake_depends "MinGW Makefiles" C:\Users\gvend\OneDrive\Documente\LibLogic C:\Users\gvend\OneDrive\Documente\LibLogic C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles\LibLogic_autogen_timestamp_deps.dir\DependInfo.cmake "--color=$(COLOR)"
+	$(CMAKE_COMMAND) -E cmake_depends "MinGW Makefiles" C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles\LibLogic_autogen_timestamp_deps.dir\DependInfo.cmake "--color=$(COLOR)"
 .PHONY : CMakeFiles/LibLogic_autogen_timestamp_deps.dir/depend
 

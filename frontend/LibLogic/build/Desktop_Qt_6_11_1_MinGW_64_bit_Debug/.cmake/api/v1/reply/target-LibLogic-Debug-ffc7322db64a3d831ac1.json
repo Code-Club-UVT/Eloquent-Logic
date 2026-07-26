@@ -395,7 +395,7 @@
 			[
 				{
 					"backtrace" : 0,
-					"path" : "C:/Users/gvend/OneDrive/Documente/LibLogic/build/Desktop_Qt_6_11_1_MinGW_64_bit_Debug/LibLogic_autogen/include"
+					"path" : "C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/build/Desktop_Qt_6_11_1_MinGW_64_bit_Debug/LibLogic_autogen/include"
 				},
 				{
 					"backtrace" : 13,
@@ -450,11 +450,11 @@
 	"dependencies" : 
 	[
 		{
-			"id" : "LibLogic_autogen_timestamp_deps::@6890427a1f51a3e7e1df"
-		},
-		{
 			"backtrace" : 0,
 			"id" : "LibLogic_autogen::@6890427a1f51a3e7e1df"
+		},
+		{
+			"id" : "LibLogic_autogen_timestamp_deps::@6890427a1f51a3e7e1df"
 		}
 	],
 	"id" : "LibLogic::@6890427a1f51a3e7e1df",
@@ -469,7 +469,7 @@
 		],
 		"prefix" : 
 		{
-			"path" : "C:/Program Files (x86)/test_project1"
+			"path" : "C:/Program Files (x86)/LibLogic"
 		}
 	},
 	"link" : 

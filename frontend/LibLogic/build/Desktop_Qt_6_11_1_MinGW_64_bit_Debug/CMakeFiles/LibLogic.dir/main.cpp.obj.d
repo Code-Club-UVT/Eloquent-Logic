@@ -1,6 +1,6 @@
 CMakeFiles/LibLogic.dir/main.cpp.obj: \
- C:\Users\gvend\OneDrive\Documente\LibLogic\main.cpp \
- C:\Users\gvend\OneDrive\Documente\LibLogic\logiceditorwindow.h \
+ C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\main.cpp \
+ C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\logiceditorwindow.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/QWidget \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qwidget.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qtwidgetsglobal.h \
@@ -385,7 +385,7 @@ CMakeFiles/LibLogic.dir/main.cpp.obj: \
  C:/Qt/6.11.1/mingw_64/include/QtGui/qcursor.h \
  C:/Qt/6.11.1/mingw_64/include/QtGui/qbitmap.h \
  C:/Qt/6.11.1/mingw_64/include/QtCore/QString \
- C:\Users\gvend\OneDrive\Documente\LibLogic\launcherwidget.h \
+ C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\launcherwidget.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/QApplication \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qapplication.h \
  C:/Qt/6.11.1/mingw_64/include/QtCore/qcoreapplication.h \

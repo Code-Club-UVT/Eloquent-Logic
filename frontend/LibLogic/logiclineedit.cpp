@@ -3,8 +3,8 @@
 LogicLineEdit::LogicLineEdit(QWidget *parent) : QLineEdit(parent), justReplaced(false) {
     replacements["and"] = "∧";
     replacements["or"] = "∨";
-    replacements["nand"] = "∇";
-    replacements["nor"] = "|";
+    replacements["co"] = "⊥";
+    replacements["ta"] = "⊤";
     replacements["not"] = "¬";
     replacements["ent"] = "⊨";
     replacements["eq"] = "↔";

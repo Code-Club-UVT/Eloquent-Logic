@@ -44,7 +44,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "LibLogic::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-LibLogic-Debug-f8ebb998278ac8756950.json",
+					"jsonFile" : "target-LibLogic-Debug-ffc7322db64a3d831ac1.json",
 					"name" : "LibLogic",
 					"projectIndex" : 0
 				},
@@ -68,8 +68,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "C:/Users/gvend/OneDrive/Documente/LibLogic/build/Desktop_Qt_6_11_1_MinGW_64_bit_Debug",
-		"source" : "C:/Users/gvend/OneDrive/Documente/LibLogic"
+		"build" : "C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/build/Desktop_Qt_6_11_1_MinGW_64_bit_Debug",
+		"source" : "C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic"
 	},
 	"version" : 
 	{

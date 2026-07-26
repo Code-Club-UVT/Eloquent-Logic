@@ -1,5 +1,5 @@
-C:/Users/gvend/OneDrive/Documente/LibLogic/build/Desktop_Qt_6_11_1_MinGW_64_bit_Debug/LibLogic_autogen/EWIEGA46WW/moc_logiclineedit.cpp: C:/Users/gvend/OneDrive/Documente/LibLogic/logiclineedit.h \
-  C:/Users/gvend/OneDrive/Documente/LibLogic/build/Desktop_Qt_6_11_1_MinGW_64_bit_Debug/LibLogic_autogen/moc_predefs.h \
+C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/build/Desktop_Qt_6_11_1_MinGW_64_bit_Debug/LibLogic_autogen/EWIEGA46WW/moc_logiclineedit.cpp: C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/logiclineedit.h \
+  C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/build/Desktop_Qt_6_11_1_MinGW_64_bit_Debug/LibLogic_autogen/moc_predefs.h \
   C:/Qt/6.11.1/mingw_64/include/QtCore/QList \
   C:/Qt/6.11.1/mingw_64/include/QtCore/QMap \
   C:/Qt/6.11.1/mingw_64/include/QtCore/QObject \

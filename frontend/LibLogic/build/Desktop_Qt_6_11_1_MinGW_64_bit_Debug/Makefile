@@ -56,10 +56,10 @@ RM = C:\Qt\Tools\CMake_64\bin\cmake.exe -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = C:\Users\gvend\OneDrive\Documente\LibLogic
+CMAKE_SOURCE_DIR = C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug
+CMAKE_BINARY_DIR = C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -131,9 +131,9 @@ install/strip/fast: preinstall/fast
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\\CMakeFiles\progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\\CMakeFiles\progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles 0
 .PHONY : all
 
 # The main clean target

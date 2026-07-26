@@ -52,10 +52,10 @@ RM = C:\Qt\Tools\CMake_64\bin\cmake.exe -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = C:\Users\gvend\OneDrive\Documente\LibLogic
+CMAKE_SOURCE_DIR = C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug
+CMAKE_BINARY_DIR = C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug
 
 # Utility rule file for LibLogic_autogen.
 
@@ -70,9 +70,9 @@ CMakeFiles/LibLogic_autogen: LibLogic_autogen/timestamp
 LibLogic_autogen/timestamp: C:/Qt/6.11.1/mingw_64/bin/moc.exe
 LibLogic_autogen/timestamp: C:/Qt/6.11.1/mingw_64/bin/uic.exe
 LibLogic_autogen/timestamp: CMakeFiles/LibLogic_autogen.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Automatic MOC and UIC for target LibLogic"
-	C:\Qt\Tools\CMake_64\bin\cmake.exe -E cmake_autogen C:/Users/gvend/OneDrive/Documente/LibLogic/build/Desktop_Qt_6_11_1_MinGW_64_bit_Debug/CMakeFiles/LibLogic_autogen.dir/AutogenInfo.json Debug
-	C:\Qt\Tools\CMake_64\bin\cmake.exe -E touch C:/Users/gvend/OneDrive/Documente/LibLogic/build/Desktop_Qt_6_11_1_MinGW_64_bit_Debug/LibLogic_autogen/timestamp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Automatic MOC and UIC for target LibLogic"
+	C:\Qt\Tools\CMake_64\bin\cmake.exe -E cmake_autogen C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/build/Desktop_Qt_6_11_1_MinGW_64_bit_Debug/CMakeFiles/LibLogic_autogen.dir/AutogenInfo.json Debug
+	C:\Qt\Tools\CMake_64\bin\cmake.exe -E touch C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/build/Desktop_Qt_6_11_1_MinGW_64_bit_Debug/LibLogic_autogen/timestamp
 
 LibLogic_autogen: CMakeFiles/LibLogic_autogen
 LibLogic_autogen: LibLogic_autogen/timestamp
@@ -88,6 +88,6 @@ CMakeFiles/LibLogic_autogen.dir/clean:
 .PHONY : CMakeFiles/LibLogic_autogen.dir/clean
 
 CMakeFiles/LibLogic_autogen.dir/depend:
-	$(CMAKE_COMMAND) -E cmake_depends "MinGW Makefiles" C:\Users\gvend\OneDrive\Documente\LibLogic C:\Users\gvend\OneDrive\Documente\LibLogic C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles\LibLogic_autogen.dir\DependInfo.cmake "--color=$(COLOR)"
+	$(CMAKE_COMMAND) -E cmake_depends "MinGW Makefiles" C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles\LibLogic_autogen.dir\DependInfo.cmake "--color=$(COLOR)"
 .PHONY : CMakeFiles/LibLogic_autogen.dir/depend
 

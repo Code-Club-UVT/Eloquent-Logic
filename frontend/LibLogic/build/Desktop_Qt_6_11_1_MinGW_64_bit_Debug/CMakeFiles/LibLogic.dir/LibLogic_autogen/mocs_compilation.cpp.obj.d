@@ -1,7 +1,7 @@
 CMakeFiles/LibLogic.dir/LibLogic_autogen/mocs_compilation.cpp.obj: \
- C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\LibLogic_autogen\mocs_compilation.cpp \
- C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\LibLogic_autogen\EWIEGA46WW/moc_launcherwidget.cpp \
- C:/Users/gvend/OneDrive/Documente/LibLogic/launcherwidget.h \
+ C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\LibLogic_autogen\mocs_compilation.cpp \
+ C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\LibLogic_autogen\EWIEGA46WW/moc_launcherwidget.cpp \
+ C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/launcherwidget.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/QWidget \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qwidget.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qtwidgetsglobal.h \
@@ -388,11 +388,11 @@ CMakeFiles/LibLogic.dir/LibLogic_autogen/mocs_compilation.cpp.obj: \
  C:/Qt/6.11.1/mingw_64/include/QtCore/qtmochelpers.h \
  C:/Qt/6.11.1/mingw_64/include/QtCore/qtmocconstants.h \
  C:/Qt/6.11.1/mingw_64/include/QtCore/q20algorithm.h \
- C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\LibLogic_autogen\EWIEGA46WW/moc_logiceditorwindow.cpp \
- C:/Users/gvend/OneDrive/Documente/LibLogic/logiceditorwindow.h \
+ C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\LibLogic_autogen\EWIEGA46WW/moc_logiceditorwindow.cpp \
+ C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/logiceditorwindow.h \
  C:/Qt/6.11.1/mingw_64/include/QtCore/QString \
- C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\LibLogic_autogen\EWIEGA46WW/moc_logiclineedit.cpp \
- C:/Users/gvend/OneDrive/Documente/LibLogic/logiclineedit.h \
+ C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\LibLogic_autogen\EWIEGA46WW/moc_logiclineedit.cpp \
+ C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/logiclineedit.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/QLineEdit \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qlineedit.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qframe.h \
@@ -431,8 +431,8 @@ CMakeFiles/LibLogic.dir/LibLogic_autogen/mocs_compilation.cpp.obj: \
  C:/Qt/6.11.1/mingw_64/include/QtCore/qlocale.h \
  C:/Qt/6.11.1/mingw_64/include/QtGui/qguiapplication_platform.h \
  C:/Qt/6.11.1/mingw_64/include/QtCore/QMap \
- C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\LibLogic_autogen\EWIEGA46WW/moc_syntactictreeviewer.cpp \
- C:/Users/gvend/OneDrive/Documente/LibLogic/syntactictreeviewer.h \
+ C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\LibLogic_autogen\EWIEGA46WW/moc_syntactictreeviewer.cpp \
+ C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/syntactictreeviewer.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/QGraphicsView \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qgraphicsview.h \
  C:/Qt/6.11.1/mingw_64/include/QtGui/qpainter.h \
@@ -440,8 +440,8 @@ CMakeFiles/LibLogic.dir/LibLogic_autogen/mocs_compilation.cpp.obj: \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qabstractscrollarea.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qgraphicsscene.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/QGraphicsScene \
- C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\LibLogic_autogen\EWIEGA46WW/moc_truthtableviewer.cpp \
- C:/Users/gvend/OneDrive/Documente/LibLogic/truthtableviewer.h \
+ C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\LibLogic_autogen\EWIEGA46WW/moc_truthtableviewer.cpp \
+ C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/truthtableviewer.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/QTableWidget \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qtablewidget.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qtableview.h \
@@ -459,5 +459,4 @@ CMakeFiles/LibLogic.dir/LibLogic_autogen/mocs_compilation.cpp.obj: \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qtabbar.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qtabwidget.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qrubberband.h \
- C:/Qt/6.11.1/mingw_64/include/QtCore/QStringList \
- C:/Qt/6.11.1/mingw_64/include/QtCore/QList
+ C:/Qt/6.11.1/mingw_64/include/QtCore/QStringList

@@ -1,6 +1,6 @@
 CMakeFiles/LibLogic.dir/logiceditorwindow.cpp.obj: \
- C:\Users\gvend\OneDrive\Documente\LibLogic\logiceditorwindow.cpp \
- C:\Users\gvend\OneDrive\Documente\LibLogic\LogicEditorWindow.h \
+ C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\logiceditorwindow.cpp \
+ C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\LogicEditorWindow.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/QWidget \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qwidget.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qtwidgetsglobal.h \
@@ -385,7 +385,7 @@ CMakeFiles/LibLogic.dir/logiceditorwindow.cpp.obj: \
  C:/Qt/6.11.1/mingw_64/include/QtGui/qcursor.h \
  C:/Qt/6.11.1/mingw_64/include/QtGui/qbitmap.h \
  C:/Qt/6.11.1/mingw_64/include/QtCore/QString \
- C:\Users\gvend\OneDrive\Documente\LibLogic\logiclineedit.h \
+ C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\logiclineedit.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/QLineEdit \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qlineedit.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qframe.h \
@@ -433,4 +433,6 @@ CMakeFiles/LibLogic.dir/logiceditorwindow.cpp.obj: \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/QPushButton \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qpushbutton.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qabstractbutton.h \
- C:/Qt/6.11.1/mingw_64/include/QtGui/QKeySequence
+ C:/Qt/6.11.1/mingw_64/include/QtGui/QKeySequence \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/QRegularExpression \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qregularexpression.h

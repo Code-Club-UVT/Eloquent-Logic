@@ -1,6 +1,7 @@
 #include "TruthTableViewer.h"
 #include <QVBoxLayout>
 #include <QHeaderView>
+#include <QScrollBar>
 
 TruthTableViewer::TruthTableViewer(const QStringList& headers, QWidget *parent)
     : QWidget(parent) {
@@ -18,6 +19,21 @@ TruthTableViewer::TruthTableViewer(const QStringList& headers, QWidget *parent)
     table->setHorizontalHeaderLabels(headers);
 
     layout->addWidget(table);
+
+    connect(table->verticalScrollBar(), &QScrollBar::valueChanged, this, &TruthTableViewer::onScroll);
+}
+
+void TruthTableViewer::onScroll(int value) {
+    if (m_isLoading || m_isFinished) {
+        return;
+    }
+
+    QScrollBar *scrollBar = table->verticalScrollBar();
+
+    if (value == scrollBar->maximum()) {
+        m_isLoading = true;
+        emit requestMoreData();
+    }
 }
 
 void TruthTableViewer::addRow(const QList<bool>& rowData) {
@@ -32,7 +48,6 @@ void TruthTableViewer::addRow(const QList<bool>& rowData) {
         bool val = rowData[i];
         QTableWidgetItem *item = new QTableWidgetItem(val ? "T" : "F");
         item->setTextAlignment(Qt::AlignCenter);
-
         item->setBackground(val ? QColor(144, 238, 144, 100) : QColor(255, 182, 193, 100));
 
         if (i == rowData.size() - 1) {
@@ -43,4 +58,12 @@ void TruthTableViewer::addRow(const QList<bool>& rowData) {
 
         table->setItem(row, i, item);
     }
+}
+
+void TruthTableViewer::setLoading(bool loading) {
+    m_isLoading = loading;
+}
+
+void TruthTableViewer::setFinished(bool finished) {
+    m_isFinished = finished;
 }

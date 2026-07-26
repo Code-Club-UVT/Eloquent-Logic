@@ -1,5 +1,5 @@
-C:/Users/gvend/OneDrive/Documente/LibLogic/build/Desktop_Qt_6_11_1_MinGW_64_bit_Debug/LibLogic_autogen/EWIEGA46WW/moc_logiceditorwindow.cpp: C:/Users/gvend/OneDrive/Documente/LibLogic/logiceditorwindow.h \
-  C:/Users/gvend/OneDrive/Documente/LibLogic/build/Desktop_Qt_6_11_1_MinGW_64_bit_Debug/LibLogic_autogen/moc_predefs.h \
+C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/build/Desktop_Qt_6_11_1_MinGW_64_bit_Debug/LibLogic_autogen/EWIEGA46WW/moc_logiceditorwindow.cpp: C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/logiceditorwindow.h \
+  C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/build/Desktop_Qt_6_11_1_MinGW_64_bit_Debug/LibLogic_autogen/moc_predefs.h \
   C:/Qt/6.11.1/mingw_64/include/QtCore/QString \
   C:/Qt/6.11.1/mingw_64/include/QtCore/q17memory.h \
   C:/Qt/6.11.1/mingw_64/include/QtCore/q20bit.h \

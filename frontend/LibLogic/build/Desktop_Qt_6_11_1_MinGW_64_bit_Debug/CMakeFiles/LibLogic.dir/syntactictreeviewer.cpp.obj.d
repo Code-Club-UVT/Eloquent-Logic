@@ -1,6 +1,6 @@
 CMakeFiles/LibLogic.dir/syntactictreeviewer.cpp.obj: \
- C:\Users\gvend\OneDrive\Documente\LibLogic\syntactictreeviewer.cpp \
- C:\Users\gvend\OneDrive\Documente\LibLogic\SyntacticTreeViewer.h \
+ C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\syntactictreeviewer.cpp \
+ C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\SyntacticTreeViewer.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/QGraphicsView \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qgraphicsview.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qtwidgetsglobal.h \
@@ -393,7 +393,7 @@ CMakeFiles/LibLogic.dir/syntactictreeviewer.cpp.obj: \
  C:/Qt/6.11.1/mingw_64/include/QtGui/qbitmap.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qgraphicsscene.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/QGraphicsScene \
- C:\Users\gvend\OneDrive\Documente\LibLogic\node.h \
+ C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\node.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/QGraphicsItem \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qgraphicsitem.h \
  C:/Qt/6.11.1/mingw_64/include/QtGui/qpainterpath.h \
@@ -401,4 +401,4 @@ CMakeFiles/LibLogic.dir/syntactictreeviewer.cpp.obj: \
  C:/Qt/6.11.1/mingw_64/include/QtCore/QString \
  C:/Qt/6.11.1/mingw_64/include/QtCore/QUuid \
  C:/Qt/6.11.1/mingw_64/include/QtCore/quuid.h \
- C:\Users\gvend\OneDrive\Documente\LibLogic\edge.h
+ C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\edge.h

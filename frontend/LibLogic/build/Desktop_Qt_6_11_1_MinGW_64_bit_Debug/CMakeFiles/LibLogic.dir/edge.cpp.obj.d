@@ -1,6 +1,6 @@
 CMakeFiles/LibLogic.dir/edge.cpp.obj: \
- C:\Users\gvend\OneDrive\Documente\LibLogic\edge.cpp \
- C:\Users\gvend\OneDrive\Documente\LibLogic\edge.h \
+ C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\edge.cpp \
+ C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\edge.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/QGraphicsItem \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qgraphicsitem.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qtwidgetsglobal.h \
@@ -372,7 +372,7 @@ CMakeFiles/LibLogic.dir/edge.cpp.obj: \
  C:/Qt/6.11.1/mingw_64/include/QtGui/qrgba64.h \
  C:/Qt/6.11.1/mingw_64/include/QtGui/qimage.h \
  C:/Qt/6.11.1/mingw_64/include/QtGui/qpixelformat.h \
- C:\Users\gvend\OneDrive\Documente\LibLogic\node.h \
+ C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\node.h \
  C:/Qt/6.11.1/mingw_64/include/QtCore/QList \
  C:/Qt/6.11.1/mingw_64/include/QtCore/QString \
  C:/Qt/6.11.1/mingw_64/include/QtCore/QUuid \

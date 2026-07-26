@@ -1,6 +1,6 @@
 CMakeFiles/LibLogic.dir/truthtableviewer.cpp.obj: \
- C:\Users\gvend\OneDrive\Documente\LibLogic\truthtableviewer.cpp \
- C:\Users\gvend\OneDrive\Documente\LibLogic\TruthTableViewer.h \
+ C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\truthtableviewer.cpp \
+ C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\TruthTableViewer.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/QWidget \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qwidget.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qtwidgetsglobal.h \
@@ -405,11 +405,12 @@ CMakeFiles/LibLogic.dir/truthtableviewer.cpp.obj: \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qtabwidget.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qrubberband.h \
  C:/Qt/6.11.1/mingw_64/include/QtCore/QStringList \
- C:/Qt/6.11.1/mingw_64/include/QtCore/QList \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/QVBoxLayout \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qboxlayout.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qlayout.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qlayoutitem.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qgridlayout.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/QHeaderView \
- C:/Qt/6.11.1/mingw_64/include/QtWidgets/qheaderview.h
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/qheaderview.h \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/QScrollBar \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/qscrollbar.h

@@ -52,10 +52,10 @@ RM = C:\Qt\Tools\CMake_64\bin\cmake.exe -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = C:\Users\gvend\OneDrive\Documente\LibLogic
+CMAKE_SOURCE_DIR = C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug
+CMAKE_BINARY_DIR = C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug
 
 # Include any dependencies generated for this target.
 include CMakeFiles/LibLogic.dir/depend.make
@@ -71,144 +71,144 @@ include CMakeFiles/LibLogic.dir/flags.make
 LibLogic_autogen/timestamp: C:/Qt/6.11.1/mingw_64/bin/moc.exe
 LibLogic_autogen/timestamp: C:/Qt/6.11.1/mingw_64/bin/uic.exe
 LibLogic_autogen/timestamp: CMakeFiles/LibLogic.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Automatic MOC and UIC for target LibLogic"
-	C:\Qt\Tools\CMake_64\bin\cmake.exe -E cmake_autogen C:/Users/gvend/OneDrive/Documente/LibLogic/build/Desktop_Qt_6_11_1_MinGW_64_bit_Debug/CMakeFiles/LibLogic_autogen.dir/AutogenInfo.json Debug
-	C:\Qt\Tools\CMake_64\bin\cmake.exe -E touch C:/Users/gvend/OneDrive/Documente/LibLogic/build/Desktop_Qt_6_11_1_MinGW_64_bit_Debug/LibLogic_autogen/timestamp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Automatic MOC and UIC for target LibLogic"
+	C:\Qt\Tools\CMake_64\bin\cmake.exe -E cmake_autogen C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/build/Desktop_Qt_6_11_1_MinGW_64_bit_Debug/CMakeFiles/LibLogic_autogen.dir/AutogenInfo.json Debug
+	C:\Qt\Tools\CMake_64\bin\cmake.exe -E touch C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/build/Desktop_Qt_6_11_1_MinGW_64_bit_Debug/LibLogic_autogen/timestamp
 
 CMakeFiles/LibLogic.dir/LibLogic_autogen/mocs_compilation.cpp.obj: CMakeFiles/LibLogic.dir/flags.make
 CMakeFiles/LibLogic.dir/LibLogic_autogen/mocs_compilation.cpp.obj: CMakeFiles/LibLogic.dir/includes_CXX.rsp
 CMakeFiles/LibLogic.dir/LibLogic_autogen/mocs_compilation.cpp.obj: LibLogic_autogen/mocs_compilation.cpp
 CMakeFiles/LibLogic.dir/LibLogic_autogen/mocs_compilation.cpp.obj: CMakeFiles/LibLogic.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/LibLogic.dir/LibLogic_autogen/mocs_compilation.cpp.obj"
-	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LibLogic.dir/LibLogic_autogen/mocs_compilation.cpp.obj -MF CMakeFiles\LibLogic.dir\LibLogic_autogen\mocs_compilation.cpp.obj.d -o CMakeFiles\LibLogic.dir\LibLogic_autogen\mocs_compilation.cpp.obj -c C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\LibLogic_autogen\mocs_compilation.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/LibLogic.dir/LibLogic_autogen/mocs_compilation.cpp.obj"
+	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LibLogic.dir/LibLogic_autogen/mocs_compilation.cpp.obj -MF CMakeFiles\LibLogic.dir\LibLogic_autogen\mocs_compilation.cpp.obj.d -o CMakeFiles\LibLogic.dir\LibLogic_autogen\mocs_compilation.cpp.obj -c C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\LibLogic_autogen\mocs_compilation.cpp
 
 CMakeFiles/LibLogic.dir/LibLogic_autogen/mocs_compilation.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/LibLogic.dir/LibLogic_autogen/mocs_compilation.cpp.i"
-	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\LibLogic_autogen\mocs_compilation.cpp > CMakeFiles\LibLogic.dir\LibLogic_autogen\mocs_compilation.cpp.i
+	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\LibLogic_autogen\mocs_compilation.cpp > CMakeFiles\LibLogic.dir\LibLogic_autogen\mocs_compilation.cpp.i
 
 CMakeFiles/LibLogic.dir/LibLogic_autogen/mocs_compilation.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/LibLogic.dir/LibLogic_autogen/mocs_compilation.cpp.s"
-	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\LibLogic_autogen\mocs_compilation.cpp -o CMakeFiles\LibLogic.dir\LibLogic_autogen\mocs_compilation.cpp.s
+	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\LibLogic_autogen\mocs_compilation.cpp -o CMakeFiles\LibLogic.dir\LibLogic_autogen\mocs_compilation.cpp.s
 
 CMakeFiles/LibLogic.dir/main.cpp.obj: CMakeFiles/LibLogic.dir/flags.make
 CMakeFiles/LibLogic.dir/main.cpp.obj: CMakeFiles/LibLogic.dir/includes_CXX.rsp
-CMakeFiles/LibLogic.dir/main.cpp.obj: C:/Users/gvend/OneDrive/Documente/LibLogic/main.cpp
+CMakeFiles/LibLogic.dir/main.cpp.obj: C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/main.cpp
 CMakeFiles/LibLogic.dir/main.cpp.obj: CMakeFiles/LibLogic.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/LibLogic.dir/main.cpp.obj"
-	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LibLogic.dir/main.cpp.obj -MF CMakeFiles\LibLogic.dir\main.cpp.obj.d -o CMakeFiles\LibLogic.dir\main.cpp.obj -c C:\Users\gvend\OneDrive\Documente\LibLogic\main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/LibLogic.dir/main.cpp.obj"
+	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LibLogic.dir/main.cpp.obj -MF CMakeFiles\LibLogic.dir\main.cpp.obj.d -o CMakeFiles\LibLogic.dir\main.cpp.obj -c C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\main.cpp
 
 CMakeFiles/LibLogic.dir/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/LibLogic.dir/main.cpp.i"
-	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\gvend\OneDrive\Documente\LibLogic\main.cpp > CMakeFiles\LibLogic.dir\main.cpp.i
+	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\main.cpp > CMakeFiles\LibLogic.dir\main.cpp.i
 
 CMakeFiles/LibLogic.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/LibLogic.dir/main.cpp.s"
-	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\gvend\OneDrive\Documente\LibLogic\main.cpp -o CMakeFiles\LibLogic.dir\main.cpp.s
+	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\main.cpp -o CMakeFiles\LibLogic.dir\main.cpp.s
 
 CMakeFiles/LibLogic.dir/logiceditorwindow.cpp.obj: CMakeFiles/LibLogic.dir/flags.make
 CMakeFiles/LibLogic.dir/logiceditorwindow.cpp.obj: CMakeFiles/LibLogic.dir/includes_CXX.rsp
-CMakeFiles/LibLogic.dir/logiceditorwindow.cpp.obj: C:/Users/gvend/OneDrive/Documente/LibLogic/logiceditorwindow.cpp
+CMakeFiles/LibLogic.dir/logiceditorwindow.cpp.obj: C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/logiceditorwindow.cpp
 CMakeFiles/LibLogic.dir/logiceditorwindow.cpp.obj: CMakeFiles/LibLogic.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/LibLogic.dir/logiceditorwindow.cpp.obj"
-	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LibLogic.dir/logiceditorwindow.cpp.obj -MF CMakeFiles\LibLogic.dir\logiceditorwindow.cpp.obj.d -o CMakeFiles\LibLogic.dir\logiceditorwindow.cpp.obj -c C:\Users\gvend\OneDrive\Documente\LibLogic\logiceditorwindow.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/LibLogic.dir/logiceditorwindow.cpp.obj"
+	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LibLogic.dir/logiceditorwindow.cpp.obj -MF CMakeFiles\LibLogic.dir\logiceditorwindow.cpp.obj.d -o CMakeFiles\LibLogic.dir\logiceditorwindow.cpp.obj -c C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\logiceditorwindow.cpp
 
 CMakeFiles/LibLogic.dir/logiceditorwindow.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/LibLogic.dir/logiceditorwindow.cpp.i"
-	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\gvend\OneDrive\Documente\LibLogic\logiceditorwindow.cpp > CMakeFiles\LibLogic.dir\logiceditorwindow.cpp.i
+	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\logiceditorwindow.cpp > CMakeFiles\LibLogic.dir\logiceditorwindow.cpp.i
 
 CMakeFiles/LibLogic.dir/logiceditorwindow.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/LibLogic.dir/logiceditorwindow.cpp.s"
-	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\gvend\OneDrive\Documente\LibLogic\logiceditorwindow.cpp -o CMakeFiles\LibLogic.dir\logiceditorwindow.cpp.s
+	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\logiceditorwindow.cpp -o CMakeFiles\LibLogic.dir\logiceditorwindow.cpp.s
 
 CMakeFiles/LibLogic.dir/logiclineedit.cpp.obj: CMakeFiles/LibLogic.dir/flags.make
 CMakeFiles/LibLogic.dir/logiclineedit.cpp.obj: CMakeFiles/LibLogic.dir/includes_CXX.rsp
-CMakeFiles/LibLogic.dir/logiclineedit.cpp.obj: C:/Users/gvend/OneDrive/Documente/LibLogic/logiclineedit.cpp
+CMakeFiles/LibLogic.dir/logiclineedit.cpp.obj: C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/logiclineedit.cpp
 CMakeFiles/LibLogic.dir/logiclineedit.cpp.obj: CMakeFiles/LibLogic.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/LibLogic.dir/logiclineedit.cpp.obj"
-	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LibLogic.dir/logiclineedit.cpp.obj -MF CMakeFiles\LibLogic.dir\logiclineedit.cpp.obj.d -o CMakeFiles\LibLogic.dir\logiclineedit.cpp.obj -c C:\Users\gvend\OneDrive\Documente\LibLogic\logiclineedit.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/LibLogic.dir/logiclineedit.cpp.obj"
+	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LibLogic.dir/logiclineedit.cpp.obj -MF CMakeFiles\LibLogic.dir\logiclineedit.cpp.obj.d -o CMakeFiles\LibLogic.dir\logiclineedit.cpp.obj -c C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\logiclineedit.cpp
 
 CMakeFiles/LibLogic.dir/logiclineedit.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/LibLogic.dir/logiclineedit.cpp.i"
-	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\gvend\OneDrive\Documente\LibLogic\logiclineedit.cpp > CMakeFiles\LibLogic.dir\logiclineedit.cpp.i
+	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\logiclineedit.cpp > CMakeFiles\LibLogic.dir\logiclineedit.cpp.i
 
 CMakeFiles/LibLogic.dir/logiclineedit.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/LibLogic.dir/logiclineedit.cpp.s"
-	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\gvend\OneDrive\Documente\LibLogic\logiclineedit.cpp -o CMakeFiles\LibLogic.dir\logiclineedit.cpp.s
+	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\logiclineedit.cpp -o CMakeFiles\LibLogic.dir\logiclineedit.cpp.s
 
 CMakeFiles/LibLogic.dir/truthtableviewer.cpp.obj: CMakeFiles/LibLogic.dir/flags.make
 CMakeFiles/LibLogic.dir/truthtableviewer.cpp.obj: CMakeFiles/LibLogic.dir/includes_CXX.rsp
-CMakeFiles/LibLogic.dir/truthtableviewer.cpp.obj: C:/Users/gvend/OneDrive/Documente/LibLogic/truthtableviewer.cpp
+CMakeFiles/LibLogic.dir/truthtableviewer.cpp.obj: C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/truthtableviewer.cpp
 CMakeFiles/LibLogic.dir/truthtableviewer.cpp.obj: CMakeFiles/LibLogic.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/LibLogic.dir/truthtableviewer.cpp.obj"
-	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LibLogic.dir/truthtableviewer.cpp.obj -MF CMakeFiles\LibLogic.dir\truthtableviewer.cpp.obj.d -o CMakeFiles\LibLogic.dir\truthtableviewer.cpp.obj -c C:\Users\gvend\OneDrive\Documente\LibLogic\truthtableviewer.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/LibLogic.dir/truthtableviewer.cpp.obj"
+	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LibLogic.dir/truthtableviewer.cpp.obj -MF CMakeFiles\LibLogic.dir\truthtableviewer.cpp.obj.d -o CMakeFiles\LibLogic.dir\truthtableviewer.cpp.obj -c C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\truthtableviewer.cpp
 
 CMakeFiles/LibLogic.dir/truthtableviewer.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/LibLogic.dir/truthtableviewer.cpp.i"
-	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\gvend\OneDrive\Documente\LibLogic\truthtableviewer.cpp > CMakeFiles\LibLogic.dir\truthtableviewer.cpp.i
+	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\truthtableviewer.cpp > CMakeFiles\LibLogic.dir\truthtableviewer.cpp.i
 
 CMakeFiles/LibLogic.dir/truthtableviewer.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/LibLogic.dir/truthtableviewer.cpp.s"
-	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\gvend\OneDrive\Documente\LibLogic\truthtableviewer.cpp -o CMakeFiles\LibLogic.dir\truthtableviewer.cpp.s
+	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\truthtableviewer.cpp -o CMakeFiles\LibLogic.dir\truthtableviewer.cpp.s
 
 CMakeFiles/LibLogic.dir/edge.cpp.obj: CMakeFiles/LibLogic.dir/flags.make
 CMakeFiles/LibLogic.dir/edge.cpp.obj: CMakeFiles/LibLogic.dir/includes_CXX.rsp
-CMakeFiles/LibLogic.dir/edge.cpp.obj: C:/Users/gvend/OneDrive/Documente/LibLogic/edge.cpp
+CMakeFiles/LibLogic.dir/edge.cpp.obj: C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/edge.cpp
 CMakeFiles/LibLogic.dir/edge.cpp.obj: CMakeFiles/LibLogic.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/LibLogic.dir/edge.cpp.obj"
-	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LibLogic.dir/edge.cpp.obj -MF CMakeFiles\LibLogic.dir\edge.cpp.obj.d -o CMakeFiles\LibLogic.dir\edge.cpp.obj -c C:\Users\gvend\OneDrive\Documente\LibLogic\edge.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/LibLogic.dir/edge.cpp.obj"
+	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LibLogic.dir/edge.cpp.obj -MF CMakeFiles\LibLogic.dir\edge.cpp.obj.d -o CMakeFiles\LibLogic.dir\edge.cpp.obj -c C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\edge.cpp
 
 CMakeFiles/LibLogic.dir/edge.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/LibLogic.dir/edge.cpp.i"
-	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\gvend\OneDrive\Documente\LibLogic\edge.cpp > CMakeFiles\LibLogic.dir\edge.cpp.i
+	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\edge.cpp > CMakeFiles\LibLogic.dir\edge.cpp.i
 
 CMakeFiles/LibLogic.dir/edge.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/LibLogic.dir/edge.cpp.s"
-	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\gvend\OneDrive\Documente\LibLogic\edge.cpp -o CMakeFiles\LibLogic.dir\edge.cpp.s
+	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\edge.cpp -o CMakeFiles\LibLogic.dir\edge.cpp.s
 
 CMakeFiles/LibLogic.dir/node.cpp.obj: CMakeFiles/LibLogic.dir/flags.make
 CMakeFiles/LibLogic.dir/node.cpp.obj: CMakeFiles/LibLogic.dir/includes_CXX.rsp
-CMakeFiles/LibLogic.dir/node.cpp.obj: C:/Users/gvend/OneDrive/Documente/LibLogic/node.cpp
+CMakeFiles/LibLogic.dir/node.cpp.obj: C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/node.cpp
 CMakeFiles/LibLogic.dir/node.cpp.obj: CMakeFiles/LibLogic.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/LibLogic.dir/node.cpp.obj"
-	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LibLogic.dir/node.cpp.obj -MF CMakeFiles\LibLogic.dir\node.cpp.obj.d -o CMakeFiles\LibLogic.dir\node.cpp.obj -c C:\Users\gvend\OneDrive\Documente\LibLogic\node.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/LibLogic.dir/node.cpp.obj"
+	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LibLogic.dir/node.cpp.obj -MF CMakeFiles\LibLogic.dir\node.cpp.obj.d -o CMakeFiles\LibLogic.dir\node.cpp.obj -c C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\node.cpp
 
 CMakeFiles/LibLogic.dir/node.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/LibLogic.dir/node.cpp.i"
-	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\gvend\OneDrive\Documente\LibLogic\node.cpp > CMakeFiles\LibLogic.dir\node.cpp.i
+	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\node.cpp > CMakeFiles\LibLogic.dir\node.cpp.i
 
 CMakeFiles/LibLogic.dir/node.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/LibLogic.dir/node.cpp.s"
-	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\gvend\OneDrive\Documente\LibLogic\node.cpp -o CMakeFiles\LibLogic.dir\node.cpp.s
+	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\node.cpp -o CMakeFiles\LibLogic.dir\node.cpp.s
 
 CMakeFiles/LibLogic.dir/launcherwidget.cpp.obj: CMakeFiles/LibLogic.dir/flags.make
 CMakeFiles/LibLogic.dir/launcherwidget.cpp.obj: CMakeFiles/LibLogic.dir/includes_CXX.rsp
-CMakeFiles/LibLogic.dir/launcherwidget.cpp.obj: C:/Users/gvend/OneDrive/Documente/LibLogic/launcherwidget.cpp
+CMakeFiles/LibLogic.dir/launcherwidget.cpp.obj: C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/launcherwidget.cpp
 CMakeFiles/LibLogic.dir/launcherwidget.cpp.obj: CMakeFiles/LibLogic.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/LibLogic.dir/launcherwidget.cpp.obj"
-	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LibLogic.dir/launcherwidget.cpp.obj -MF CMakeFiles\LibLogic.dir\launcherwidget.cpp.obj.d -o CMakeFiles\LibLogic.dir\launcherwidget.cpp.obj -c C:\Users\gvend\OneDrive\Documente\LibLogic\launcherwidget.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/LibLogic.dir/launcherwidget.cpp.obj"
+	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LibLogic.dir/launcherwidget.cpp.obj -MF CMakeFiles\LibLogic.dir\launcherwidget.cpp.obj.d -o CMakeFiles\LibLogic.dir\launcherwidget.cpp.obj -c C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\launcherwidget.cpp
 
 CMakeFiles/LibLogic.dir/launcherwidget.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/LibLogic.dir/launcherwidget.cpp.i"
-	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\gvend\OneDrive\Documente\LibLogic\launcherwidget.cpp > CMakeFiles\LibLogic.dir\launcherwidget.cpp.i
+	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\launcherwidget.cpp > CMakeFiles\LibLogic.dir\launcherwidget.cpp.i
 
 CMakeFiles/LibLogic.dir/launcherwidget.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/LibLogic.dir/launcherwidget.cpp.s"
-	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\gvend\OneDrive\Documente\LibLogic\launcherwidget.cpp -o CMakeFiles\LibLogic.dir\launcherwidget.cpp.s
+	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\launcherwidget.cpp -o CMakeFiles\LibLogic.dir\launcherwidget.cpp.s
 
 CMakeFiles/LibLogic.dir/syntactictreeviewer.cpp.obj: CMakeFiles/LibLogic.dir/flags.make
 CMakeFiles/LibLogic.dir/syntactictreeviewer.cpp.obj: CMakeFiles/LibLogic.dir/includes_CXX.rsp
-CMakeFiles/LibLogic.dir/syntactictreeviewer.cpp.obj: C:/Users/gvend/OneDrive/Documente/LibLogic/syntactictreeviewer.cpp
+CMakeFiles/LibLogic.dir/syntactictreeviewer.cpp.obj: C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/syntactictreeviewer.cpp
 CMakeFiles/LibLogic.dir/syntactictreeviewer.cpp.obj: CMakeFiles/LibLogic.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/LibLogic.dir/syntactictreeviewer.cpp.obj"
-	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LibLogic.dir/syntactictreeviewer.cpp.obj -MF CMakeFiles\LibLogic.dir\syntactictreeviewer.cpp.obj.d -o CMakeFiles\LibLogic.dir\syntactictreeviewer.cpp.obj -c C:\Users\gvend\OneDrive\Documente\LibLogic\syntactictreeviewer.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/LibLogic.dir/syntactictreeviewer.cpp.obj"
+	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LibLogic.dir/syntactictreeviewer.cpp.obj -MF CMakeFiles\LibLogic.dir\syntactictreeviewer.cpp.obj.d -o CMakeFiles\LibLogic.dir\syntactictreeviewer.cpp.obj -c C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\syntactictreeviewer.cpp
 
 CMakeFiles/LibLogic.dir/syntactictreeviewer.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/LibLogic.dir/syntactictreeviewer.cpp.i"
-	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\gvend\OneDrive\Documente\LibLogic\syntactictreeviewer.cpp > CMakeFiles\LibLogic.dir\syntactictreeviewer.cpp.i
+	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\syntactictreeviewer.cpp > CMakeFiles\LibLogic.dir\syntactictreeviewer.cpp.i
 
 CMakeFiles/LibLogic.dir/syntactictreeviewer.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/LibLogic.dir/syntactictreeviewer.cpp.s"
-	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\gvend\OneDrive\Documente\LibLogic\syntactictreeviewer.cpp -o CMakeFiles\LibLogic.dir\syntactictreeviewer.cpp.s
+	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\syntactictreeviewer.cpp -o CMakeFiles\LibLogic.dir\syntactictreeviewer.cpp.s
 
 # Object files for target LibLogic
 LibLogic_OBJECTS = \
@@ -243,7 +243,7 @@ LibLogic.exe: LibLogic.exe.manifest
 LibLogic.exe: CMakeFiles/LibLogic.dir/linkLibs.rsp
 LibLogic.exe: CMakeFiles/LibLogic.dir/objects1.rsp
 LibLogic.exe: CMakeFiles/LibLogic.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Linking CXX executable LibLogic.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Linking CXX executable LibLogic.exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\LibLogic.dir\link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -255,6 +255,6 @@ CMakeFiles/LibLogic.dir/clean:
 .PHONY : CMakeFiles/LibLogic.dir/clean
 
 CMakeFiles/LibLogic.dir/depend: LibLogic_autogen/timestamp
-	$(CMAKE_COMMAND) -E cmake_depends "MinGW Makefiles" C:\Users\gvend\OneDrive\Documente\LibLogic C:\Users\gvend\OneDrive\Documente\LibLogic C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug C:\Users\gvend\OneDrive\Documente\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles\LibLogic.dir\DependInfo.cmake "--color=$(COLOR)"
+	$(CMAKE_COMMAND) -E cmake_depends "MinGW Makefiles" C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles\LibLogic.dir\DependInfo.cmake "--color=$(COLOR)"
 .PHONY : CMakeFiles/LibLogic.dir/depend
 

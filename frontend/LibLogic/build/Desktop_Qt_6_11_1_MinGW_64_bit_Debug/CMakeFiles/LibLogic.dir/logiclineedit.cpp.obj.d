@@ -1,6 +1,6 @@
 CMakeFiles/LibLogic.dir/logiclineedit.cpp.obj: \
- C:\Users\gvend\OneDrive\Documente\LibLogic\logiclineedit.cpp \
- C:\Users\gvend\OneDrive\Documente\LibLogic\LogicLineEdit.h \
+ C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\logiclineedit.cpp \
+ C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\LogicLineEdit.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/QLineEdit \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qlineedit.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qtwidgetsglobal.h \
