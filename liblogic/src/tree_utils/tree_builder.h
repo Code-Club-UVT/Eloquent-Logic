@@ -2,6 +2,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <system/uuid.h>
 #include "dictionary.h"
 namespace eloquent::logic {
     struct Node;
@@ -37,6 +38,7 @@ namespace eloquent::logic {
         size_t index = 0;
         std::vector<NodePtr> children;
         NodeObsPtr parent;
+        CppCommon::UUID uuid;
         [[nodiscard]] bool isRoot() const noexcept {
             return parent.expired();
         }
@@ -52,7 +54,7 @@ namespace eloquent::logic {
          * @param _type Type of node
          * @param _text Label of node
          */
-        explicit Node(NodeType _type, std::string _text=""):   type(_type), text(std::move(_text)){}
+        explicit Node(NodeType _type, std::string _text=""):   uuid(CppCommon::UUID::Random	()),type(_type), text(std::move(_text)){}
 
         /**
          * Writes the information regarding the given token in node form's type and properties to the current node
@@ -61,6 +63,7 @@ namespace eloquent::logic {
         void copy_from(const NodePtr& n) {
             this->type = n->type;
             this->text = n->text;
+            this->uuid = n->uuid;
         }
 
         /*

@@ -8,7 +8,7 @@ add_library(eloquent_logic_parser tree_sanitizer.cpp cursor.cpp
         antlr_parser.hpp)
 add_dependencies(eloquent_logic_parser treelib)
 target_include_directories(eloquent_logic_parser PRIVATE ${ANTLR4_INCLUDE_DIR})
-target_link_libraries(eloquent_logic_parser PRIVATE treelib antlr4_shared liblogicCommon)
+target_link_libraries(eloquent_logic_parser PRIVATE treelib antlr4_static liblogicCommon)
 target_compile_features(eloquent_logic_parser PRIVATE cxx_std_23)
 target_compile_options(eloquent_logic_parser PRIVATE -Wall -Wextra)
 target_sources(eloquent_logic_parser

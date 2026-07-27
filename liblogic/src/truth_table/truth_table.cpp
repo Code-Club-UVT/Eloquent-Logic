@@ -18,7 +18,7 @@ namespace eloquent::logic {
                 throw std::invalid_argument("blank node");
             }
             if (node->isAtom())
-                lexemes.push_back(lexeme::build_from_node(node));
+
             else if (node->type == NodeType::NotOp) {
 
             }

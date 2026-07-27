@@ -8,6 +8,7 @@
 #include <steppable.hpp>
 #include <feedback_base.hpp>
 #include <string>
+#include <system/uuid.h>
 
 #include "interpretation.h"
 #include "lexeme.hpp"
@@ -21,7 +22,9 @@ namespace eloquent::logic {
     };
 
     class truth_table : public steppable<truth_table_feedback>{
-        std::vector<lexeme> m_lexemes;
+        interpretation m_interpretation;
+
+        std::unordered_map<CppCommon::UUID , bool> value_cache;
         explicit truth_table(std::vector<lexeme> lexemes): m_lexemes(std::move(lexemes)) {}
     protected:
         std::generator<steppable_result<truth_table_feedback>> step_impl() final;
