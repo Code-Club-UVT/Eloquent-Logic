@@ -12,7 +12,8 @@
 namespace eloquent::logic {
 
     class parser_feedback : public feedback_base {
-
+        public:
+        FEEDBACK_TYPE(parser_feedback);
     };
     class antlr_parser : public steppable<parser_feedback, std::shared_ptr<syntax_tree>> {
         std::string_view expression;

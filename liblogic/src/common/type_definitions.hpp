@@ -8,6 +8,7 @@
 #include <vector>
 #include "feedback_base.hpp"
 #include <memory>
-using FeedbackCollector = std::vector<std::shared_ptr<feedback_base>>;
-
+namespace eloquent::logic {
+    using FeedbackCollector = std::vector<std::shared_ptr<feedback_base>>;
+};
 #endif //ELOQUENTLOGIC_TYPE_DEFINITIONS_HPP

@@ -14,3 +14,5 @@ target_sources(treelib
         tree_builder.h
         dictionary.h
 )
+find_package(cppcommon REQUIRED)
+target_link_libraries(treelib PUBLIC cppcommon::cppcommon)
