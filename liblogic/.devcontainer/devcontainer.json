@@ -1,5 +1,5 @@
 {
-  "name": "LibLogic devenvironment",
+  "name": "LibLogic development environment",
   "build": {
     "dockerfile": "Dockerfile",
 
@@ -8,7 +8,10 @@
     "jetbrains": {
       "settings": {
         "com.intellij:app:HttpConfigurable.use_proxy_pac": true
-      }
+      },
+      "plugins": [
+        "com.jfrog.conan.clion"
+      ]
     }
   },
   "remoteUser": "vscode",
