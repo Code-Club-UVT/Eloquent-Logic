@@ -2,6 +2,8 @@ add_library(liblogicCommon steppable.cpp
         feedback_base.cpp
         steppable_result.cpp
         feedback_provider.h
+        feedback_stream.cpp
+        feedback_stream.hpp
 )
 find_package(nlohmann_json REQUIRED)
 target_compile_options(liblogicCommon PUBLIC -Wall -Wextra)
