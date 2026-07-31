@@ -1,8 +1,8 @@
 add_library(eloquent_logic liblogic.cpp)
 
-add_dependencies(eloquent_logic treelib)
+add_dependencies(eloquent_logic)
 add_dependencies(eloquent_logic liblogicCommon)
-target_link_libraries(eloquent_logic PUBLIC treelib liblogicCommon)
+target_link_libraries(eloquent_logic PUBLIC liblogicCommon)
 
 add_dependencies(eloquent_logic eloquent_logic_parser)
 add_dependencies(eloquent_logic liblogicTruthTable)

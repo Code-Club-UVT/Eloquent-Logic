@@ -8,10 +8,20 @@ add_library(eloquent_logic_parser cursor.cpp
         lexer.hpp
         lexer_listener_t.cpp
         lexer_listener_t.hpp
+        node.cpp
+        parser_listener_t.cpp
+        parser_listener_t.hpp
+        strict_parser.cpp
+        strict_parser.hpp
+        relaxed_parser.cpp
+        relaxed_parser.hpp
 )
-add_dependencies(eloquent_logic_parser treelib)
-target_include_directories(eloquent_logic_parser PRIVATE ${ANTLR4_INCLUDE_DIR})
-target_link_libraries(eloquent_logic_parser PRIVATE treelib antlr4_static liblogicCommon)
+find_package(cppcommon)
+
+# Then, link your executable or library with the corresponding package targets:
+
+target_link_libraries(eloquent_logic_parser PUBLIC cppcommon::cppcommon)
+target_link_libraries(eloquent_logic_parser PUBLIC liblogicCommon)
 target_compile_features(eloquent_logic_parser PRIVATE cxx_std_23)
 target_compile_options(eloquent_logic_parser PRIVATE -Wall -Wextra)
 target_sources(eloquent_logic_parser
@@ -20,7 +30,6 @@ target_sources(eloquent_logic_parser
         TYPE HEADERS
         FILES
         cursor.h
-        execution_stack.h
-        interpretation.h
+        node.h
 
 )

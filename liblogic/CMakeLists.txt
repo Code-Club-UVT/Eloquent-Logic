@@ -10,7 +10,6 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_subdirectory(src/common)
-add_subdirectory(src/tree_utils)
 add_subdirectory(src/parser)
 add_subdirectory(src)
 add_subdirectory(src/sat)

@@ -1,7 +1,7 @@
 #pragma once
 #include <queue>
 
-#include "execution_stack.h"
+#include  "node.h"
 #include "syntax_tree.hpp"
 
 namespace eloquent::logic {
@@ -9,8 +9,7 @@ namespace eloquent::logic {
 
     struct CursorPrivate {
         NodeObsPtr c_node;
-        std::shared_ptr<syntax_tree> tree = nullptr;
-        std::shared_ptr<execution_stack> estack = std::make_shared<execution_stack>();
+        std::shared_ptr<syntax_tree> tree;
         void move_to_first_blank_child();
         void set_node(NodePtr n);
 
@@ -19,7 +18,7 @@ namespace eloquent::logic {
         [[nodiscard]] bool canGoUp() const noexcept {
             return !c_node.expired();
         }
-        size_t find_first_blank_child() const;
+        [[nodiscard]] size_t find_first_blank_child() const;
         explicit CursorPrivate(std::shared_ptr<syntax_tree> tree): tree(std::move(tree)) {}
 
     };
