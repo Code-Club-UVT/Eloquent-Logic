@@ -74,3 +74,4 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/cmake/EloquentLogicConfig.cmake
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/cmake/EloquentLogicConfig.cmake
         ${CMAKE_CURRENT_BINARY_DIR}/cmake/EloquentLogicConfigVersion.cmake
         DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/cmake )
+add_subdirectory(logic_agent)

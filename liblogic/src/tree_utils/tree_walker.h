@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 
-#include "tree_builder.h"
+#include "../parser/util/tree_builder.h"
 #include "tree_walker_strategy_base.h"
 
 namespace eloquent::logic {

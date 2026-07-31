@@ -1,11 +1,7 @@
-add_library(liblogicCommon steppable.cpp
-        feedback_base.cpp
-        steppable_result.cpp
-        feedback_provider.h
-        feedback_stream.cpp
-        feedback_stream.hpp
+add_library(liblogicCommon
+        feedback_listener.cpp
 )
 find_package(nlohmann_json REQUIRED)
 target_compile_options(liblogicCommon PUBLIC -Wall -Wextra)
-target_sources(liblogicCommon PUBLIC FILE_SET HEADERS FILES steppable.hpp steppable_result.hpp feedback_base.hpp)
-target_link_libraries(liblogicCommon PUBLIC nlohmann_json::nlohmann_json)
+target_sources(liblogicCommon PUBLIC FILE_SET HEADERS FILES feedback_listener.hpp)
+target_link_libraries(liblogicCommon PUBLIC)

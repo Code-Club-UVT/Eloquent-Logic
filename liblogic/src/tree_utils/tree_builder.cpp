@@ -1,7 +1,7 @@
 //
 // Created by thonkdifferent on 11.12.24.
 //
-#include <tree_builder.h>
+#include <../parser/util/tree_builder.h>
 #include <sstream>
 namespace eloquent::logic {
 

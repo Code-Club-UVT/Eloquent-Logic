@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include <../parser/util/cursor.h>
-#include </IdeaProjects/liblogic/liblogic/src/tree_utils/tree_builder.h>
+#include <../src/parser/util/tree_builder.h>
 #include <../src/parser/util/execution_stack.h>
 #include <../src/truth_table/operation_private.h>
 namespace eloquent::logic {

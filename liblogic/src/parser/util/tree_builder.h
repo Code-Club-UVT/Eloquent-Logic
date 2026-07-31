@@ -10,12 +10,13 @@ namespace eloquent::logic {
     using NodePtr = std::shared_ptr<Node>;
     using NodeObsPtr = std::weak_ptr<Node>;
     enum class NodeType {
-        Atom = 0,
+        Atom,
         NotOp,
         AndOp,
         OrOp,
         ImpliesOp,
         IffOp,
+        LEquiOp,
         Blank
     };
 

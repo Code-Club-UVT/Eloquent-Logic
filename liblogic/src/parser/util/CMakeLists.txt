@@ -1,11 +1,14 @@
 
-add_library(eloquent_logic_parser tree_sanitizer.cpp cursor.cpp
+add_library(eloquent_logic_parser cursor.cpp
         lexeme.cpp
         lexeme.hpp
         syntax_tree.cpp
         syntax_tree.hpp
-        antlr_parser.cpp
-        antlr_parser.hpp)
+        lexer.cpp
+        lexer.hpp
+        lexer_listener_t.cpp
+        lexer_listener_t.hpp
+)
 add_dependencies(eloquent_logic_parser treelib)
 target_include_directories(eloquent_logic_parser PRIVATE ${ANTLR4_INCLUDE_DIR})
 target_link_libraries(eloquent_logic_parser PRIVATE treelib antlr4_static liblogicCommon)
@@ -16,9 +19,7 @@ target_sources(eloquent_logic_parser
         FILE_SET sanitizer_headers
         TYPE HEADERS
         FILES
-        tree_sanitizer.h
         cursor.h
-        # TODO: move the execution stack from the parser. It shouldn't be bunched up with the AST making parts of LibLogic
         execution_stack.h
         interpretation.h
 

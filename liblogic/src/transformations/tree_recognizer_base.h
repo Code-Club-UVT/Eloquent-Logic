@@ -8,7 +8,7 @@
  */
 
 #pragma once
-#include "tree_builder.h"
+#include "../parser/util/tree_builder.h"
 
 namespace eloquent::logic {
     /**
