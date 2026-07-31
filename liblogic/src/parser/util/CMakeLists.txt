@@ -15,6 +15,8 @@ add_library(eloquent_logic_parser cursor.cpp
         strict_parser.hpp
         relaxed_parser.cpp
         relaxed_parser.hpp
+        unexpected_token_error.cpp
+        unexpected_token_error.hpp
 )
 find_package(cppcommon)
 

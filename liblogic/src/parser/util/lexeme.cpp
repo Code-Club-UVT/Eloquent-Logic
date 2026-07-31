@@ -30,21 +30,15 @@ namespace eloquent::logic {
             return lexeme_type::LEquiOp;
                 break;
             case NodeType::Blank:
-                throw std::runtime_error("No lexeme can be blank");
+                return lexeme_type::Unknown;
                 break;
         }
         return lexeme_type::Unknown;
     }
-    lexeme lexeme::build_from_node(NodeObsPtr ptr) {
-        if (ptr.expired())
-            throw std::invalid_argument("null node");
-        NodePtr node_ptr = ptr.lock();
-        return {make_from_node(node_ptr->type), std::move(node_ptr->text)};
-    }
 
-    lexeme lexeme::make(lexeme_type node_type, std::string token)
+    lexeme lexeme::make(lexeme_type node_type, std::string token, size_t start, size_t end)
     {
-        return {node_type, std::move(token)};
+        return {node_type, std::move(token), start, end};
     }
 
     lexeme_type lexeme::type() const {
@@ -53,5 +47,10 @@ namespace eloquent::logic {
 
     std::string lexeme::token() const {
         return m_token;
+    }
+
+    size_t lexeme::position() const
+    {
+        return m_position;
     }
 }

@@ -5,7 +5,7 @@
 #ifndef ELOQUENTLOGIC_LEXEME_HPP
 #define ELOQUENTLOGIC_LEXEME_HPP
 
-#include <tree_builder.h>
+#include "node.h"
 
 #include <utility>
 namespace eloquent::logic {
@@ -21,7 +21,8 @@ namespace eloquent::logic {
         ImpliesOp,
         IffOp,
         LEquiOp,
-        Unknown
+        Eof,
+        Unknown // blank
     };
     lexeme_type make_from_node(NodeType nt);
 
@@ -30,12 +31,14 @@ namespace eloquent::logic {
     class lexeme {
         lexeme_type m_node_type;
         std::string m_token;
-        lexeme(lexeme_type node_type, std::string token) : m_node_type(node_type), m_token(std::move(token)) {}
+        size_t m_start;
+        size_t m_end;
+        lexeme(lexeme_type node_type, std::string token, size_t start, size_t end) : m_node_type(node_type), m_token(std::move(token)), m_start(start), m_end(end){}
         public:
-        static lexeme build_from_node(NodeObsPtr ptr);
-        static lexeme make(lexeme_type node_type, std::string token);
+        static lexeme make(lexeme_type node_type, std::string token, size_t start, size_t end);
         [[nodiscard]] lexeme_type type() const ;
         [[nodiscard]] std::string token() const;
+        [[nodiscard]] size_t position() const;
     };
 }
 

@@ -19,6 +19,7 @@ namespace eloquent::logic
         virtual void didFindMissingSubscript(size_t idx){}
         virtual void didFindUnbalancedSubscript(size_t idx){}
         virtual void didFindUnexpectedSequence(std::string_view s, size_t start_idx) {};
+        virtual void didReachEof(){}
     };
 }
 

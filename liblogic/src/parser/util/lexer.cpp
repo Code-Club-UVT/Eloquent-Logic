@@ -219,17 +219,23 @@ namespace eloquent::logic
         std::vector<lexeme> lexemes;
         if (text.empty())
         {
+            listener->didReachEof();
+            lexemes.emplace_back(lexeme::make(lexeme_type::Eof, ""));
             listener->didFinish();
             return lexemes;
         }
         size_t last_change = 0;
+        bool in_lexeme = false;
         for (size_t i = 0; i < text.size(); ++i)
         {
             listener->didReadCharacter(text[i]);
             if (isspace(text[i])) continue;
             LexMode new_mode = transition_table.at(mode)(text[i], ld);
-            if (new_mode != LexMode::None && new_mode != mode)
+            if (!in_lexeme)
+            {
                 last_change = i;
+                in_lexeme = true;
+            }
             if (new_mode == LexMode::Error)
             {
                 auto sequence = text.substr(last_change);
@@ -239,13 +245,16 @@ namespace eloquent::logic
             }
             if (ld.lexemeFlag)
             {
-                lexeme l = lexeme::make(ld.type, ld.buffer.str());
+                lexeme l = lexeme::make(ld.type, ld.buffer.str(), last_change, i);
                 lexemes.emplace_back(l);
                 listener->didRecogniseLexeme(l);
                 ld.lexemeFlag = false;
                 ld.type = lexeme_type::Unknown;
                 ld.buffer.str("");
+                in_lexeme = false;
+
             }
+
         }
         {
             LexMode new_mode = transition_table.at(mode)(3, ld); // ETX
@@ -259,13 +268,15 @@ namespace eloquent::logic
         }
         if (ld.lexemeFlag)
         {
-            lexeme l = lexeme::make(ld.type, ld.buffer.str());
+            lexeme l = lexeme::make(ld.type, ld.buffer.str(), last_change,text.size()-1);
             lexemes.emplace_back(l);
             listener->didRecogniseLexeme(l);
             ld.lexemeFlag = false;
             ld.type = lexeme_type::Unknown;
             ld.buffer.str("");
         }
+        listener->didReachEof();
+        lexemes.emplace_back(lexeme::make(lexeme_type::Eof, "",text.size(), text.size()));
         return lexemes;
     }
 

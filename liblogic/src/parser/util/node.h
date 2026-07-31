@@ -4,6 +4,8 @@
 #include <vector>
 #include <system/uuid.h>
 #include "dictionary.h"
+#include "lexeme.hpp"
+
 namespace eloquent::logic {
     struct Node;
     struct NodeBuilder;
@@ -21,8 +23,7 @@ namespace eloquent::logic {
     };
     class Node {
         NodeType type = NodeType::Blank;
-        std::string text;
-        size_t index = 0;
+        lexeme m_lexeme;
         std::vector<NodePtr> children;
         NodeObsPtr parent;
         CppCommon::UUID uuid;
@@ -31,19 +32,24 @@ namespace eloquent::logic {
         [[nodiscard]] constexpr bool isAtom() const noexcept;
         [[nodiscard]] constexpr bool isBlank() const noexcept;
         [[nodiscard]] std::vector<NodePtr>& getChildren() noexcept;
-        void spawn_new_child();
+        [[nodiscard]] NodeType getType() const noexcept;
+        [[nodiscard]] std::string getText() const noexcept;
+        [[nodiscard]] NodeObsPtr getParent() const noexcept;
+        [[nodiscard]] lexeme getLexeme() const noexcept;
+        [[nodiscard]] CppCommon::UUID getUUID() const noexcept;
+        void spawn_new_child(const lexeme& l);
 
         /**
          * Creates a new node with given parameters
          * @param _type Type of node
          * @param _text Label of node
          */
-        explicit Node(NodeType _type, std::string _text="");
+        explicit Node(lexeme l);
         Node(const Node& n);
         friend bool operator==(const Node &lhs, const Node &rhs) ;
         friend bool operator!=(const Node &lhs, const Node &rhs) ;
         std::string to_string();
-
+        static std::shared_ptr<Node> make_node(NodeType _type, const std::string& _text="");
     private:
         std::ostringstream& to_string_impl(std::ostringstream& ss);
     };

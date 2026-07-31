@@ -9,7 +9,7 @@
 #include <memory>
 #include <generator>
 #include <ranges>
-#include "tree_builder.h"
+#include "node.h"
 
 namespace eloquent::logic {
     class syntax_tree {
