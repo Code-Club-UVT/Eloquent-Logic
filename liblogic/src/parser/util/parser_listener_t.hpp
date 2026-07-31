@@ -6,11 +6,14 @@
 #define ELOQUENTLOGIC_PARSER_LISTENER_T_HPP
 
 #include "feedback_listener.hpp"
+#include "lexeme.hpp"
+
 namespace eloquent::logic
 {
-    class parser_listener_t : feedback_listener
+    class parser_listener_t : public feedback_listener
     {
-
+    public:
+        virtual void didProcessLexeme(const lexeme& value) {}
     };
 }
 
