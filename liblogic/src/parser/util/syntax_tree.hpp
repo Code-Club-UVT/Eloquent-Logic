@@ -18,9 +18,10 @@ namespace eloquent::logic {
     public:
         NodePtr root();
         void set_root(NodePtr root);
-        std::generator<NodeObsPtr> post_order() const;
-        bool empty() const;
+        [[nodiscard]] std::generator<NodeObsPtr> post_order() const;
+        [[nodiscard]] bool empty() const;
         void extend_upwards(const lexeme& l);
+        NodeObsPtr rootRef() const;
         friend bool operator==(const syntax_tree &, const syntax_tree &);
     };
 };

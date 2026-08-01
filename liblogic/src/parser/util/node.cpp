@@ -10,10 +10,6 @@ namespace eloquent::logic
         return parent != nullptr;
     }
 
-    std::vector<NodePtr>& Node::getChildren() noexcept
-    {
-        return children;
-    }
 
     NodeType Node::getType() const noexcept
     {
@@ -74,6 +70,38 @@ namespace eloquent::logic
         }
     }
 
+    size_t Node::num_children() const noexcept
+    {
+        return children.size();
+    }
+    NodeObsPtr Node::childAt(size_t idx) const
+    {
+        return children[idx].get();
+    }
+
+    bool Node::allChildrenAreWritten() const noexcept
+    {
+        for (const auto & i : children)
+        {
+            if (i->getType() == NodeType::Blank)
+                return false;
+        }
+        return true;
+    }
+    size_t Node::find_by_uuid(CppCommon::UUID id) const noexcept
+    {
+        for (size_t i = 0; i < children.size(); ++i)
+        {
+            if (children[i]->uuid == id)
+                return i;
+        }
+        return children.size();
+    }
+    size_t Node::arity() const noexcept
+    {
+        return children.size();
+    }
+
     Node::Node(const lexeme& l): m_lexeme(l)
     {
         this->uuid = CppCommon::UUID::Random();
@@ -96,10 +124,17 @@ namespace eloquent::logic
     {
         return type == NodeType::Blank;
     }
-
-    void Node::adopt(const NodePtr& node)
+    void Node::adopt(NodePtr node)
     {
         children.emplace_back(std::move(node));
+    }
+
+    void Node::replace_child(size_t idx, NodePtr new_child)
+    {
+        NodePtr old = std::move(children[idx]);
+        new_child->set_parent(this);
+        new_child->children[0] = std::move(old);
+        children[idx] = std::move(new_child);
     }
 
     std::string Node::to_string() const
@@ -108,6 +143,7 @@ namespace eloquent::logic
         to_string_impl(os);
         return os.str();
     }
+
 
     std::unique_ptr<Node> Node::make_node(const lexeme& l)
     {

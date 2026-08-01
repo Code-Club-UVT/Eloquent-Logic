@@ -20,7 +20,6 @@ namespace eloquent::logic {
     {
       return !this->m_root;
     }
-
     void syntax_tree::extend_upwards(const lexeme& l)
     {
       if (empty())
@@ -31,8 +30,13 @@ namespace eloquent::logic {
       {
        NodePtr node = this->root();
        this->m_root = Node::make_node(l);
-       this->m_root->adopt(node);
+       this->m_root->adopt(std::move(node));
       }
+    }
+
+    NodeObsPtr syntax_tree::rootRef() const
+    {
+      return m_root.get();
     }
 
     std::generator<NodeObsPtr> syntax_tree::post_order_impl(NodeObsPtr node) const {

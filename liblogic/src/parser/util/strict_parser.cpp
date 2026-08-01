@@ -8,118 +8,99 @@
 
 namespace eloquent::logic
 {
-    bool strict_parser::lexeme_stream::can_continue() const noexcept
-    {
-        return idx < lexemes.size();
-    }
 
-    strict_parser::lexeme_stream::lexeme_stream(std::vector<lexeme> lexemes): lexemes(std::move(lexemes)){}
-
-    lexeme strict_parser::lexeme_stream::peek()
-    {
-        if (lexemes.empty())
-            return lexeme::make(lexeme_type::Eof,"",0,0);
-        if (idx+1 >= lexemes.size())
-            return lexemes[idx];
-        return lexemes[idx+1];
-    }
-
-    lexeme strict_parser::lexeme_stream::next()
-    {
-        if (lexemes.empty())
-            return lexeme::make(lexeme_type::Eof,"",0,0);
-        if (idx+1 >= lexemes.size())
-            return lexemes[idx];
-        return lexemes[++idx];
-    }
-
-    NodePtr strict_parser::parse_paranthesised_expression(Cursor& cursor, lexeme_stream& ls, const std::shared_ptr<parser_listener_t>& listener)
-    {
-        listener->startedProcessingParanthesis();
-        bool has_content = false; // empty paranthesis MUST have something in them
-        bool has_operator = false; //(P) is not allowed
-        lexeme l = ls.next();
-        if (l.type() == lexeme_type::Eof)
-        {
-            listener->foundMismatchedParanthesis();
-            throw unexpected_token_error(l);
-        }
-        NodePtr root;
-        if (l.type() == lexeme_type::LParen)
-        {
-            has_content = true;
-            root = parse_paranthesised_expression(cursor, ls, listener);
-        }
-        else if (l.type() == lexeme_type::Atom)
-        {
-            has_content = true;
-            root = Node::make_node(l);
-        }
-        else if (l.type() == lexeme_type::NotOp)
-        {
-            has_content = true;
-            has_operator = true;
-            root = Node::make_node(l);
-            l = ls.next();
-
-            if (ls.peek().type() == lexeme_type::Atom)
-            {
-                NodePtr inner = Node::make_node(l);
-                lexeme l2 = ls.next();
-                if (l2.type() == lexeme_type::RParen)
-                {
-                    ls.next(); //consume )
-                    root->getChildren().emplace_back(inner);
-                    return root;
-                }
-                if (l2.type() == lexeme_type::Eof)
-                    listener->foundMismatchedParanthesis();
-                else
-                    listener->foundUnexpectedToken(l2);
-                throw unexpected_token_error(l);
-            }
-            if (l.type() == lexeme_type::LParen)
-            {
-                NodePtr inner = parse_paranthesised_expression(cursor, ls, listener);
-                root->getChildren().emplace_back(inner);
-                return root;
-            }
-        }
-        else if (l.type() == lexeme_type::Atom)
-    }
 
     std::shared_ptr<syntax_tree> strict_parser::parse(const std::vector<lexeme>& lexemes, const std::shared_ptr<parser_listener_t>& listener)
     {
         listener->didStart();
         std::shared_ptr<syntax_tree> result = std::make_shared<syntax_tree>();
         lexeme_stream stream(lexemes);
-        lexeme l = stream.peek();
-        Cursor c(result,listener);
-
-        switch (l.type())
+        Cursor cursor(result,listener);
+        while (stream.can_continue())
         {
-            case lexeme_type::Eof:
-                break; //empty string, nothing to do
+            lexeme l = stream.current();
+            switch (l.type())
+            {
+                using enum lexeme_type;
+            case  lexeme_type::LParen: // 2 posibilitati
+                {
+                    listener->startedProcessingParanthesis();
+                    if (cursor.get_tree()->rootRef() != nullptr) //am mai fost in arbore
+                    {
+                        throw unexpected_token_error(l);
+                    }
+                    if (stream.peek().type() == lexeme_type::NotOp)
+                    {
+                        listener->acceptUnaryOpVariant();
+                        cursor.grow_up_tree(); // operator node
+                        cursor.spawn_new_child_node(); // expresion node
+                    }
+                    else if (stream.peek().type() == lexeme_type::LParen || stream.peek().type() == lexeme_type::Atom)
+                    {
+                        listener->acceptBinaryOpVariant();
+                        cursor.grow_up_tree();
+                        cursor.spawn_new_child_node();
+                        cursor.spawn_new_child_node();
+                        cursor.move_to_child(0);
+                    }
+                }
+            case lexeme_type::RParen:
+                {
+                    NodeObsPtr ptr = cursor.get_current_node();
+                    if (ptr->isRoot() && ptr->isBlank())
+                    {
+                        listener->foundAstError(cursor);
+                        throw unexpected_token_error(l);
+                    }
+                    cursor.up();
+                    if (!ptr->isRoot())
+                        if (!cursor.get_current_node()->allChildrenAreWritten())
+                        {
+                            listener->foundAstError(cursor);
+                            throw unexpected_token_error(l);
+                        }
+                }
             case lexeme_type::Atom:
                 {
-                    c.new_node(l);
-                    listener->didMakeNode(c.get_current_node());
-                    if (stream.peek().type() != lexeme_type::Eof)
+                    cursor.write_to_node(l);
+                    cursor.up();
+                }
+            case lexeme_type::AndOp:
+            case lexeme_type::OrOp:
+            case lexeme_type::ImpliesOp:
+            case lexeme_type::IffOp:
+            case lexeme_type::LEquiOp:
+                {
+                    if (cursor.get_current_node() == nullptr)
                     {
-                        listener->foundUnexpectedToken(stream.peek());
-                        throw unexpected_token_error(stream.peek());
+                        listener->didTryInvalidPosition(nullptr, 0);
+                        throw unexpected_token_error(l);
+                    }
+                    cursor.write_to_node(l);
+                    if (!cursor.has_child(1))
+                    {
+                        listener->wrongArityForNode(cursor.get_current_node());
+                        throw unexpected_token_error(l);
+                    }
+                    cursor.move_to_child(1); //right child
+                }
+
+            case lexeme_type::Eof:
+                {
+                    if (cursor.get_current_node() != nullptr)
+                    {
+                        listener->foundAstError(cursor);
+                        throw unexpected_token_error(l);
                     }
                     break;
                 }
-            case lexeme_type::LParen:
-                {
-                    c.up();
-                    NodePtr expr = parse_paranthesised_expression(c, stream, listener);
-
-                    break;
-                }
             default:
-                throw unexpected_token_error(stream.peek());
+                {
+                    listener->foundUnexpectedToken(l);
+                    throw unexpected_token_error(l);
+                }
+            }
+            l = stream.next();
         }
         listener->didFinish();
 

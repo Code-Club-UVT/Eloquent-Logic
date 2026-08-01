@@ -30,11 +30,15 @@ namespace eloquent::logic {
         [[nodiscard]] bool isRoot() const noexcept;
         [[nodiscard]] constexpr bool isAtom() const noexcept;
         [[nodiscard]] constexpr bool isBlank() const noexcept;
-        [[nodiscard]] std::vector<NodePtr>& getChildren() noexcept;
         [[nodiscard]] NodeType getType() const noexcept;
         [[nodiscard]] NodeObsPtr getParent() const noexcept;
         [[nodiscard]] lexeme getLexeme() const noexcept;
         [[nodiscard]] CppCommon::UUID getUUID() const noexcept;
+        [[nodiscard]] size_t num_children() const noexcept;
+        [[nodiscard]] size_t arity() const noexcept;
+        [[nodiscard]] NodeObsPtr childAt(size_t idx) const;
+        [[nodiscard]] bool allChildrenAreWritten() const noexcept;
+        [[nodiscard]] size_t find_by_uuid(CppCommon::UUID id) const noexcept;
         void spawn_new_child(const lexeme& l);
         void set_node_type(const lexeme& l);
 
@@ -48,14 +52,14 @@ namespace eloquent::logic {
         void set_lexeme(const lexeme& l);
         friend bool operator==(const Node &lhs, const Node &rhs) ;
         friend bool operator!=(const Node &lhs, const Node &rhs) ;
-        void adopt(const NodePtr& node);
+        void adopt(NodePtr node);
+        void replace_child(size_t idx, NodePtr new_child);
         std::string to_string() const;
 
         void set_parent(const NodeObsPtr& parent)
         {
             this->parent = parent;
         }
-
         static std::unique_ptr<Node> make_node(const lexeme& l);
     private:
         std::ostringstream& to_string_impl(std::ostringstream& ss) const;
