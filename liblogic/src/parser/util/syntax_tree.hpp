@@ -14,11 +14,13 @@
 namespace eloquent::logic {
     class syntax_tree {
         NodePtr m_root = nullptr;
-        std::generator<NodePtr> post_order_impl(NodePtr node) const;
+        std::generator<NodeObsPtr> post_order_impl(NodeObsPtr node) const;
     public:
         NodePtr root();
         void set_root(NodePtr root);
-        std::generator<NodePtr> post_order() const;
+        std::generator<NodeObsPtr> post_order() const;
+        bool empty() const;
+        void extend_upwards(const lexeme& l);
         friend bool operator==(const syntax_tree &, const syntax_tree &);
     };
 };

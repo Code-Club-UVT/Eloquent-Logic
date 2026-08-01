@@ -5,8 +5,42 @@
 #include <cursor.h>
 
 namespace eloquent::logic {
+    void Cursor::new_node(const lexeme& l)
+    {
+        NodeObsPtr new_node = nullptr;
+        if (this->tree->empty()) //root
+        {
+            this->tree->extend_upwards(l);
+
+        }
+        else
+        {
+            switch (this->direction)
+            {
+                using enum Direction;
+                case Up:
+                    {
+                        this->tree->extend_upwards(l);
+                    }
+                case Down:
+                    {
+                        this->c_node->spawn_new_child(l);
+
+                    }
+                case Current:
+                    {
+                        listener->didTrySpawiningOverExistingNode(this->cursor_position);
+                        throw std::logic_error("Cursor::move_to_first_child");
+                    }
+
+            }
+        }
+        this->direction = Direction::Current;
+        listener->didPlaceNode();
+    }
+
     size_t Cursor::find_first_blank_child() const {
-        NodePtr c_sharednode = c_node.lock();
+        NodeObsPtr c_sharednode = c_node ;
         for (size_t i=0; i< c_sharednode->getChildren().size(); i++) {
             if (c_sharednode->getChildren().at(i)->getType() == NodeType::Blank)
                 return i;
@@ -15,39 +49,38 @@ namespace eloquent::logic {
     }
 
     void Cursor::up() {
-        NodePtr c_sharednode = c_node.lock();
-        if (canGoUp()) {
-            c_node = c_sharednode->getParent();
-        }
+        if (cursor_position.direction == Position::Up)
+        {
+            listener->didTryInvalidPosition();
+            throw std::logic_error("Cursor::up");
+        };
+        NodeObsPtr c_sharednode = c_node ;
+        c_node = c_sharednode->getParent();
+
     }
 
     void Cursor::spawn_new_child_node() {
-        if (c_node.expired()) {
-            tree->set_root(Node::make_node(NodeType::Blank));
-            c_node = tree->root();
-            return;
-        }
-        NodePtr c_sharednode = c_node.lock();
-        c_sharednode->spawn_new_child();
-        c_sharednode->getChildren().back()->getParent() = c_node;
+        if (c_node != nullptr) return;
+        NodeObsPtr c_sharednode = c_node ;
+        c_sharednode->spawn_new_child(lexeme::make(lexeme_type::Unknown,"", 0,0));
         move_to_first_blank_child();
 
     }
 
     void Cursor::move_to_first_blank_child() {
-        NodePtr c_sharednode = c_node.lock();
+        NodeObsPtr c_sharednode = c_node ;
         c_node = c_sharednode->getChildren().at(find_first_blank_child());
     }
 
-    void Cursor::set_node(const NodePtr& n) {
-        NodePtr c_sharednode = c_node.lock();
-        if (c_node.expired())
+    void Cursor::write_to_node(const lexeme& n) {
+        if (c_node != nullptr)
         {
-            this->tree->set_root(n);
-            this->c_node = tree->root();
+            throw std::logic_error("Cursor::write_to_node");
         }
-        if (n->isBlank())
-            throw std::invalid_argument("Blank node");
-        *c_sharednode=*n;
+        NodeObsPtr c_sharednode = c_node ;
+
+        if (!c_sharednode->isBlank())
+            throw std::invalid_argument("Can't write to not blank node");
+        c_sharednode->set_lexeme(n);
     }
 }

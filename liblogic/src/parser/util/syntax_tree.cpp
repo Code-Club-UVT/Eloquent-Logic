@@ -5,20 +5,39 @@
 #include "syntax_tree.hpp"
 namespace eloquent::logic {
    NodePtr syntax_tree::root() {
-       return this->m_root;
+       return std::move(this->m_root);
     }
 
     void syntax_tree::set_root(NodePtr root) {
-       this->m_root.swap(root);
+       this->m_root = std::move(root);
     }
 
-    std::generator<NodePtr> syntax_tree::post_order() const {
-       return post_order_impl(m_root);
+    std::generator<NodeObsPtr> syntax_tree::post_order() const {
+       return post_order_impl(m_root.get());
     }
 
-    std::generator<NodePtr> syntax_tree::post_order_impl(NodePtr node) const {
-      for (const auto& child : node->children) {
-          co_yield std::ranges::elements_of(post_order_impl(child));
+    bool syntax_tree::empty() const
+    {
+      return !this->m_root;
+    }
+
+    void syntax_tree::extend_upwards(const lexeme& l)
+    {
+      if (empty())
+      {
+         this->m_root = Node::make_node(l);
+      }
+      else
+      {
+       NodePtr node = this->root();
+       this->m_root = Node::make_node(l);
+       this->m_root->adopt(node);
+      }
+    }
+
+    std::generator<NodeObsPtr> syntax_tree::post_order_impl(NodeObsPtr node) const {
+      for (const auto& child : node->getChildren()) {
+          co_yield std::ranges::elements_of(post_order_impl(child.get()));
       }
       co_yield node;
       co_return;

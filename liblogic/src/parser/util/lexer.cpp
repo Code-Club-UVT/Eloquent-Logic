@@ -5,7 +5,8 @@
 #include "lexer.hpp"
 #include <functional>
 #include <map>
-
+#include <sstream>
+#include "dictionary.h"
 namespace eloquent::logic
 {
     enum class LexMode
@@ -30,12 +31,6 @@ namespace eloquent::logic
     inline bool is_final(LexMode mode)
     {
         return mode == LexMode::None;
-    }
-    void register_lexeme(lexeme_type type, const std::string& sequence, const std::shared_ptr<lexer_listener_t>& listener, std::vector<lexeme>& lexemes)
-    {
-        lexeme l = lexeme::make(type, sequence);
-        listener->didRecogniseLexeme(l);
-        lexemes.emplace_back(l);
     }
     using transition_func = std::function<LexMode(const char&, lexer_data&)> ;
     LexMode none_func(const char& c, lexer_data& ld)
@@ -220,7 +215,7 @@ namespace eloquent::logic
         if (text.empty())
         {
             listener->didReachEof();
-            lexemes.emplace_back(lexeme::make(lexeme_type::Eof, ""));
+            lexemes.emplace_back(lexeme::make(lexeme_type::Eof, "",0,0));
             listener->didFinish();
             return lexemes;
         }

@@ -9,6 +9,8 @@
 #include <string>
 #include <format>
 #include <vector>
+#include <fmt/format.h>
+
 #include "lexeme.hpp"
 #include "lexer_listener_t.hpp"
 

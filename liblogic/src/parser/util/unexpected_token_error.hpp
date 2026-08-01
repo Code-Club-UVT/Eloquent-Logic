@@ -7,6 +7,8 @@
 #include "lexeme.hpp"
 #include <exception>
 #include <format>
+#include <string/format.h>
+
 namespace eloquent::logic
 {
     class unexpected_token_error : public std::exception
@@ -14,10 +16,7 @@ namespace eloquent::logic
         lexeme m_lexeme;
         public:
             explicit unexpected_token_error(lexeme lexeme) : m_lexeme(lexeme) {}
-        const char* what() const noexcept
-        {
-            return fmt::format("Unexpected token {} at {}\n", m_lexeme.token(), m_lexeme.position() ).c_str();
-        }
+        [[nodiscard]] const char* what() const noexcept final;
     };
 }
 

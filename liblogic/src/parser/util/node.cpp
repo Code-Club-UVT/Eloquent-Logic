@@ -7,7 +7,7 @@ namespace eloquent::logic
 {
     bool Node::isRoot() const noexcept
     {
-        return parent.expired();
+        return parent != nullptr;
     }
 
     std::vector<NodePtr>& Node::getChildren() noexcept
@@ -18,11 +18,6 @@ namespace eloquent::logic
     NodeType Node::getType() const noexcept
     {
         return type;
-    }
-
-    std::string Node::getText() const noexcept
-    {
-        return text;
     }
 
     NodeObsPtr Node::getParent() const noexcept
@@ -42,15 +37,16 @@ namespace eloquent::logic
 
     void Node::spawn_new_child(const lexeme& l)
     {
-        this->children.emplace_back(std::make_shared<Node>(l));
+        this->children.emplace_back(make_node(l));
+        this->children.back()->set_parent(this);
     }
 
-    Node::Node(lexeme l) : uuid(CppCommon::UUID::Random())
+    void Node::set_node_type(const lexeme& l)
     {
-        switch (l)
+        switch (l.type())
         {
         case lexeme_type::Unknown:
-                this->type = NodeType::Blank;
+            this->type = NodeType::Blank;
             break;
         case lexeme_type::Atom:
             this->type = NodeType::Atom;
@@ -76,17 +72,21 @@ namespace eloquent::logic
         default:
             throw std::logic_error("Unknown lexeme type");
         }
-        m_lexeme = l;
     }
 
-
-    Node::Node(const Node& n)
+    Node::Node(const lexeme& l): m_lexeme(l)
     {
-        this->children = n.children;
-        this->type = n.type;
-        this->m_lexeme = n.m_lexeme;
-        this->uuid = n.uuid;
+        this->uuid = CppCommon::UUID::Random();
+        set_node_type(l);
     }
+
+    void Node::set_lexeme(const lexeme& l)
+    {
+        this->m_lexeme = l;
+        set_node_type(l);
+    }
+
+
     constexpr bool Node::isAtom() const noexcept
     {
         return type == NodeType::Atom;
@@ -97,23 +97,29 @@ namespace eloquent::logic
         return type == NodeType::Blank;
     }
 
-    std::string Node::to_string()
+    void Node::adopt(const NodePtr& node)
+    {
+        children.emplace_back(std::move(node));
+    }
+
+    std::string Node::to_string() const
     {
         std::ostringstream os;
         to_string_impl(os);
         return os.str();
     }
 
-    std::shared_ptr<Node> Node::make_node(NodeType _type, const std::string& _text)
+    std::unique_ptr<Node> Node::make_node(const lexeme& l)
     {
-        return std::make_shared<Node>(_type, _text);
+        return std::make_unique<Node>(l);
     }
 
-    std::ostringstream& Node::to_string_impl(std::ostringstream& ss)
+
+    std::ostringstream& Node::to_string_impl(std::ostringstream& ss) const
     {
         if (this->isAtom())
         {
-            ss<<this->text;
+            ss<<this->m_lexeme.token();
             return ss;
         }
         ss << '(';
@@ -129,9 +135,9 @@ namespace eloquent::logic
         for (size_t i = 0; i < children.size()-1; ++i)
         {
             children[i]->to_string_impl(ss);
-            ss << this->text;
+            ss << this->m_lexeme.token();
         }
-        ss<<this->text;
+        ss<<this->m_lexeme.token();
         children.back()->to_string_impl(ss);
         ss<<')';
         return ss;
@@ -143,7 +149,7 @@ namespace eloquent::logic
             return false;
         }
         bool response =  lhs.type == rhs.type
-               && lhs.text == rhs.text;
+               && lhs.m_lexeme.token() == rhs.m_lexeme.token();
         return response;
     }
 

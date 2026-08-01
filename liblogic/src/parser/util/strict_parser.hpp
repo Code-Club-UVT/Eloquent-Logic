@@ -7,6 +7,8 @@
 
 #include <vector>
 #include <memory>
+
+#include "cursor.h"
 #include "lexeme.hpp"
 #include "syntax_tree.hpp"
 #include "parser_listener_t.hpp"
@@ -25,8 +27,8 @@ namespace eloquent::logic
             lexeme next();
         };
         public:
-        NodePtr parse_paranthesised_expression(const std::shared_ptr<parser_listener_t>& listener);
-        static syntax_tree parse(const std::vector<lexeme>& lexemes, const std::shared_ptr<parser_listener_t>& listener);
+        static NodePtr parse_paranthesised_expression(Cursor& cursor, lexeme_stream& ls, const std::shared_ptr<parser_listener_t>& listener);
+        static std::shared_ptr<syntax_tree> parse(const std::vector<lexeme>& lexemes, const std::shared_ptr<parser_listener_t>& listener);
     };
 }
 
