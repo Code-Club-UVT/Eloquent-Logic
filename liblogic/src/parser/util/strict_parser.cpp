@@ -43,6 +43,7 @@ namespace eloquent::logic
                         cursor.spawn_new_child_node();
                         cursor.move_to_child(0);
                     }
+                    break;
                 }
             case lexeme_type::RParen:
                 {
@@ -59,11 +60,13 @@ namespace eloquent::logic
                             listener->foundAstError(cursor);
                             throw unexpected_token_error(l);
                         }
+                    break;
                 }
             case lexeme_type::Atom:
                 {
                     cursor.write_to_node(l);
                     cursor.up();
+                    break;
                 }
             case lexeme_type::AndOp:
             case lexeme_type::OrOp:
@@ -83,6 +86,7 @@ namespace eloquent::logic
                         throw unexpected_token_error(l);
                     }
                     cursor.move_to_child(1); //right child
+                    break;
                 }
 
             case lexeme_type::Eof:
@@ -98,6 +102,7 @@ namespace eloquent::logic
                 {
                     listener->foundUnexpectedToken(l);
                     throw unexpected_token_error(l);
+                    break;
                 }
             }
             l = stream.next();

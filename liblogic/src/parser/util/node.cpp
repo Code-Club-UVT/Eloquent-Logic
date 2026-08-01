@@ -74,6 +74,9 @@ namespace eloquent::logic
     {
         return children.size();
     }
+
+
+
     NodeObsPtr Node::childAt(size_t idx) const
     {
         return children[idx].get();
@@ -115,15 +118,6 @@ namespace eloquent::logic
     }
 
 
-    constexpr bool Node::isAtom() const noexcept
-    {
-        return type == NodeType::Atom;
-    }
-
-    constexpr bool Node::isBlank() const noexcept
-    {
-        return type == NodeType::Blank;
-    }
     void Node::adopt(NodePtr node)
     {
         children.emplace_back(std::move(node));
@@ -186,6 +180,10 @@ namespace eloquent::logic
         }
         bool response =  lhs.type == rhs.type
                && lhs.m_lexeme.token() == rhs.m_lexeme.token();
+        for (size_t i = 0; i < lhs.children.size(); ++i)
+        {
+            response = response && *(lhs.children[i]) == *(rhs.children[i]);
+        }
         return response;
     }
 

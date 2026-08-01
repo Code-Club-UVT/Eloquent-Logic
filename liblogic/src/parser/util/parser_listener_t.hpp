@@ -8,7 +8,7 @@
 #include "cursor_listener_t.hpp"
 #include "lexeme.hpp"
 #include "node.h"
-#include "strict_parser.hpp"
+#include "cursor.h"
 
 namespace eloquent::logic
 {

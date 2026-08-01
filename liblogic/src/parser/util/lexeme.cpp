@@ -11,7 +11,7 @@ namespace eloquent::logic {
     }
     bool is_nary_operator(lexeme_type node_type)
     {
-        return node_type == lexeme_type::AndOp
+        return node_type == lexeme_type::AndOp;
     }
     lexeme_type lexeme::type() const {
         return m_node_type;

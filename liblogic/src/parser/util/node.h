@@ -28,8 +28,12 @@ namespace eloquent::logic {
         CppCommon::UUID uuid;
     public:
         [[nodiscard]] bool isRoot() const noexcept;
-        [[nodiscard]] constexpr bool isAtom() const noexcept;
-        [[nodiscard]] constexpr bool isBlank() const noexcept;
+        [[nodiscard]] constexpr bool isAtom() const noexcept {
+            return type == NodeType::Atom;
+        }
+        [[nodiscard]] constexpr bool isBlank() const noexcept{
+            return type == NodeType::Blank;
+        }
         [[nodiscard]] NodeType getType() const noexcept;
         [[nodiscard]] NodeObsPtr getParent() const noexcept;
         [[nodiscard]] lexeme getLexeme() const noexcept;

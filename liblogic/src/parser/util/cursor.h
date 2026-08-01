@@ -30,7 +30,7 @@ namespace eloquent::logic {
         void move_to_child(size_t idx);
         [[nodiscard]] bool has_child(size_t idx) const;
         [[nodiscard]] bool tree_is_empty() const noexcept;
-        [[nodiscard]] void replace_child_with_placeholders(lexeme l)
+        void replace_child_with_placeholders(lexeme l);
         explicit Cursor(std::shared_ptr<syntax_tree> tree, std::shared_ptr<cursor_listener_t> listener): tree(std::move(tree)), listener(std::move(listener)) {}
 
         [[nodiscard]] NodeObsPtr get_current_node() const
