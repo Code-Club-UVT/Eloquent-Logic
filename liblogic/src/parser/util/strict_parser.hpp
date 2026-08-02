@@ -17,9 +17,7 @@ namespace eloquent::logic
 {
     class strict_parser
     {
-
         public:
-        static NodePtr parse_paranthesised_expression(Cursor& cursor, lexeme_stream& ls, const std::shared_ptr<parser_listener_t>& listener);
         static std::shared_ptr<syntax_tree> parse(const std::vector<lexeme>& lexemes, const std::shared_ptr<parser_listener_t>& listener);
     };
 }

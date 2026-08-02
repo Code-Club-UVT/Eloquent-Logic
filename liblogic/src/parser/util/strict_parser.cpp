@@ -22,20 +22,20 @@ namespace eloquent::logic
             switch (l.type())
             {
                 using enum lexeme_type;
-            case  lexeme_type::LParen: // 2 posibilitati
+            case  LParen: // 2 posibilitati
                 {
                     listener->startedProcessingParanthesis();
                     if (cursor.get_tree()->rootRef() != nullptr) //am mai fost in arbore
                     {
                         throw unexpected_token_error(l);
                     }
-                    if (stream.peek().type() == lexeme_type::NotOp)
+                    if (stream.peek().type() == NotOp)
                     {
                         listener->acceptUnaryOpVariant();
                         cursor.grow_up_tree(); // operator node
                         cursor.spawn_new_child_node(); // expresion node
                     }
-                    else if (stream.peek().type() == lexeme_type::LParen || stream.peek().type() == lexeme_type::Atom)
+                    else if (stream.peek().type() == LParen || stream.peek().type() == Atom)
                     {
                         listener->acceptBinaryOpVariant();
                         cursor.grow_up_tree();
@@ -45,7 +45,7 @@ namespace eloquent::logic
                     }
                     break;
                 }
-            case lexeme_type::RParen:
+            case RParen:
                 {
                     NodeObsPtr ptr = cursor.get_current_node();
                     if (ptr->isRoot() && ptr->isBlank())
@@ -62,21 +62,26 @@ namespace eloquent::logic
                         }
                     break;
                 }
-            case lexeme_type::Atom:
+            case Atom:
                 {
                     cursor.write_to_node(l);
                     cursor.up();
                     break;
                 }
-            case lexeme_type::AndOp:
-            case lexeme_type::OrOp:
-            case lexeme_type::ImpliesOp:
-            case lexeme_type::IffOp:
-            case lexeme_type::LEquiOp:
+            case AndOp:
+            case OrOp:
+            case ImpliesOp:
+            case IffOp:
+            case LEquiOp:
                 {
                     if (cursor.get_current_node() == nullptr)
                     {
                         listener->didTryInvalidPosition(nullptr, 0);
+                        throw unexpected_token_error(l);
+                    }
+                    if (!cursor.get_current_node()->isBlank())
+                    {
+                        listener->foundAstError(cursor);
                         throw unexpected_token_error(l);
                     }
                     cursor.write_to_node(l);
@@ -88,8 +93,28 @@ namespace eloquent::logic
                     cursor.move_to_child(1); //right child
                     break;
                 }
-
-            case lexeme_type::Eof:
+            case NotOp:
+                {
+                    if (cursor.get_current_node() == nullptr)
+                    {
+                        listener->didTryInvalidPosition(nullptr, 0);
+                        throw unexpected_token_error(l);
+                    }
+                    if (!cursor.get_current_node()->isBlank())
+                    {
+                        listener->foundAstError(cursor);
+                        throw unexpected_token_error(l);
+                    }
+                    if (cursor.get_arity() != 1)
+                    {
+                        listener->wrongArityForNode(cursor.get_current_node());
+                        throw unexpected_token_error(l);
+                    }
+                    cursor.write_to_node(l);
+                    cursor.move_to_child(0);
+                    break;
+                }
+            case Eof:
                 {
                     if (cursor.get_current_node() != nullptr)
                     {

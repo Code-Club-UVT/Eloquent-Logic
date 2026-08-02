@@ -49,7 +49,7 @@ namespace eloquent::logic {
         }
         size_t node_idx = parent->find_by_uuid(c_node->getUUID());
         parent->replace_child(node_idx, std::move(root));
-        c_node = parent;
+        c_node = parent->childAt(node_idx);
     }
 
     void Cursor::move_to_child(size_t idx)
