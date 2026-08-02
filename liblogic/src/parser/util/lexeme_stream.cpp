@@ -30,7 +30,7 @@ namespace eloquent::logic
     {
         if (lexemes.empty())
             return lexeme::make(lexeme_type::Eof,"",0,0);
-        if (idx+1 >= lexemes.size())
+        if (idx+1 > lexemes.size())
             return lexemes[idx];
         return lexemes[++idx];
     }

@@ -16,32 +16,33 @@ namespace eloquent::logic
         std::shared_ptr<syntax_tree> result = std::make_shared<syntax_tree>();
         lexeme_stream stream(lexemes);
         Cursor cursor(result,listener);
+        lexeme l = stream.current();
         while (stream.can_continue())
         {
-            lexeme l = stream.current();
             switch (l.type())
             {
                 using enum lexeme_type;
             case  LParen: // 2 posibilitati
                 {
                     listener->startedProcessingParanthesis();
-                    if (cursor.get_tree()->rootRef() != nullptr) //am mai fost in arbore
-                    {
+                    bool unary  = stream.peek().type() == NotOp;
+                    bool binary = stream.peek().type() == LParen || stream.peek().type() == Atom;
+                    if (!unary && !binary)
                         throw unexpected_token_error(l);
-                    }
-                    if (stream.peek().type() == NotOp)
+
+                    if (cursor.tree_is_empty())
                     {
-                        listener->acceptUnaryOpVariant();
-                        cursor.grow_up_tree(); // operator node
-                        cursor.spawn_new_child_node(); // expresion node
-                    }
-                    else if (stream.peek().type() == LParen || stream.peek().type() == Atom)
-                    {
-                        listener->acceptBinaryOpVariant();
+                        unary ? listener->acceptUnaryOpVariant() : listener->acceptBinaryOpVariant();
                         cursor.grow_up_tree();
                         cursor.spawn_new_child_node();
-                        cursor.spawn_new_child_node();
-                        cursor.move_to_child(0);
+                        if (binary) { cursor.spawn_new_child_node(); cursor.move_to_child(0); }
+                    }
+                    else
+                    {
+                        unary ? listener->acceptUnaryOpVariant() : listener->acceptBinaryOpVariant();
+                        lexeme arity_hint = lexeme::make(unary ? NotOp : AndOp, "", 0, 0);
+                        cursor.replace_child_with_placeholders(arity_hint);
+                        if (binary) cursor.move_to_child(0);
                     }
                     break;
                 }
@@ -53,17 +54,23 @@ namespace eloquent::logic
                         listener->foundAstError(cursor);
                         throw unexpected_token_error(l);
                     }
+                    if (!ptr->allChildrenAreWritten())
+                    {
+                        listener->foundAstError(cursor);
+                        throw unexpected_token_error(l);
+                    }
                     cursor.up();
-                    if (!ptr->isRoot())
-                        if (!cursor.get_current_node()->allChildrenAreWritten())
-                        {
-                            listener->foundAstError(cursor);
-                            throw unexpected_token_error(l);
-                        }
                     break;
                 }
             case Atom:
                 {
+                    if (cursor.get_tree()->empty())
+                        cursor.grow_up_tree();
+                    if (cursor.get_arity() != 0)
+                    {
+                        listener->wrongArityForNode(cursor.get_current_node());
+                        throw unexpected_token_error(l);
+                    }
                     cursor.write_to_node(l);
                     cursor.up();
                     break;

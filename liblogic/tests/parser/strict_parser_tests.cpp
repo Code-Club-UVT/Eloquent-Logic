@@ -56,10 +56,6 @@ protected:
     }
 };
 
-// ============================================================================
-// 1. Valid Formulae Tests (Verify Root and Complete Traversal)
-// ============================================================================
-
 TEST_F(StrictParserTest, ParsesSingleAtom)
 {
     auto tokens = make_stream({ Atom("P") });

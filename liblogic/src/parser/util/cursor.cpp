@@ -64,16 +64,8 @@ namespace eloquent::logic {
 
 
     void Cursor::up() {
-        if (direction == Direction::Up)
-        {
-            listener->alreadyUp();
-            throw std::logic_error("Cursor::up");
-        };
-        if (c_node->getParent() == nullptr)
-            this->direction = Direction::Up;
-        else
-            this->c_node = c_node->getParent();
-
+        if (c_node == nullptr) return;
+        c_node = c_node->getParent();
         this->listener->didGoUp();
 
     }

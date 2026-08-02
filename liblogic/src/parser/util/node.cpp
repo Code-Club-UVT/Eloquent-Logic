@@ -127,6 +127,7 @@ namespace eloquent::logic
     {
         NodePtr old = std::move(children[idx]);
         new_child->set_parent(this);
+        old->set_parent(new_child.get());
         new_child->children[0] = std::move(old);
         children[idx] = std::move(new_child);
     }

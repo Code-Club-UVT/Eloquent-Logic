@@ -14,12 +14,6 @@ namespace eloquent::logic {
         std::shared_ptr<syntax_tree> tree;
         std::shared_ptr<cursor_listener_t> listener;
 
-        enum class Direction
-        {
-            Up,
-            Current,
-            Down
-        } direction;
     public:
         void write_to_node(const lexeme& n);
 
@@ -31,7 +25,7 @@ namespace eloquent::logic {
         [[nodiscard]] bool has_child(size_t idx) const;
         [[nodiscard]] bool tree_is_empty() const noexcept;
         void replace_child_with_placeholders(lexeme l);
-        explicit Cursor(std::shared_ptr<syntax_tree> tree, std::shared_ptr<cursor_listener_t> listener): tree(std::move(tree)), listener(std::move(listener)) {}
+        explicit Cursor(std::shared_ptr<syntax_tree> tree, std::shared_ptr<cursor_listener_t> listener): c_node(nullptr), tree(std::move(tree)), listener(std::move(listener)){}
 
         [[nodiscard]] NodeObsPtr get_current_node() const
         {
