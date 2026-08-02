@@ -2,7 +2,8 @@ add_executable(liblogic_tests main.cpp
         truth-machine.cpp
         transformations.cpp
         traversal_tests.cpp
-        execution-context.cpp)
+        execution-context.cpp
+        parser/parser_tests.cpp)
 
 
 find_package(antlr4-runtime REQUIRED)
@@ -33,8 +34,7 @@ if(WINDOWS)
 endif()
 FetchContent_MakeAvailable(googletest)
 
-
-
+add_subdirectory(parser)
 target_link_libraries(liblogic_tests PRIVATE gtest_main gmock)
 include(GoogleTest)
 gtest_discover_tests(liblogic_tests)

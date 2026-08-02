@@ -79,7 +79,7 @@ namespace eloquent::logic {
     }
 
     void Cursor::spawn_new_child_node() {
-        if (c_node != nullptr) return;
+        if (c_node == nullptr) return;
         c_node->spawn_new_child(lexeme::make(lexeme_type::Unknown,"", 0,0));
         listener->spawnedNewChildNode(c_node, c_node->childAt(c_node->num_children()-1));
     }
