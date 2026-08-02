@@ -120,6 +120,7 @@ namespace eloquent::logic
 
     void Node::adopt(NodePtr node)
     {
+        node->set_parent(this);
         children.emplace_back(std::move(node));
     }
 
