@@ -11,7 +11,7 @@ namespace eloquent::logic
     struct binding_power
     {
         size_t left, right;
-        binding_power(size_t power): left(power), right(power+1) {}
+        binding_power(size_t power): left(power), right(power) {}
     };
     constexpr size_t default_power = 0;
     static std::map<lexeme_type, binding_power> binding_map = {
@@ -38,13 +38,15 @@ namespace eloquent::logic
     {
         listener->startParsingParens(stream.current());
         disallow_pure_atoms_in_parens(stream, listener);
+        (void)stream.next(); // Consume LParen
         NodePtr root = expr(default_power, stream, listener);
-        auto l = stream.peek();
-        if ( l.type() != lexeme_type::RParen)
+        auto l = stream.current();
+        if (l.type() != lexeme_type::RParen)
         {
             listener->mismatchedParens(l);
             throw unexpected_token_error(l);
         }
+        (void)stream.next(); // Consume RParen
         return root;
     }
 
@@ -63,16 +65,19 @@ namespace eloquent::logic
             {
                 lhs = Node::make_node(l); // atomic node
                 listener->didMakeNewSubtree(lhs.get());
+                (void)stream.next(); // Consume Atom token
                 break;
             }
         case NotOp:
             {
                 lhs = Node::make_node(l);
                 listener->didMakeNewSubtree(lhs.get());
-                l = stream.next();
+                l = stream.next(); // Consume NotOp token and move to operand
                 NodePtr subtree = parse_nud(stream, listener, l);
+                NodeObsPtr lhs_ptr = lhs.get();
+                NodeObsPtr sub_ptr = subtree.get();
                 lhs->adopt(std::move(subtree));
-                listener->didJoin(lhs.get(), subtree.get());
+                listener->didJoin(lhs_ptr, sub_ptr);
                 break;
             }
         default:
@@ -84,34 +89,40 @@ namespace eloquent::logic
 
     NodePtr expr(size_t min_binding, lexeme_stream& stream, const std::shared_ptr<relaxed_parser_listener_t>& listener)
     {
-        lexeme l = stream.next();
+        lexeme l = stream.current();
         listener->didReadLexeme(l);
         NodePtr lhs = parse_nud(stream, listener, l);
 
         while (true)
         {
-            l = stream.peek();
+            l = stream.current();
             listener->didReadLexeme(l);
             if (l.type() == lexeme_type::Eof || l.type() == lexeme_type::RParen)
                 return lhs;
             if (is_nary_operator(l.type()))
             {
-                lexeme op = lexeme::make(l.type(), l.token(), l.start(), l.end());
-                l = stream.next();
-                listener->didReadLexeme(l);
-                binding_power bp = binding_map.at(l.type());
+                lexeme op = l;
+                binding_power bp = binding_map.at(op.type());
                 if (bp.left < min_binding)
                 {
-                    listener->didFindLowerPrecendenceOperator(l);
+                    listener->didFindLowerPrecendenceOperator(op);
                     break;
                 }
-                NodePtr root = Node::make_node(l);
+                (void)stream.next(); // Consume operator token
+                NodePtr root = Node::make_node(op);
                 listener->didMakeNewSubtree(root.get());
+
+                NodeObsPtr root_ptr = root.get();
+                NodeObsPtr lhs_ptr = lhs.get();
                 root->adopt(std::move(lhs));
-                listener->didJoin(root.get(), lhs.get());
-                root->adopt(expr(bp.right, stream, listener));
-                listener->didJoin(root.get(), lhs.get());
-                lhs.swap(root);
+                listener->didJoin(root_ptr, lhs_ptr);
+
+                NodePtr rhs = expr(bp.right, stream, listener);
+                NodeObsPtr rhs_ptr = rhs.get();
+                root->adopt(std::move(rhs));
+                listener->didJoin(root_ptr, rhs_ptr);
+
+                lhs = std::move(root);
             }
             else
             {

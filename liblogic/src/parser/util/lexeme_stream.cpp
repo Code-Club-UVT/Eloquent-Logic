@@ -14,6 +14,10 @@ namespace eloquent::logic
 
     lexeme lexeme_stream::current()
     {
+        if (lexemes.empty())
+            return lexeme::make(lexeme_type::Eof,"",0,0);
+        if (idx >= lexemes.size())
+            return lexemes.back();
         return lexemes[idx];
     }
 
@@ -21,7 +25,7 @@ namespace eloquent::logic
     {
         if (lexemes.empty())
             return lexeme::make(lexeme_type::Eof,"",0,0);
-        if (idx+offset >= lexemes.size()-1-idx)
+        if (idx + offset >= lexemes.size())
             return lexemes.back();
         return lexemes[idx+offset];
     }
@@ -30,8 +34,10 @@ namespace eloquent::logic
     {
         if (lexemes.empty())
             return lexeme::make(lexeme_type::Eof,"",0,0);
-        if (idx+1 > lexemes.size())
-            return lexemes[idx];
-        return lexemes[++idx];
+        if (idx < lexemes.size())
+            ++idx;
+        if (idx >= lexemes.size())
+            return lexemes.back();
+        return lexemes[idx];
     }
 }

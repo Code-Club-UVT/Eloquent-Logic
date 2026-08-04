@@ -4,7 +4,7 @@
 
 #include "strict_parser.hpp"
 #include "unexpected_token_error.hpp"
-#include "parser_listener_t.hpp"
+#include "strict_parser_listener_t.hpp"
 #include "lexeme.hpp"
 
 namespace eloquent::logic::testing
