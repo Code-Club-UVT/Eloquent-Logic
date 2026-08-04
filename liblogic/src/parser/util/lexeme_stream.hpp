@@ -16,7 +16,7 @@ namespace eloquent::logic
         [[nodiscard]] bool can_continue() const noexcept;
         explicit lexeme_stream(std::vector<lexeme> lexemes);
         [[nodiscard]] lexeme current();
-        [[nodiscard]] lexeme peek();
+        [[nodiscard]] lexeme peek(size_t offset=1);
         [[nodiscard]] lexeme next();
     };
 }

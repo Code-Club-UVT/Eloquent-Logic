@@ -12,7 +12,7 @@
 
 namespace eloquent::logic
 {
-    class parser_listener_t : public cursor_listener_t
+    class strict_parser_listener_t : public cursor_listener_t
     {
     public:
         virtual void didProcessLexeme(const lexeme&) {}

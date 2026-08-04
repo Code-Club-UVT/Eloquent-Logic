@@ -4,145 +4,133 @@
 
 #include "relaxed_parser.hpp"
 #include "unexpected_token_error.hpp"
+#include "lexeme_stream.hpp"
 #include <map>
 namespace eloquent::logic
 {
-    static std::map<lexeme_type, size_t> precedence({
-        {lexeme_type::NotOp, 6},
-        {lexeme_type::AndOp, 5},
-        {lexeme_type::OrOp, 4},
-        {lexeme_type::ImpliesOp, 3},
-        {lexeme_type::IffOp, 2},
-        {lexeme_type::LEquiOp, 1},
-    });
-     std::shared_ptr<syntax_tree> relaxed_parser::parse(const std::vector<lexeme>& lexemes, const std::shared_ptr<parser_listener_t>& listener)
-     {
+    struct binding_power
+    {
+        size_t left, right;
+        binding_power(size_t power): left(power), right(power+1) {}
+    };
+    constexpr size_t default_power = 0;
+    static std::map<lexeme_type, binding_power> binding_map = {
+        {lexeme_type::AndOp, binding_power{10}},
+        {lexeme_type::OrOp, binding_power{9}},
+        {lexeme_type::ImpliesOp, binding_power{8}},
+        {lexeme_type::IffOp, binding_power{7}},
+        {lexeme_type::LEquiOp, binding_power{6}},
+    };
+
+    NodePtr expr(size_t min_binding, lexeme_stream& stream, const std::shared_ptr<relaxed_parser_listener_t>& listener);
+
+    void disallow_pure_atoms_in_parens(lexeme_stream& stream, const std::shared_ptr<relaxed_parser_listener_t>& listener)
+    {
+        if (stream.peek(1).type() == lexeme_type::Atom &&
+            stream.peek(2).type() == lexeme_type::RParen)
+        {
+            listener->didFindPureAtomInParens(stream.current(),stream.peek(1),stream.peek(2));
+            throw unexpected_token_error(stream.peek(2));
+        }
+    }
+
+    NodePtr handle_parens(lexeme_stream& stream, const std::shared_ptr<relaxed_parser_listener_t>& listener)
+    {
+        listener->startParsingParens(stream.current());
+        disallow_pure_atoms_in_parens(stream, listener);
+        NodePtr root = expr(default_power, stream, listener);
+        auto l = stream.peek();
+        if ( l.type() != lexeme_type::RParen)
+        {
+            listener->mismatchedParens(l);
+            throw unexpected_token_error(l);
+        }
+        return root;
+    }
+
+    NodePtr parse_nud(lexeme_stream& stream, const std::shared_ptr<relaxed_parser_listener_t>& listener, lexeme& l)
+    {
+        NodePtr lhs;
+        switch (l.type()) //lhs poate fi: P, ~P, ~(, (
+        {
+            using enum lexeme_type;
+        case LParen:
+            {
+                lhs = handle_parens(stream, listener);
+                break;
+            }
+        case Atom:
+            {
+                lhs = Node::make_node(l); // atomic node
+                listener->didMakeNewSubtree(lhs.get());
+                break;
+            }
+        case NotOp:
+            {
+                lhs = Node::make_node(l);
+                listener->didMakeNewSubtree(lhs.get());
+                l = stream.next();
+                NodePtr subtree = parse_nud(stream, listener, l);
+                lhs->adopt(std::move(subtree));
+                listener->didJoin(lhs.get(), subtree.get());
+                break;
+            }
+        default:
+            listener->foundUnexpectedToken(l);
+            throw unexpected_token_error(l);
+        }
+        return lhs;
+    }
+
+    NodePtr expr(size_t min_binding, lexeme_stream& stream, const std::shared_ptr<relaxed_parser_listener_t>& listener)
+    {
+        lexeme l = stream.next();
+        listener->didReadLexeme(l);
+        NodePtr lhs = parse_nud(stream, listener, l);
+
+        while (true)
+        {
+            l = stream.peek();
+            listener->didReadLexeme(l);
+            if (l.type() == lexeme_type::Eof || l.type() == lexeme_type::RParen)
+                return lhs;
+            if (is_nary_operator(l.type()))
+            {
+                lexeme op = lexeme::make(l.type(), l.token(), l.start(), l.end());
+                l = stream.next();
+                listener->didReadLexeme(l);
+                binding_power bp = binding_map.at(l.type());
+                if (bp.left < min_binding)
+                {
+                    listener->didFindLowerPrecendenceOperator(l);
+                    break;
+                }
+                NodePtr root = Node::make_node(l);
+                listener->didMakeNewSubtree(root.get());
+                root->adopt(std::move(lhs));
+                listener->didJoin(root.get(), lhs.get());
+                root->adopt(expr(bp.right, stream, listener));
+                listener->didJoin(root.get(), lhs.get());
+                lhs.swap(root);
+            }
+            else
+            {
+                listener->foundUnexpectedToken(l);
+                throw unexpected_token_error(l);
+            }
+        }
+        return lhs;
+    }
+    std::shared_ptr<syntax_tree> relaxed_parser::parse(const std::vector<lexeme>& lexemes, const std::shared_ptr<relaxed_parser_listener_t>& listener)
+    {
         listener->didStart();
         std::shared_ptr<syntax_tree> result = std::make_shared<syntax_tree>();
         lexeme_stream stream(lexemes);
-        Cursor cursor(result,listener);
-        while (stream.can_continue())
+        lexeme l = stream.current();
+        if (l.type() != lexeme_type::Eof)
         {
-            lexeme l = stream.current();
-            switch (l.type())
-            {
-                using enum lexeme_type;
-            case  LParen: // 2 posibilitati
-                {
-                    listener->startedProcessingParanthesis();
-                    if (cursor.get_tree()->rootRef() != nullptr) //am mai fost in arbore
-                    {
-                        throw unexpected_token_error(l);
-                    }
-                    if (stream.peek().type() == NotOp)
-                    {
-                        listener->acceptUnaryOpVariant();
-                        cursor.grow_up_tree(); // operator node
-                        cursor.spawn_new_child_node(); // expresion node
-                    }
-                    else if (stream.peek().type() == LParen || stream.peek().type() == Atom)
-                    {
-                        listener->acceptBinaryOpVariant();
-                        cursor.grow_up_tree();
-                        cursor.spawn_new_child_node();
-                        cursor.spawn_new_child_node();
-                        cursor.move_to_child(0);
-                    }
-                    break;
-                }
-            case RParen:
-                {
-                    NodeObsPtr ptr = cursor.get_current_node();
-                    if (ptr->isRoot() && ptr->isBlank())
-                    {
-                        listener->foundAstError(cursor);
-                        throw unexpected_token_error(l);
-                    }
-                    cursor.up();
-                    if (!ptr->isRoot())
-                        if (!cursor.get_current_node()->allChildrenAreWritten())
-                        {
-                            listener->foundAstError(cursor);
-                            throw unexpected_token_error(l);
-                        }
-                    break;
-                }
-            case Atom:
-                {
-                    if (stream.peek().type() == cursor.get_current_node()->getParent()->getLexeme().type() && is_nary_operator(stream.peek().type()) )
-                    {
-                        cursor.replace_child_with_placeholders(stream.peek());
-                        cursor.move_to_child(0);
-                    }
-                    cursor.write_to_node(l);
-                    cursor.up();
-                    break;
-                }
-            case AndOp:
-            case OrOp:
-            case ImpliesOp:
-            case IffOp:
-            case LEquiOp:
-                {
-                    while (cursor.get_current_node()!= nullptr && precedence[l.type()] < precedence[cursor.get_current_node()->getLexeme().type()])
-                    {
-                        cursor.up();
-                    }
-                    cursor.replace_child_with_placeholders(l);
-
-                    cursor.write_to_node(l);
-                    if (cursor.get_arity() != 2)
-                    {
-                        listener->wrongArityForNode(cursor.get_current_node());
-                        throw unexpected_token_error(l);
-                    }
-                    cursor.move_to_child(1); //right child
-                    break;
-                }
-            case NotOp:
-                {
-                    if (cursor.tree_is_empty())
-                    {
-                        cursor.grow_up_tree(); // operator node
-                    }
-                    else if (!cursor.get_current_node()->isBlank())
-                    {
-                        listener->foundAstError(cursor);
-                        throw unexpected_token_error(l);
-                    }
-                    if (cursor.get_arity() != 1)
-                    {
-                        listener->wrongArityForNode(cursor.get_current_node());
-                        throw unexpected_token_error(l);
-                    }
-                    cursor.write_to_node(l);
-                    if (stream.peek().type() == NotOp || stream.peek().type() == Atom)
-                        cursor.spawn_new_child_node();
-                    else
-                    {
-                        cursor.spawn_new_child_node();
-                        cursor.spawn_new_child_node();
-                    }
-                    cursor.move_to_child(0);
-                    break;
-                }
-            case Eof:
-                {
-                    if (cursor.get_current_node() != nullptr)
-                    {
-                        listener->foundAstError(cursor);
-                        throw unexpected_token_error(l);
-                    }
-                    break;
-                }
-            default:
-                {
-                    listener->foundUnexpectedToken(l);
-                    throw unexpected_token_error(l);
-                    break;
-                }
-            }
-            l = stream.next();
+            NodePtr root = expr(default_power, stream, listener);
+            result->set_root(std::move(root));
         }
         listener->didFinish();
 

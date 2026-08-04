@@ -14,8 +14,9 @@ namespace eloquent::logic
     class unexpected_token_error : public std::exception
     {
         lexeme m_lexeme;
+        std::string message;
         public:
-            explicit unexpected_token_error(lexeme lexeme) : m_lexeme(lexeme) {}
+            explicit unexpected_token_error(lexeme lexeme) : m_lexeme(lexeme), message(fmt::format("Unexpected token {} at [{},{}]\n", m_lexeme.token(), m_lexeme.start(), m_lexeme.end() )) {}
         [[nodiscard]] const char* what() const noexcept final;
     };
 }

@@ -9,8 +9,8 @@ add_library(eloquent_logic_parser cursor.cpp
         lexer_listener_t.cpp
         lexer_listener_t.hpp
         node.cpp
-        parser_listener_t.cpp
-        parser_listener_t.hpp
+        strict_parser_listener_t.cpp
+        strict_parser_listener_t.hpp
         strict_parser.cpp
         strict_parser.hpp
         relaxed_parser.cpp

@@ -10,7 +10,7 @@ namespace eloquent::logic
 {
 
 
-    std::shared_ptr<syntax_tree> strict_parser::parse(const std::vector<lexeme>& lexemes, const std::shared_ptr<parser_listener_t>& listener)
+    std::shared_ptr<syntax_tree> strict_parser::parse(const std::vector<lexeme>& lexemes, const std::shared_ptr<strict_parser_listener_t>& listener)
     {
         listener->didStart();
         std::shared_ptr<syntax_tree> result = std::make_shared<syntax_tree>();

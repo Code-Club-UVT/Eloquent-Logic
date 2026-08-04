@@ -25,6 +25,8 @@ namespace eloquent::logic {
     };
 
     bool is_nary_operator(lexeme_type node_type);
+    bool is_operator(lexeme_type node_type);
+
 
 
 

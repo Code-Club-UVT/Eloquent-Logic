@@ -9,13 +9,21 @@ namespace eloquent::logic {
     {
         return {node_type, std::move(token), start, end};
     }
+    bool is_operator(lexeme_type node_type)
+    {
+        using enum lexeme_type;
+        return is_nary_operator(node_type) ||
+                node_type == NotOp;
+            
+    }
     bool is_nary_operator(lexeme_type node_type)
     {
-        return node_type == lexeme_type::AndOp ||
-            node_type == lexeme_type::OrOp ||
-            node_type == lexeme_type::IffOp ||
-            node_type == lexeme_type::ImpliesOp ||
-            node_type == lexeme_type::LEquiOp;
+        using enum lexeme_type;
+        return node_type == AndOp ||
+            node_type == OrOp ||
+            node_type == IffOp ||
+            node_type == ImpliesOp ||
+            node_type == LEquiOp;
     }
     lexeme_type lexeme::type() const {
         return m_node_type;

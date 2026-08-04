@@ -11,7 +11,7 @@ namespace eloquent::logic::testing
 {
 
 // No-op listener implementation for testing purposes
-class mock_parser_listener : public parser_listener_t
+class mock_parser_listener : public strict_parser_listener_t
 {
 public:
     void didStart() override {}

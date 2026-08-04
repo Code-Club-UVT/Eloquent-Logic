@@ -11,14 +11,14 @@
 #include "cursor.h"
 #include "lexeme.hpp"
 #include "syntax_tree.hpp"
-#include "parser_listener_t.hpp"
+#include "strict_parser_listener_t.hpp"
 #include "lexeme_stream.hpp"
 namespace eloquent::logic
 {
     class strict_parser
     {
         public:
-        static std::shared_ptr<syntax_tree> parse(const std::vector<lexeme>& lexemes, const std::shared_ptr<parser_listener_t>& listener);
+        static std::shared_ptr<syntax_tree> parse(const std::vector<lexeme>& lexemes, const std::shared_ptr<strict_parser_listener_t>& listener);
     };
 }
 

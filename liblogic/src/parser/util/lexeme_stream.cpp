@@ -17,13 +17,13 @@ namespace eloquent::logic
         return lexemes[idx];
     }
 
-    lexeme lexeme_stream::peek()
+    lexeme lexeme_stream::peek(const size_t offset)
     {
         if (lexemes.empty())
             return lexeme::make(lexeme_type::Eof,"",0,0);
-        if (idx+1 >= lexemes.size())
-            return lexemes[idx];
-        return lexemes[idx+1];
+        if (idx+offset >= lexemes.size()-1-idx)
+            return lexemes.back();
+        return lexemes[idx+offset];
     }
 
     lexeme lexeme_stream::next()
