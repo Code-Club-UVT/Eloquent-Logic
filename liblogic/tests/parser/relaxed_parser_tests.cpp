@@ -3,11 +3,11 @@
 #include <vector>
 #include <string>
 
-#include "relaxed_parser.hpp"
+#include "../../src/parser/relaxed_parser.hpp"
 #include "relaxed_parser_listener.hpp"
-#include "unexpected_token_error.hpp"
+#include "../../src/parser/unexpected_token_error.hpp"
 #include "lexeme.hpp"
-#include "dictionary.h"
+#include "../../src/parser/dictionary.h"
 
 namespace eloquent::logic::testing
 {

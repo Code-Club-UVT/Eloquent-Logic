@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
-#include <../parser/util/cursor.h>
-#include <../src/parser/util/tree_builder.h>
-#include <../src/parser/util/execution_stack.h>
+#include <../src/parser/cursor.h>
+#include <../src/parser/tree_builder.h>
+#include <../src/parser/execution_stack.h>
 #include <../src/truth_table/operation_private.h>
 namespace eloquent::logic {
     TEST(TruthMachineTest, BasicStackTest) {

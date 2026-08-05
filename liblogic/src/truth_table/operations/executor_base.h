@@ -2,7 +2,7 @@
 #include <vector>
 #include <stdexcept>
 #include <memory>
-#include <../parser/util/interpretation.h>
+#include <../parser/interpretation.h>
 
 //#include "liblogic/private/execution_stack.h"
 

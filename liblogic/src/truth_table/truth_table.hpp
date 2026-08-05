@@ -11,8 +11,8 @@
 #include <system/uuid.h>
 
 #include "interpretation.h"
-#include "lexeme.hpp"
-#include <syntax_tree.hpp>
+#include "../parser/lexeme.hpp"
+#include <../parser/syntax_tree.hpp>
 namespace eloquent::logic {
     class truth_table_feedback : public feedback_base {
         interpretation m_interpretation;

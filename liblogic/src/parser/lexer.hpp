@@ -20,12 +20,13 @@ namespace eloquent::logic
     {
         std::string sequence;
         size_t start_idx;
+        std::string message;
         public:
-        constexpr lexer_exception(std::string_view msg, size_t start_idx) : sequence(std::string(msg)), start_idx(start_idx) {}
+        constexpr lexer_exception(std::string_view msg, size_t start_idx) : sequence(std::string(msg)), start_idx(start_idx), message(fmt::format("Invalid sequence {} found starting at {}", this->sequence, this->start_idx)) {}
         [[nodiscard]] const char * what() const noexcept override
         {
 
-            return fmt::format("Invalid sequence {} found starting at {}", this->sequence, this->start_idx).c_str();
+            return message.c_str();
         }
     };
     class lexer
