@@ -3,7 +3,7 @@
 #include <utility>
 
 #include "cursor_listener_t.hpp"
-#include  "node.h"
+#include "node.h"
 #include "syntax_tree.hpp"
 
 namespace eloquent::logic {

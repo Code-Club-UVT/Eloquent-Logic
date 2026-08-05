@@ -5,7 +5,7 @@
 #pragma once
 #include <tree_recognizer_base.h>
 #include <vector>
-#include <../parser/util/tree_builder.h>
+#include <../parser/tree_builder.h>
 
 namespace eloquent::logic {
     class N_izer : public TreeRecognizerBase {

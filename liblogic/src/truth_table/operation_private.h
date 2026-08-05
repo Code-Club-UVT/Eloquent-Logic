@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 #include <interpretation.h>
-#include <../parser/util/tree_builder.h>
+#include <../parser/tree_builder.h>
 #include "operations/operations.h"
 
 namespace eloquent::logic {

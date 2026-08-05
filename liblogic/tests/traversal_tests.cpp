@@ -2,7 +2,7 @@
 #include </IdeaProjects/liblogic/liblogic/src/tree_utils/tree_walker.h>
 #include </IdeaProjects/liblogic/liblogic/src/tree_utils/depth_first_traversal.h>
 #include </IdeaProjects/liblogic/liblogic/src/tree_utils/breath_first_traversal.h>
-#include <../parser/util/cursor.h>
+#include <../src/parser/cursor.h>
 
 
 namespace eloquent::logic {

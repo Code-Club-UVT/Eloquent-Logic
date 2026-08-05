@@ -2,10 +2,10 @@
 #include <memory>
 #include <vector>
 
-#include "strict_parser.hpp"
-#include "unexpected_token_error.hpp"
+#include "../../src/parser/strict_parser.hpp"
+#include "../../src/parser/unexpected_token_error.hpp"
 #include "strict_parser_listener_t.hpp"
-#include "lexeme.hpp"
+#include "../../src/parser/lexeme.hpp"
 
 namespace eloquent::logic::testing
 {
