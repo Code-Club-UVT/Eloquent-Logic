@@ -4,10 +4,11 @@
 
 #ifndef ELOQUENTLOGIC_RPC_RESPONSE_HPP
 #define ELOQUENTLOGIC_RPC_RESPONSE_HPP
-
+#include <memory>
 
 class rpc_response
 {
+    std
 };
 
 

@@ -3,7 +3,7 @@
 //
 
 #include "relaxed_parser.hpp"
-#include "unexpected_token_error.hpp"
+#include "unknown_variable_error.hpp"
 #include "lexeme_stream.hpp"
 #include <map>
 namespace eloquent::logic
@@ -26,11 +26,11 @@ namespace eloquent::logic
 
     void disallow_pure_atoms_in_parens(lexeme_stream& stream, const std::shared_ptr<relaxed_parser_listener_t>& listener)
     {
-        if (stream.peek(1).type() == lexeme_type::Atom &&
+        if (is_atom(stream.peek(1).type())&&
             stream.peek(2).type() == lexeme_type::RParen)
         {
             listener->didFindPureAtomInParens(stream.current(),stream.peek(1),stream.peek(2));
-            throw unexpected_token_error(stream.peek(2));
+            throw unknown_variable_error(stream.peek(2));
         }
     }
 
@@ -44,7 +44,7 @@ namespace eloquent::logic
         if (l.type() != lexeme_type::RParen)
         {
             listener->mismatchedParens(l);
-            throw unexpected_token_error(l);
+            throw unknown_variable_error(l);
         }
         (void)stream.next(); // Consume RParen
         return root;
@@ -62,6 +62,8 @@ namespace eloquent::logic
                 break;
             }
         case Atom:
+        case Tautology:
+        case Contradiction:
             {
                 lhs = Node::make_node(l); // atomic node
                 listener->didMakeNewSubtree(lhs.get());
@@ -82,7 +84,7 @@ namespace eloquent::logic
             }
         default:
             listener->foundUnexpectedToken(l);
-            throw unexpected_token_error(l);
+            throw unknown_variable_error(l);
         }
         return lhs;
     }
@@ -127,7 +129,7 @@ namespace eloquent::logic
             else
             {
                 listener->foundUnexpectedToken(l);
-                throw unexpected_token_error(l);
+                throw unknown_variable_error(l);
             }
         }
         return lhs;

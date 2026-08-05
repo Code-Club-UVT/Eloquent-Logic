@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "../../src/parser/strict_parser.hpp"
-#include "../../src/parser/unexpected_token_error.hpp"
+#include "../../src/parser/unknown_variable_error.hpp"
 #include "strict_parser_listener_t.hpp"
 #include "../../src/parser/lexeme.hpp"
 
@@ -163,7 +163,7 @@ TEST_F(StrictParserTest, RejectsUnparenthesizedBinaryOp)
         Atom("Q")
     });
 
-    EXPECT_THROW(strict_parser::parse(tokens, listener), unexpected_token_error);
+    EXPECT_THROW(strict_parser::parse(tokens, listener), unknown_variable_error);
 }
 
 TEST_F(StrictParserTest, RejectsUnmatchedParentheses)
@@ -176,7 +176,7 @@ TEST_F(StrictParserTest, RejectsUnmatchedParentheses)
         Atom("Q")
     });
 
-    EXPECT_THROW(strict_parser::parse(tokens, listener), unexpected_token_error);
+    EXPECT_THROW(strict_parser::parse(tokens, listener), unknown_variable_error);
 }
 
 TEST_F(StrictParserTest, RejectsMissingOperator)
@@ -189,7 +189,7 @@ TEST_F(StrictParserTest, RejectsMissingOperator)
         Sym(lexeme_type::RParen)
     });
 
-    EXPECT_THROW(strict_parser::parse(tokens, listener), unexpected_token_error);
+    EXPECT_THROW(strict_parser::parse(tokens, listener), unknown_variable_error);
 }
 
 TEST_F(StrictParserTest, RejectsDoubleNegativeWithoutParens)
@@ -203,7 +203,7 @@ TEST_F(StrictParserTest, RejectsDoubleNegativeWithoutParens)
         Sym(lexeme_type::RParen)
     });
 
-    EXPECT_THROW(strict_parser::parse(tokens, listener), unexpected_token_error);
+    EXPECT_THROW(strict_parser::parse(tokens, listener), unknown_variable_error);
 }
 
 TEST_F(StrictParserTest, RejectsEmptyParentheses)
@@ -214,7 +214,7 @@ TEST_F(StrictParserTest, RejectsEmptyParentheses)
         Sym(lexeme_type::RParen)
     });
 
-    EXPECT_THROW(strict_parser::parse(tokens, listener), unexpected_token_error);
+    EXPECT_THROW(strict_parser::parse(tokens, listener), unknown_variable_error);
 }
 
 } // namespace eloquent::logic::testing

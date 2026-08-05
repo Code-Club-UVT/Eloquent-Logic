@@ -91,6 +91,7 @@ namespace eloquent::logic
             return LexMode::AtomMulticharZeroStart;
         if (isdigit(c))
         {
+            ld.buffer.str().pop_back();// leading zeroes are ignored, unless P_0
             ld.buffer<<c;
             return LexMode::AtomMulticharSubscript;
         }
@@ -159,13 +160,13 @@ namespace eloquent::logic
         if (ld.buffer.str() == symbols::SYMB_TAUTOLOGY)
         {
             ld.lexemeFlag = true;
-            ld.type = lexeme_type::Atom;
+            ld.type = lexeme_type::Tautology;
             return LexMode::None;
         }
         if (ld.buffer.str() == symbols::SYMB_CONTRADICTION)
         {
             ld.lexemeFlag = true;
-            ld.type = lexeme_type::Atom;
+            ld.type = lexeme_type::Contradiction;
             return LexMode::None;
         }
         if (ld.buffer.str() == symbols::SYMB_AND)
@@ -202,7 +203,7 @@ namespace eloquent::logic
         {LexMode::AtomOpenMulticharSubscript, atom_open_multichar_subscript_func},
         {LexMode::AtomMulticharSubscript, atom_multichar_subscript_func},
         {LexMode::AtomSubscriptChar, atom_subscript_func},
-        {LexMode::AtomMulticharZeroStart, atom_subscript_func},
+        {LexMode::AtomMulticharZeroStart, atom_multichar_zero_start_func},
         {LexMode::Operator, operator_func},
     };
     //TODO: better diagnostics

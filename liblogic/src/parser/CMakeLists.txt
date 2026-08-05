@@ -18,8 +18,8 @@ add_library(eloquent_logic_parser cursor.cpp
         strict_parser.hpp
         relaxed_parser.cpp
         relaxed_parser.hpp
-        unexpected_token_error.cpp
-        unexpected_token_error.hpp
+        unknown_variable_error.cpp
+        unknown_variable_error.hpp
         cursor_listener_t.cpp
         cursor_listener_t.hpp
         lexeme_stream.cpp

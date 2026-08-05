@@ -1,5 +1,6 @@
 add_library(liblogicCommon
         feedback_listener.cpp
+        hash_combine.hpp
 )
 find_package(nlohmann_json REQUIRED)
 target_compile_options(liblogicCommon PUBLIC -Wall -Wextra)

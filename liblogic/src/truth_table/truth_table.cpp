@@ -6,23 +6,124 @@
 /// Aici se implementeaza algoritmul cu cele 2 stive
 
 #include <stack>
-namespace eloquent::logic {
-    std::generator<steppable_result<truth_table_feedback>>  truth_table::step_impl() {
 
+#include "unknown_variable_error.hpp"
+#include "unsupported_operator_error.hpp"
+
+namespace eloquent::logic {
+    bool truth_table::get_value(NodeObsPtr nid)
+    {
+        using enum lexeme_type;
+        switch (nid->getLexeme().type())
+        {
+        case Atom:
+            return this->m_interpretation[nid->getLexeme().token()];
+        case Tautology:
+            return true;
+        case Contradiction:
+            return false;
+        default:
+            return this->value_cache[nid->getUUID()];
+        }
+    }
+    bool combine(NodeType nt, bool lhs, bool rhs)
+    {
+        switch (nt)
+        {
+            using enum NodeType;
+        case AndOp:
+            {
+                return lhs & rhs;
+            }
+        case OrOp:
+            {
+                return lhs | rhs;
+            }
+        case IffOp:
+            {
+                return lhs == rhs;
+            }
+        case ImpliesOp:
+            {
+                return !lhs || rhs;
+            }
+        default:
+            throw std::runtime_error("Should not have reached here");
+        }
+    }
+    void truth_table::emplace_or_update(CppCommon::UUID id, bool value)
+    {
+        if (this->value_cache.contains(id))
+        {
+            value_cache[id] = value;
+        }
+        else
+            value_cache.try_emplace(id, value);
     }
 
-    truth_table truth_table::make_from_tree(const syntax_tree &tree) {
-        std::vector<lexeme> lexemes;
-        for (const auto& node: tree.post_order()){
-            if (node->isBlank()) {
-                throw std::invalid_argument("blank node");
+    void truth_table::evaluate_impl(const interpretation& i, const std::shared_ptr<truth_table_listener_t>& listener)
+    {
+        for (const auto& pair : i)
+        {
+            if (!this->m_interpretation.contains(pair.first))
+            {
+                listener->didFindUnknownVariable(pair.first);
+                throw unknown_variable_error(pair.first);
             }
-            if (node->isAtom())
-
-            else if (node->type == NodeType::NotOp) {
-
-            }
+            this->m_interpretation[pair.first] = pair.second;
+            listener->didSetVariable(pair.first, pair.second);
         }
-        return truth_table(lexemes);
+
+        this->m_tree->walk([&](auto node)
+        {
+            if (is_operator(node->getLexeme().type()))
+            {
+                std::optional<bool> result;
+                if (is_nary_operator(node->getLexeme().type()))
+                {
+                    node->traverse_children([&](NodeObsPtr cnode)
+                    {
+                        if (result == std::nullopt)
+                            result = get_value(cnode);
+                        else
+                            result = combine(node->getType(), result.value(), get_value(cnode));
+                    });
+                    emplace_or_update(node->getUUID(), result.value());
+                    listener->didComputeSubexpression(node->getUUID(), result.value());
+                }
+                else
+                {
+                    node->traverse_children([&](NodeObsPtr cnode)
+                    {
+                        result = get_value(cnode);
+                    });
+                    emplace_or_update(node->getUUID(), !result.value());
+                    listener->didComputeSubexpression(node->getUUID(), result.value());
+                }
+            }
+        });
+    }
+
+    table_row truth_table::evaluate(const interpretation& i, const std::shared_ptr<truth_table_listener_t>& listener)
+    {
+        table_row tr;
+        listener->didStart();
+        evaluate_impl(i, listener);
+        listener->didFinish();
+        return tr;
+    }
+
+    truth_table truth_table::make_from_tree(const std::shared_ptr<syntax_tree> &tree) {
+       truth_table t(tree);
+        // add atoms
+       tree->walk([&t](auto node)
+       {
+           using enum lexeme_type;
+           if (node->getLexeme().type() == Atom && !t.m_interpretation.contains(node->getLexeme().token()))
+           {
+               t.m_interpretation.try_emplace(node->getLexeme().token(), false);
+           }
+       });
+       return t;
     }
 };

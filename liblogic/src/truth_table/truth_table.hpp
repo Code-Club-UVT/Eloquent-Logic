@@ -5,32 +5,34 @@
 #ifndef ELOQUENTLOGIC_TRUTH_TABLE_HPP
 #define ELOQUENTLOGIC_TRUTH_TABLE_HPP
 
-#include <steppable.hpp>
-#include <feedback_base.hpp>
 #include <string>
 #include <system/uuid.h>
 
-#include "interpretation.h"
-#include "../parser/lexeme.hpp"
-#include <../parser/syntax_tree.hpp>
+
+#include <lexeme.hpp>
+#include <unordered_map>
+#include <syntax_tree.hpp>
+
+#include "truth_table_listener_t.hpp"
+
 namespace eloquent::logic {
-    class truth_table_feedback : public feedback_base {
-        interpretation m_interpretation;
-        public:
-[[nodiscard]] explicit truth_table_feedback(interpretation m_interpretation)
-            : m_interpretation(std::move(m_interpretation)) {}
-    };
 
-    class truth_table : public steppable<truth_table_feedback>{
+    using interpretation = std::unordered_map<std::string, bool>;
+    using table_row = std::unordered_map<CppCommon::UUID, bool>;
+    class truth_table{
         interpretation m_interpretation;
+        std::shared_ptr<syntax_tree> m_tree;
+        table_row value_cache;
+        explicit truth_table(std::shared_ptr<syntax_tree> tree): m_tree(std::move(tree)) {}
+        bool get_value(NodeObsPtr nid);
+        void emplace_or_update(CppCommon::UUID, bool value);
+        void evaluate_impl(const interpretation& i, const std::shared_ptr<truth_table_listener_t>& listener);
 
-        std::unordered_map<CppCommon::UUID , bool> value_cache;
-        explicit truth_table(std::vector<lexeme> lexemes): m_lexemes(std::move(lexemes)) {}
-    protected:
-        std::generator<steppable_result<truth_table_feedback>> step_impl() final;
     public:
-        static truth_table make_from_tree(const syntax_tree& tree);
 
+        std::vector<table_row> evaluate_all (const std::shared_ptr<truth_table_listener_t>& listener);
+        table_row evaluate(const interpretation& i, const std::shared_ptr<truth_table_listener_t>& listener);
+        static truth_table make_from_tree(const std::shared_ptr<syntax_tree>& tree);
     };
 };
 #endif //ELOQUENTLOGIC_TRUTH_TABLE_HPP

@@ -45,6 +45,8 @@ namespace eloquent::logic
             this->type = NodeType::Blank;
             break;
         case lexeme_type::Atom:
+        case lexeme_type::Contradiction:
+        case lexeme_type::Tautology:
             this->type = NodeType::Atom;
             break;
         case lexeme_type::NotOp:
@@ -67,6 +69,21 @@ namespace eloquent::logic
             break;
         default:
             throw std::logic_error("Unknown lexeme type");
+        }
+    }
+
+    void Node::walk(const std::function<void(NodeObsPtr)>& cb)
+    {
+        for (const NodePtr& n : children)
+            n->walk(cb);
+        cb(this);
+    }
+
+    void Node::traverse_children(const std::function<void(const NodeObsPtr&)>& cb) const
+    {
+        for (const auto& child : children)
+        {
+            cb(child.get());
         }
     }
 

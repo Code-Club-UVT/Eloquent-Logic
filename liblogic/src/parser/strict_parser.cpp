@@ -3,7 +3,7 @@
 //
 
 #include "strict_parser.hpp"
-#include "unexpected_token_error.hpp"
+#include "unknown_variable_error.hpp"
 #include "cursor.h"
 
 namespace eloquent::logic
@@ -26,9 +26,9 @@ namespace eloquent::logic
                 {
                     listener->startedProcessingParanthesis();
                     bool unary  = stream.peek().type() == NotOp;
-                    bool binary = stream.peek().type() == LParen || stream.peek().type() == Atom;
+                    bool binary = stream.peek().type() == LParen || is_atom(stream.peek().type());
                     if (!unary && !binary)
-                        throw unexpected_token_error(l);
+                        throw unknown_variable_error(l);
 
                     if (cursor.tree_is_empty())
                     {
@@ -52,24 +52,26 @@ namespace eloquent::logic
                     if (ptr->isRoot() && ptr->isBlank())
                     {
                         listener->foundAstError(cursor);
-                        throw unexpected_token_error(l);
+                        throw unknown_variable_error(l);
                     }
                     if (!ptr->allChildrenAreWritten())
                     {
                         listener->foundAstError(cursor);
-                        throw unexpected_token_error(l);
+                        throw unknown_variable_error(l);
                     }
                     cursor.up();
                     break;
                 }
             case Atom:
+            case Tautology:
+            case Contradiction:
                 {
                     if (cursor.get_tree()->empty())
                         cursor.grow_up_tree();
                     if (cursor.get_arity() != 0)
                     {
                         listener->wrongArityForNode(cursor.get_current_node());
-                        throw unexpected_token_error(l);
+                        throw unknown_variable_error(l);
                     }
                     cursor.write_to_node(l);
                     cursor.up();
@@ -84,18 +86,18 @@ namespace eloquent::logic
                     if (cursor.get_current_node() == nullptr)
                     {
                         listener->didTryInvalidPosition(nullptr, 0);
-                        throw unexpected_token_error(l);
+                        throw unknown_variable_error(l);
                     }
                     if (!cursor.get_current_node()->isBlank())
                     {
                         listener->foundAstError(cursor);
-                        throw unexpected_token_error(l);
+                        throw unknown_variable_error(l);
                     }
                     cursor.write_to_node(l);
                     if (!cursor.has_child(1))
                     {
                         listener->wrongArityForNode(cursor.get_current_node());
-                        throw unexpected_token_error(l);
+                        throw unknown_variable_error(l);
                     }
                     cursor.move_to_child(1); //right child
                     break;
@@ -105,17 +107,17 @@ namespace eloquent::logic
                     if (cursor.get_current_node() == nullptr)
                     {
                         listener->didTryInvalidPosition(nullptr, 0);
-                        throw unexpected_token_error(l);
+                        throw unknown_variable_error(l);
                     }
                     if (!cursor.get_current_node()->isBlank())
                     {
                         listener->foundAstError(cursor);
-                        throw unexpected_token_error(l);
+                        throw unknown_variable_error(l);
                     }
                     if (cursor.get_arity() != 1)
                     {
                         listener->wrongArityForNode(cursor.get_current_node());
-                        throw unexpected_token_error(l);
+                        throw unknown_variable_error(l);
                     }
                     cursor.write_to_node(l);
                     cursor.move_to_child(0);
@@ -126,14 +128,14 @@ namespace eloquent::logic
                     if (cursor.get_current_node() != nullptr)
                     {
                         listener->foundAstError(cursor);
-                        throw unexpected_token_error(l);
+                        throw unknown_variable_error(l);
                     }
                     break;
                 }
             default:
                 {
                     listener->foundUnexpectedToken(l);
-                    throw unexpected_token_error(l);
+                    throw unknown_variable_error(l);
                     break;
                 }
             }
