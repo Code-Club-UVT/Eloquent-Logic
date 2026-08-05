@@ -7,11 +7,16 @@
 
 #include <string>
 #include <utility>
+
+#include "hash_combine.hpp"
+
 namespace eloquent::logic {
 
     enum class lexeme_type
     {
         Atom,
+        Tautology,
+        Contradiction,
         LParen,
         RParen,
         NotOp,
@@ -26,6 +31,7 @@ namespace eloquent::logic {
 
     bool is_nary_operator(lexeme_type node_type);
     bool is_operator(lexeme_type node_type);
+    bool is_atom(lexeme_type node_type);
 
 
 
@@ -39,13 +45,29 @@ namespace eloquent::logic {
         public:
         lexeme(const lexeme& l) = default;
         lexeme& operator=(const lexeme& l) = default;
+        bool operator==(const lexeme& other) const = default;
         static lexeme make(lexeme_type node_type, std::string token, size_t start, size_t end);
         [[nodiscard]] lexeme_type type() const ;
         [[nodiscard]] std::string token() const;
         [[nodiscard]] size_t start() const;
         [[nodiscard]] size_t end() const;
     };
+
 }
 
+namespace std {
+    template <> struct hash<eloquent::logic::lexeme>
+    {
+        size_t operator()(const eloquent::logic::lexeme & x) const noexcept
+        {
+            size_t seed;
+            eloquent::logic::hash_combine(seed, x.type());
+            eloquent::logic::hash_combine(seed, x.token());
+            eloquent::logic::hash_combine(seed, x.start());
+            eloquent::logic::hash_combine(seed, x.end());
+            return seed;
+        }
+    };
+}
 
 #endif //ELOQUENTLOGIC_LEXEME_HPP

@@ -20,6 +20,7 @@ namespace eloquent::logic {
         void extend_upwards(const lexeme& l);
         NodeObsPtr rootRef() const;
         friend bool operator==(const syntax_tree &, const syntax_tree &);
+        void walk(const std::function<void(NodeObsPtr)>& callback) const;
     };
 };
 

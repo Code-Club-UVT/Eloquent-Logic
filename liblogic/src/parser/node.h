@@ -45,6 +45,8 @@ namespace eloquent::logic {
         [[nodiscard]] size_t find_by_uuid(CppCommon::UUID id) const noexcept;
         void spawn_new_child(const lexeme& l);
         void set_node_type(const lexeme& l);
+        void walk(const std::function<void(NodeObsPtr)>& cb);
+        void traverse_children(const std::function<void(const NodeObsPtr&)>& cb) const;
 
         /**
          * Creates a new node with given parameters

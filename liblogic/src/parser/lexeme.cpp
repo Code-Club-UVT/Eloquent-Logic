@@ -19,11 +19,18 @@ namespace eloquent::logic {
     bool is_nary_operator(lexeme_type node_type)
     {
         using enum lexeme_type;
-        return node_type == AndOp ||
-            node_type == OrOp ||
-            node_type == IffOp ||
-            node_type == ImpliesOp ||
+        return node_type == AndOp   ||
+            node_type == OrOp       ||
+            node_type == IffOp      ||
+            node_type == ImpliesOp  ||
             node_type == LEquiOp;
+    }
+    inline bool is_atom(lexeme_type node_type)
+    {
+        using enum lexeme_type;
+        return node_type == Atom           ||
+               node_type == Tautology      ||
+               node_type == Contradiction;
     }
     lexeme_type lexeme::type() const {
         return m_node_type;

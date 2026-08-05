@@ -36,6 +36,11 @@ namespace eloquent::logic {
       return m_root.get();
     }
 
+    void syntax_tree::walk(const std::function<void(NodeObsPtr)>& callback) const
+    {
+       m_root->walk(callback);
+    }
+
     bool operator==(const syntax_tree &lhs, const syntax_tree &rhs)  {
       return lhs.m_root == rhs.m_root;
     }
