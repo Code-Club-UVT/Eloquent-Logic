@@ -11,7 +11,7 @@
 #include "unsupported_operator_error.hpp"
 
 namespace eloquent::logic {
-    bool truth_table::get_value(NodeObsPtr nid)
+    bool truth_table::get_value(table_row& cache, NodeObsPtr nid)
     {
         using enum lexeme_type;
         switch (nid->getLexeme().type())
@@ -23,7 +23,7 @@ namespace eloquent::logic {
         case Contradiction:
             return false;
         default:
-            return this->value_cache[nid->getUUID()];
+            return cache[nid->getUUID()];
         }
     }
     bool combine(NodeType nt, bool lhs, bool rhs)
@@ -51,17 +51,17 @@ namespace eloquent::logic {
             throw std::runtime_error("Should not have reached here");
         }
     }
-    void truth_table::emplace_or_update(CppCommon::UUID id, bool value)
+    void truth_table::emplace_or_update(table_row& cache, CppCommon::UUID id, bool value)
     {
-        if (this->value_cache.contains(id))
+        if (cache.contains(id))
         {
-            value_cache[id] = value;
+            cache[id] = value;
         }
         else
-            value_cache.try_emplace(id, value);
+            cache.try_emplace(id, value);
     }
 
-    void truth_table::evaluate_impl(const interpretation& i, const std::shared_ptr<truth_table_listener_t>& listener)
+    void truth_table::evaluate_impl(const interpretation& i, table_row& cache, const std::shared_ptr<truth_table_listener_t>& listener)
     {
         for (const auto& pair : i)
         {
@@ -84,31 +84,53 @@ namespace eloquent::logic {
                     node->traverse_children([&](NodeObsPtr cnode)
                     {
                         if (result == std::nullopt)
-                            result = get_value(cnode);
+                            result = get_value(cache, cnode);
                         else
-                            result = combine(node->getType(), result.value(), get_value(cnode));
+                            result = combine(node->getType(), result.value(), get_value(cache, cnode));
                     });
-                    emplace_or_update(node->getUUID(), result.value());
+                    emplace_or_update(cache, node->getUUID(), result.value());
                     listener->didComputeSubexpression(node->getUUID(), result.value());
                 }
                 else
                 {
                     node->traverse_children([&](NodeObsPtr cnode)
                     {
-                        result = get_value(cnode);
+                        result = get_value(cache, cnode);
                     });
-                    emplace_or_update(node->getUUID(), !result.value());
+                    emplace_or_update(cache, node->getUUID(), !result.value());
                     listener->didComputeSubexpression(node->getUUID(), result.value());
                 }
             }
         });
     }
 
+    std::vector<table_row> truth_table::evaluate_all(const std::shared_ptr<truth_table_listener_t>& listener)
+    {
+        std::vector<table_row> trs;
+        listener->didStart();
+        auto num_vars = this->get_variables().size();
+        if (num_vars > std::numeric_limits<std::size_t>::digits)
+            throw std::runtime_error("too many variables");
+        for (size_t i = 0; i < (static_cast<size_t>(1)<<num_vars); ++i)
+        { //TODO: this is horribly inefficient
+            interpretation it;
+            for (size_t j = 0; j< num_vars; ++j)
+            {
+                it.try_emplace(get_variables()[i], i & (1<<j));
+            }
+            table_row tr;
+            evaluate_impl(it, tr, listener);
+            trs.emplace_back(tr);
+        }
+        listener->didFinish();
+        return trs;
+    }
+
     table_row truth_table::evaluate(const interpretation& i, const std::shared_ptr<truth_table_listener_t>& listener)
     {
         table_row tr;
         listener->didStart();
-        evaluate_impl(i, listener);
+        evaluate_impl(i,tr, listener);
         listener->didFinish();
         return tr;
     }
@@ -125,5 +147,15 @@ namespace eloquent::logic {
            }
        });
        return t;
+    }
+
+    std::vector<std::string> truth_table::get_variables() const noexcept
+    {
+        std::vector<std::string> result;
+        for (const auto& c: m_interpretation)
+        {
+            result.emplace_back(c.first);
+        }
+        return result;
     }
 };

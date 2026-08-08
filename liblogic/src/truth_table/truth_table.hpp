@@ -22,17 +22,17 @@ namespace eloquent::logic {
     class truth_table{
         interpretation m_interpretation;
         std::shared_ptr<syntax_tree> m_tree;
-        table_row value_cache;
         explicit truth_table(std::shared_ptr<syntax_tree> tree): m_tree(std::move(tree)) {}
-        bool get_value(NodeObsPtr nid);
-        void emplace_or_update(CppCommon::UUID, bool value);
-        void evaluate_impl(const interpretation& i, const std::shared_ptr<truth_table_listener_t>& listener);
+        bool get_value(table_row& cache, NodeObsPtr nid);
+        static void emplace_or_update(table_row& cache, CppCommon::UUID, bool value);
+        void evaluate_impl(const interpretation& i, table_row& cache , const std::shared_ptr<truth_table_listener_t>& listener);
 
     public:
 
         std::vector<table_row> evaluate_all (const std::shared_ptr<truth_table_listener_t>& listener);
         table_row evaluate(const interpretation& i, const std::shared_ptr<truth_table_listener_t>& listener);
         static truth_table make_from_tree(const std::shared_ptr<syntax_tree>& tree);
+        std::vector<std::string> get_variables() const noexcept;
     };
 };
 #endif //ELOQUENTLOGIC_TRUTH_TABLE_HPP

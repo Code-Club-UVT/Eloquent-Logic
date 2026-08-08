@@ -17,7 +17,7 @@ namespace eloquent::logic
     public:
         virtual void didFindUnknownVariable(const std::string_view&) {}
         virtual void didSetVariable(const std::string_view&, bool) {}
-        virtual void didComputeSubexpression(const CppCommon::UUID&, bool)
+        virtual void didComputeSubexpression(const CppCommon::UUID&, bool) {}
     };
 }
 
