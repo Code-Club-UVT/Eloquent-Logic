@@ -1,0 +1,5 @@
+add_executable(truth_table_test truth_table_tests.cpp)
+target_link_libraries(truth_table_test PRIVATE gtest_main gmock)
+target_link_libraries(truth_table_test PRIVATE eloquent_logic_parser)
+include(GoogleTest)
+gtest_discover_tests(truth_table_test)
