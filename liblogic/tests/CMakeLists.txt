@@ -41,6 +41,7 @@ if(WINDOWS)
 endif()
 FetchContent_MakeAvailable(googletest)
 
+add_subdirectory(common)
 add_subdirectory(parser)
 add_subdirectory(truth_table)
 target_link_libraries(liblogic_tests PRIVATE gtest_main gmock)

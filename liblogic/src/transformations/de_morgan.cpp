@@ -2,14 +2,14 @@
 // Created by xcell on 16.12.2024.
 //
 
-#include <de_morgan.h>
+#include "de_morgan.h"
 
 // OPTIMIZATION: due to the high similarity of the classes, they may be fused into one single class.
 
 namespace eloquent::logic {
     bool DeMorganDisjunction::match(const NodeObsPtr subtree) {
-        const auto node = subtree.lock();
-        return node->type == NodeType::NotOp && node->children[0]->type == NodeType::OrOp;
+        const auto node = subtree;
+        return node->getType() == NodeType::NotOp && node->children[0]->getType() == NodeType::OrOp;
     }
 
     /*
@@ -23,7 +23,7 @@ namespace eloquent::logic {
      */
 
     void DeMorganDisjunction::replace(const NodeObsPtr target) {
-        const auto node = target.lock();
+        const auto node = target;
         const auto newNode = NodeBuilder::makeNewAndNode();
 
         for (size_t i = 0; i < node->children[0]->children.size(); i++) {
@@ -38,8 +38,8 @@ namespace eloquent::logic {
     }
 
     bool DeMorganConjunction::match(NodeObsPtr subtree) {
-        const auto node = subtree.lock();
-        return node->type == NodeType::NotOp && node->children[0]->type == NodeType::AndOp;
+        const auto node = subtree;
+        return node->getType() == NodeType::NotOp && node->children[0]->getType() == NodeType::AndOp;
     }
 
     /*
@@ -53,7 +53,7 @@ namespace eloquent::logic {
      */
 
     void DeMorganConjunction::replace(const NodeObsPtr target) {
-        const auto node = target.lock();
+        const auto node = target;
         const auto newNode = NodeBuilder::makeNewOrNode();
 
         for (size_t i = 0; i < node->children[0]->children.size(); i++) {

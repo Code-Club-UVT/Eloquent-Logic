@@ -25,7 +25,7 @@ namespace eloquent::logic {
             node_type == ImpliesOp  ||
             node_type == LEquiOp;
     }
-    inline bool is_atom(lexeme_type node_type)
+    bool is_atom(lexeme_type node_type)
     {
         using enum lexeme_type;
         return node_type == Atom           ||

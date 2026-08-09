@@ -3,10 +3,10 @@
 //
 
 #pragma once
-#include "tree_recognizer_base.h"
+#include "tree_operation_base.h"
 
 namespace eloquent::logic {
-    class ImplicationReduction : public TreeRecognizerBase {
+    class ImplicationReduction : public tree_operation_base {
     public:
         bool match(NodeObsPtr subtree) override;
         void replace(NodeObsPtr target) override;

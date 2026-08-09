@@ -8,7 +8,7 @@
 namespace eloquent::logic {
     NeutralElements::Signal NeutralElements::get_case(const NodeObsPtr& node) {
 
-        const auto locked = node.lock();
+        const auto locked = node;
 
         size_t count_tautology{0};
         size_t count_contradiction{0};
@@ -22,22 +22,22 @@ namespace eloquent::logic {
         }
 
         // case 1 (high priority): a contradiction in a conjunction subtree
-        if (locked->type == NodeType::AndOp && count_contradiction) { return Signal::SIG_CONJUNCTION_CONTRADICTION; }
+        if (locked->getType() == NodeType::AndOp && count_contradiction) { return Signal::SIG_CONJUNCTION_CONTRADICTION; }
 
         // case 2 (high priority): a tautology in a disjunction subtree
-        if (locked->type == NodeType::OrOp && count_tautology) { return Signal::SIG_DISJUNCTION_TAUTOLOGY; }
+        if (locked->getType() == NodeType::OrOp && count_tautology) { return Signal::SIG_DISJUNCTION_TAUTOLOGY; }
 
         // case 3: a tautology in a binary conjunction subtree
-        if (locked->type == NodeType::AndOp && count_tautology && locked->children.size() == 2) { return Signal::SIG_CONJUNCTION_TAUTOLOGY_BINARY; }
+        if (locked->getType() == NodeType::AndOp && count_tautology && locked->children.size() == 2) { return Signal::SIG_CONJUNCTION_TAUTOLOGY_BINARY; }
 
         // case 4: a tautology in an n-ary conjunction subtree
-        if (locked->type == NodeType::AndOp && count_tautology && locked->children.size() > 2) { return Signal::SIG_CONJUNCTION_TAUTOLOGY_MULTIPLE; }
+        if (locked->getType() == NodeType::AndOp && count_tautology && locked->children.size() > 2) { return Signal::SIG_CONJUNCTION_TAUTOLOGY_MULTIPLE; }
 
         // case 5: a contradiction in a binary disjunction subtree
-        if (locked->type == NodeType::OrOp && count_contradiction && locked->children.size() == 2) { return Signal::SIG_DISJUNCTION_CONTRADICTION_BINARY; }
+        if (locked->getType() == NodeType::OrOp && count_contradiction && locked->children.size() == 2) { return Signal::SIG_DISJUNCTION_CONTRADICTION_BINARY; }
 
         // case 6: a contradiction in an n-ary disjunction subtree
-        if (locked->type == NodeType::OrOp && count_contradiction && locked->children.size() > 2) { return Signal::SIG_DISJUNCTION_CONTRADICTION_MULTIPLE; }
+        if (locked->getType() == NodeType::OrOp && count_contradiction && locked->children.size() > 2) { return Signal::SIG_DISJUNCTION_CONTRADICTION_MULTIPLE; }
 
         // base case
         return Signal::SIG_CLEAR;
@@ -85,7 +85,7 @@ namespace eloquent::logic {
         // it is a good improvement for larger trees and longer runtimes.
         // The heap will thank the user.
 
-        const auto node = target.lock();
+        const auto node = target;
         Signal flag = get_case(node);
 
         // Neat loop - runs until all unwanted values are cleared.
@@ -137,7 +137,7 @@ namespace eloquent::logic {
                 // We want to get rid of all tautologies. If, somehow, all but one node were tautologies,
                 // we copy that into the parent node. If no nodes remain, we know that the parent must be a tautology.
                 std::erase_if(node->children, [](const NodeObsPtr& n) {
-                    const auto l = n.lock();
+                    const auto l = n;
                     return l->text == ELOQUENT_LIBLOGIC_SYMB_TAUTOLOGY;
                 });
 
@@ -158,7 +158,7 @@ namespace eloquent::logic {
                 // We want to get rid of all contradictions. If, somehow, all but one node were contradictions,
                 // we copy that into the parent node. If no nodes remain, we know that the parent must be a contradiction.
                 std::erase_if(node->children, [](const NodeObsPtr& n) {
-                    const auto l = n.lock();
+                    const auto l = n;
                     return l->text == ELOQUENT_LIBLOGIC_SYMB_CONTRADICTION;
                 });
 
@@ -179,7 +179,7 @@ namespace eloquent::logic {
         }
 
         // If the node is a binary operation node, and it has less than 2 children, it's broken.
-        assert( !( (node->type == NodeType::AndOp || node->type == NodeType::OrOp) && node->children.size() < 2 ) );
+        assert( !( (node->getType() == NodeType::AndOp || node->getType() == NodeType::OrOp) && node->children.size() < 2 ) );
 
     }
 

@@ -87,6 +87,33 @@ namespace eloquent::logic
         }
     }
 
+    void Node::condense()
+    {
+        using enum NodeType;
+        if (this->type != AndOp && this->type != OrOp) return;
+        bool ok = true;
+        do
+        {
+            ok = true;
+            std::vector<size_t> indices;
+            std::vector<NodePtr>::iterator cnode;
+            for (cnode = children.begin(); cnode != children.end(); ++cnode)
+            {
+                if ((*cnode)->type == this->type)
+                {
+                    ok = false;
+                    break;
+                }
+            }
+            for (auto& child: (*cnode)->children)
+            {
+                adopt(std::move(child));
+            }
+            children.erase(cnode);
+        }
+        while (!ok);
+    }
+
     size_t Node::num_children() const noexcept
     {
         return children.size();
@@ -117,6 +144,21 @@ namespace eloquent::logic
         }
         return children.size();
     }
+
+    NodePtr Node::disconnect(size_t idx)
+    {
+        for (auto it = children.begin(); it != children.end(); ++it)
+        {
+            NodePtr n = std::move(children.at(idx));
+            n->set_parent(nullptr);
+            this->children.erase(it);
+            return n;
+            break;
+        }
+        throw std::out_of_range(fmt::format("Index {} out of range", idx));
+    }
+
+
     size_t Node::arity() const noexcept
     {
         return children.size();

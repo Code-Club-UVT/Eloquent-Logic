@@ -43,11 +43,12 @@ namespace eloquent::logic {
         [[nodiscard]] NodeObsPtr childAt(size_t idx) const;
         [[nodiscard]] bool allChildrenAreWritten() const noexcept;
         [[nodiscard]] size_t find_by_uuid(CppCommon::UUID id) const noexcept;
+        [[nodiscard]] NodePtr disconnect(size_t idx);
         void spawn_new_child(const lexeme& l);
         void set_node_type(const lexeme& l);
         void walk(const std::function<void(NodeObsPtr)>& cb);
         void traverse_children(const std::function<void(const NodeObsPtr&)>& cb) const;
-
+        void condense(); //applies n-isation
         /**
          * Creates a new node with given parameters
          * @param _type Type of node

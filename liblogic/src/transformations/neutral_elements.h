@@ -3,10 +3,10 @@
 //
 
 #pragma once
-#include <tree_recognizer_base.h>
+#include <tree_operation_base.h>
 
 namespace eloquent::logic {
-    class NeutralElements : public TreeRecognizerBase {
+    class NeutralElements : public tree_operation_base {
         enum class Signal {
             SIG_CLEAR = 0,
             SIG_CONJUNCTION_CONTRADICTION,          // high priority

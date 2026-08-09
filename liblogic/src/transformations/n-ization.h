@@ -3,12 +3,12 @@
 //
 
 #pragma once
-#include <tree_recognizer_base.h>
+#include "tree_operation_base.h"
 #include <vector>
-#include <../parser/tree_builder.h>
+#include <node.h>
 
 namespace eloquent::logic {
-    class N_izer : public TreeRecognizerBase {
+    class N_izer : public tree_operation_base {
         std::vector<NodePtr> get_descendants(const NodeObsPtr& subtree);
     public:
         bool match(NodeObsPtr subtree) override;

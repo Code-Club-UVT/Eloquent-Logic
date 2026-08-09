@@ -14,8 +14,8 @@ namespace eloquent::logic
 
     }
 
-    inline const char* unsupported_operator_error::what() const noexcept
+    const char* unsupported_operator_error::what() const noexcept
     {
-        return exception::what();
+        return msg.c_str();
     }
 }
