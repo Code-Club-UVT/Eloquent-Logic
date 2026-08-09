@@ -3,11 +3,11 @@
 #include <vector>
 #include <string>
 
-#include "../../src/parser/relaxed_parser.hpp"
+#include <relaxed_parser.hpp>
 #include "relaxed_parser_listener.hpp"
-#include "../../src/parser/unknown_variable_error.hpp"
+#include <unknown_variable_error.hpp>
 #include "lexeme.hpp"
-#include "../../src/parser/dictionary.h"
+#include <dictionary.h>
 
 namespace eloquent::logic::testing
 {

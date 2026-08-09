@@ -2,12 +2,12 @@
 // Created by xcell on 16.12.2024.
 //
 
-#include <implication_reduction.h>
+#include "implication_reduction.h"
 
 namespace eloquent::logic {
     bool ImplicationReduction::match(const NodeObsPtr subtree) {
-        const auto node = subtree.lock();
-        return node->type == NodeType::ImpliesOp;
+        const auto node = subtree;
+        return node->getType() == NodeType::ImpliesOp;
     }
 
     /*
@@ -25,7 +25,7 @@ namespace eloquent::logic {
      */
 
     void ImplicationReduction::replace(const NodeObsPtr target) {
-        const auto node = target.lock();
+        const auto node = target;
 
         const auto newNode = NodeBuilder::makeNewOrNode();
 

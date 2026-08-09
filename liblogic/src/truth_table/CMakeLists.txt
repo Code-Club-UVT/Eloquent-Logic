@@ -4,7 +4,11 @@ add_library(liblogicTruthTable
         truth_table_listener_t.cpp
         truth_table_listener_t.hpp
         unsupported_operator_error.cpp
-        unsupported_operator_error.hpp)
+        unsupported_operator_error.hpp
+        unbound_variable_error.cpp
+        unbound_variable_error.hpp)
 add_dependencies(liblogicTruthTable liblogicCommon)
-target_link_libraries(liblogicTruthTable PRIVATE liblogicCommon)
-target_link_libraries(liblogicTruthTable PRIVATE eloquent_logic_parser)
+add_dependencies(liblogicTruthTable eloquent_logic_parser)
+target_link_libraries(liblogicTruthTable PUBLIC liblogicCommon)
+target_link_libraries(liblogicTruthTable PUBLIC eloquent_logic_parser)
+target_include_directories(liblogicTruthTable PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)

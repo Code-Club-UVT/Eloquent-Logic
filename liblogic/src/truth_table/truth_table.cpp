@@ -7,7 +7,7 @@
 
 #include <stack>
 
-#include "unknown_variable_error.hpp"
+#include "unbound_variable_error.hpp"
 #include "unsupported_operator_error.hpp"
 
 namespace eloquent::logic {
@@ -26,7 +26,7 @@ namespace eloquent::logic {
             return cache[nid->getUUID()];
         }
     }
-    bool combine(NodeType nt, bool lhs, bool rhs)
+    bool combine(NodeType nt, const lexeme& l, bool lhs, bool rhs)
     {
         switch (nt)
         {
@@ -48,7 +48,7 @@ namespace eloquent::logic {
                 return !lhs || rhs;
             }
         default:
-            throw std::runtime_error("Should not have reached here");
+            throw unsupported_operator_error(l);
         }
     }
     void truth_table::emplace_or_update(table_row& cache, CppCommon::UUID id, bool value)
@@ -68,7 +68,7 @@ namespace eloquent::logic {
             if (!this->m_interpretation.contains(pair.first))
             {
                 listener->didFindUnknownVariable(pair.first);
-                throw unknown_variable_error(pair.first);
+                throw unbound_variable_error(pair.first);
             }
             this->m_interpretation[pair.first] = pair.second;
             listener->didSetVariable(pair.first, pair.second);
@@ -86,7 +86,7 @@ namespace eloquent::logic {
                         if (result == std::nullopt)
                             result = get_value(cache, cnode);
                         else
-                            result = combine(node->getType(), result.value(), get_value(cache, cnode));
+                            result = combine(node->getType(), node->getLexeme(), result.value(), get_value(cache, cnode));
                     });
                     emplace_or_update(cache, node->getUUID(), result.value());
                     listener->didComputeSubexpression(node->getUUID(), result.value());
@@ -98,7 +98,7 @@ namespace eloquent::logic {
                         result = get_value(cache, cnode);
                     });
                     emplace_or_update(cache, node->getUUID(), !result.value());
-                    listener->didComputeSubexpression(node->getUUID(), result.value());
+                    listener->didComputeSubexpression(node->getUUID(), !result.value());
                 }
             }
         });
@@ -116,7 +116,7 @@ namespace eloquent::logic {
             interpretation it;
             for (size_t j = 0; j< num_vars; ++j)
             {
-                it.try_emplace(get_variables()[i], i & (1<<j));
+                it.try_emplace(get_variables()[j], i & (1<<j));
             }
             table_row tr;
             evaluate_impl(it, tr, listener);

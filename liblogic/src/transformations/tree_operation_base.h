@@ -8,29 +8,35 @@
  */
 
 #pragma once
-#include "../parser/tree_builder.h"
+#include <node.h>
+
+#include "tree_matcher.hpp"
 
 namespace eloquent::logic {
     /**
-     * @class TreeRecognizerBase
+     * @class tree_operation_base
      * @brief Base class for other classes responsible for propositional logic transformations.
      */
-    class TreeRecognizerBase {
+    class tree_operation_base: public tree_matcher {
     public:
-        virtual ~TreeRecognizerBase() = default;
+        virtual ~tree_operation_base() = default;
 
     private:
-        /**
-         * @brief Base function which seeks a user-defined pattern, such as a double negation.
-         * @param subtree Node observer pointer, which represents the place where the function begins to seek the pattern.
-         * @return bool Whether the function found the sought pattern or not.
-         */
-        virtual bool match(NodeObsPtr subtree) = 0;
 
         /**
          * @brief Base function which modifies the tree at given node according to a pattern.
          * @param target Node observer pointer, which represents the place according to which the change occurs.
          */
         virtual void replace(NodeObsPtr target) = 0;
+
+        /**
+         * @brief Called to check whether or not operation should be applied automatically. Defaults to true
+         * @return True if this operation can be safely applied automatically, false otherwise
+         */
+        virtual bool should_apply()
+        {
+            return true;
+        }
+
     };
 }

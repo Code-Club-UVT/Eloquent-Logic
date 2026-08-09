@@ -2,12 +2,12 @@
 // Created by xcell on 19.12.2024.
 //
 
-#include <inverter.h>
+#include "inverter.h"
 
 namespace eloquent::logic {
     bool Inverter::match(const NodeObsPtr subtree) {
-        const auto node = subtree.lock();
-        return node->type == NodeType::NotOp && (node->children[0]->text == ELOQUENT_LIBLOGIC_SYMB_TAUTOLOGY || node->children[0]->text == ELOQUENT_LIBLOGIC_SYMB_CONTRADICTION);
+        const auto node = subtree;
+        return node->getType() == NodeType::NotOp && (node->childAt(0)->get() == Node || node->children[0]->text == ELOQUENT_LIBLOGIC_SYMB_CONTRADICTION);
     }
 
     /*
@@ -18,7 +18,7 @@ namespace eloquent::logic {
      *   (\bot OR \top)
      */
     void Inverter::replace(const NodeObsPtr target) {
-        const auto node = target.lock();
+        const auto node = target;
 
         NodePtr newNode{nullptr};
         if (node->children[0]->text == ELOQUENT_LIBLOGIC_SYMB_TAUTOLOGY) { newNode = NodeBuilder::makeNewContradictionNode(); }

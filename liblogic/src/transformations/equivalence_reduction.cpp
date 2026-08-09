@@ -2,7 +2,7 @@
 // Created by xcell on 16.12.2024.
 //
 
-#include <equivalence_reduction.h>
+#include "equivalence_reduction.h"
 
 namespace eloquent::logic {
     bool EquivalenceReduction::match(const NodeObsPtr subtree) {
