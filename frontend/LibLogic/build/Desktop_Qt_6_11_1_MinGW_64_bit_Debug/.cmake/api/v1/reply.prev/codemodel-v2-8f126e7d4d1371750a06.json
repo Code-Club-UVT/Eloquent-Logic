@@ -7,7 +7,7 @@
 				{
 					"build" : ".",
 					"hasInstallRule" : true,
-					"jsonFile" : "directory-.-Debug-146338ad7a113a620080.json",
+					"jsonFile" : "directory-.-Debug-f54fdbe1247e4a5afdf5.json",
 					"minimumCMakeVersion" : 
 					{
 						"string" : "3.16"
@@ -44,7 +44,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "LibLogic::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-LibLogic-Debug-ffc7322db64a3d831ac1.json",
+					"jsonFile" : "target-LibLogic-Debug-5e9a3fda64479da6877b.json",
 					"name" : "LibLogic",
 					"projectIndex" : 0
 				},
