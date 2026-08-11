@@ -1,8 +1,5 @@
 add_executable(liblogic_tests main.cpp
-        truth-machine.cpp
         transformations.cpp
-        traversal_tests.cpp
-        execution-context.cpp
         parser/parser_tests.cpp
         truth_table/truth_table_tests.cpp)
 

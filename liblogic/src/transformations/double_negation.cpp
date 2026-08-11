@@ -7,7 +7,7 @@
 namespace eloquent::logic {
     bool DoubleNegation::match(const NodeObsPtr subtree) {
         const auto node = subtree;
-        return node->getType() == NodeType::NotOp && node->children[0]->getType() == NodeType::NotOp;
+        return node->getType() == NodeType::NotOp && node->childAt(0)->getType() == NodeType::NotOp;
     }
 
     /*
@@ -21,10 +21,13 @@ namespace eloquent::logic {
      */
 
     void DoubleNegation::replace(const NodeObsPtr target) {
-        const auto node = target;
-        const auto newNode = node->children[0]->children[0];
-        node->copy_children(newNode);
-        node->copy_from(newNode);
+        NodePtr new_node = target->childAt(0)->disconnect(0);
+        target->set_lexeme(new_node->getLexeme());
+        for (size_t i = 0; i < new_node->num_children(); ++i)
+        {
+            new_node->transfer_child_to(target, i);
+        }
+        (void)target->disconnect(0);
     }
 
 }

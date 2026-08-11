@@ -6,8 +6,7 @@
 
 namespace eloquent::logic {
     bool ImplicationReduction::match(const NodeObsPtr subtree) {
-        const auto node = subtree;
-        return node->getType() == NodeType::ImpliesOp;
+        return subtree->getType() == NodeType::ImpliesOp;
     }
 
     /*
@@ -27,20 +26,13 @@ namespace eloquent::logic {
     void ImplicationReduction::replace(const NodeObsPtr target) {
         const auto node = target;
 
-        const auto newNode = NodeBuilder::makeNewOrNode();
+        NodePtr left_subtree = target->disconnect(0);
+        NodePtr right_subtree = target->disconnect(1);
+        lexeme l = node->getLexeme();
+        node->set_lexeme(lexeme::make(lexeme_type::OrOp, symbols::SYMB_OR, l.start(), l.end()));
 
-        // add negation and copy the left branch
-        newNode->spawn_new_child();
-        newNode->children[0] = NodeBuilder::makeNewNotNode();
-        newNode->children[0]->spawn_new_child();
-        newNode->children[0]->children[0] = node->children[0];
-
-        // copy right branch as is
-        newNode->spawn_new_child();
-        newNode->children[1] = node->children[1];
-
-        // give the original node the attributes of the created node
-        node->copy_from(newNode);
-        node->copy_children(newNode);
+        node->spawn_new_child(lexeme::make(lexeme_type::NotOp, symbols::SYMB_NOT, 0,0));
+        node->childAt(0)->adopt(std::move(left_subtree));
+        node->adopt(std::move(right_subtree));
     }
 }

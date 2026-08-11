@@ -46,29 +46,33 @@ namespace eloquent::logic {
         [[nodiscard]] NodePtr disconnect(size_t idx);
         void spawn_new_child(const lexeme& l);
         void set_node_type(const lexeme& l);
+        void transfer_child_to(NodeObsPtr node, size_t child_idx);
         void walk(const std::function<void(NodeObsPtr)>& cb);
         void traverse_children(const std::function<void(const NodeObsPtr&)>& cb) const;
         void condense(); //applies n-isation
-        /**
-         * Creates a new node with given parameters
-         * @param _type Type of node
-         * @param _text Label of node
-         */
-        explicit Node(const lexeme& l);
+
         Node(const Node& n) = delete;
         void set_lexeme(const lexeme& l);
         friend bool operator==(const Node &lhs, const Node &rhs) ;
         friend bool operator!=(const Node &lhs, const Node &rhs) ;
         void adopt(NodePtr node);
         void replace_child(size_t idx, NodePtr new_child);
+        void clear_children();
         std::string to_string() const;
-
+        /**
+         * Creates a new node with given parameters
+         * @param _type Type of node
+         * @param _text Label of node
+         */
+        explicit Node(const lexeme& l);
         void set_parent(const NodeObsPtr& parent)
         {
             this->parent = parent;
         }
         static std::unique_ptr<Node> make_node(const lexeme& l);
+        static std::unique_ptr<Node> duplicate_node(const NodeObsPtr& node);
     private:
+
         std::ostringstream& to_string_impl(std::ostringstream& ss) const;
     };
 

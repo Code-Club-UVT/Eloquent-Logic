@@ -6,8 +6,8 @@
 
 namespace eloquent::logic {
     bool Inverter::match(const NodeObsPtr subtree) {
-        const auto node = subtree;
-        return node->getType() == NodeType::NotOp && (node->childAt(0)->get() == Node || node->children[0]->text == ELOQUENT_LIBLOGIC_SYMB_CONTRADICTION);
+        return subtree->getType() == NodeType::NotOp && (subtree->childAt(0)->getLexeme().type() == lexeme_type::Tautology ||
+                                                         subtree->childAt(0)->getLexeme().type() == lexeme_type::Contradiction);
     }
 
     /*
@@ -18,14 +18,14 @@ namespace eloquent::logic {
      *   (\bot OR \top)
      */
     void Inverter::replace(const NodeObsPtr target) {
-        const auto node = target;
+        auto child_lexeme = target->childAt(0)->getLexeme();
+        auto child_type = child_lexeme.type();
+        if (child_type == lexeme_type::Tautology)
+            target->set_lexeme(lexeme::make(lexeme_type::Contradiction, symbols::SYMB_CONTRADICTION,child_lexeme.start(), child_lexeme.end()));
+        else
+            target->set_lexeme(lexeme::make(lexeme_type::Tautology, symbols::SYMB_TAUTOLOGY,child_lexeme.start(), child_lexeme.end()));
 
-        NodePtr newNode{nullptr};
-        if (node->children[0]->text == ELOQUENT_LIBLOGIC_SYMB_TAUTOLOGY) { newNode = NodeBuilder::makeNewContradictionNode(); }
-        else if (node->children[0]->text == ELOQUENT_LIBLOGIC_SYMB_CONTRADICTION) { newNode = NodeBuilder::makeNewTautologyNode(); }
-
-        node->copy_from(newNode);
-        node->children.clear();
+        (void) target->disconnect(0);
     }
 
 }

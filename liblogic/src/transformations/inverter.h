@@ -3,8 +3,7 @@
 //
 
 #pragma once
-#include <tree_operation_base.h>
-#include <../parser/tree_builder.h>
+#include "tree_operation_base.h"
 namespace eloquent::logic {
     class Inverter : public tree_operation_base {
     public:

@@ -3,7 +3,7 @@
 //
 
 #pragma once
-#include <tree_operation_base.h>
+#include "tree_operation_base.h"
 
 namespace eloquent::logic {
     class DoubleNegation : public tree_operation_base {

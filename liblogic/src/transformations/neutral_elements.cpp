@@ -3,51 +3,39 @@
 //
 
 #include <cassert>
-#include <neutral_elements.h>
+#include "neutral_elements.h"
 
 namespace eloquent::logic {
     NeutralElements::Signal NeutralElements::get_case(const NodeObsPtr& node) {
-
-        const auto locked = node;
-
+        
         size_t count_tautology{0};
         size_t count_contradiction{0};
 
         // something in the back of my mind tells me this is inefficient.
         // good place for future optimizations.
 
-        for (const auto& n : locked->children) {
-            if (n->text == ELOQUENT_LIBLOGIC_SYMB_TAUTOLOGY) count_tautology++;
-            else if (n->text == ELOQUENT_LIBLOGIC_SYMB_CONTRADICTION) count_contradiction++;
-        }
+        node->traverse_children([&](auto n){
+            if (n->getLexeme().type() == lexeme_type::Tautology) count_tautology++;
+            else if (n->getLexeme().type() == lexeme_type::Contradiction) count_contradiction++;
+        });
 
         // case 1 (high priority): a contradiction in a conjunction subtree
-        if (locked->getType() == NodeType::AndOp && count_contradiction) { return Signal::SIG_CONJUNCTION_CONTRADICTION; }
+        if (node->getType() == NodeType::AndOp && count_contradiction) { return Signal::CONJUNCTION_CONTRADICTION; }
 
         // case 2 (high priority): a tautology in a disjunction subtree
-        if (locked->getType() == NodeType::OrOp && count_tautology) { return Signal::SIG_DISJUNCTION_TAUTOLOGY; }
-
-        // case 3: a tautology in a binary conjunction subtree
-        if (locked->getType() == NodeType::AndOp && count_tautology && locked->children.size() == 2) { return Signal::SIG_CONJUNCTION_TAUTOLOGY_BINARY; }
+        if (node->getType() == NodeType::OrOp && count_tautology) { return Signal::DISJUNCTION_TAUTOLOGY; }
 
         // case 4: a tautology in an n-ary conjunction subtree
-        if (locked->getType() == NodeType::AndOp && count_tautology && locked->children.size() > 2) { return Signal::SIG_CONJUNCTION_TAUTOLOGY_MULTIPLE; }
-
-        // case 5: a contradiction in a binary disjunction subtree
-        if (locked->getType() == NodeType::OrOp && count_contradiction && locked->children.size() == 2) { return Signal::SIG_DISJUNCTION_CONTRADICTION_BINARY; }
-
-        // case 6: a contradiction in an n-ary disjunction subtree
-        if (locked->getType() == NodeType::OrOp && count_contradiction && locked->children.size() > 2) { return Signal::SIG_DISJUNCTION_CONTRADICTION_MULTIPLE; }
-
+        if (node->getType() == NodeType::AndOp && count_tautology ) { return Signal::CONJUNCTION_TAUTOLOGY; }
         // base case
-        return Signal::SIG_CLEAR;
+        return Signal::CLEAR;
     }
 
     // The following 2 functions could be made more efficient if, instead of the node,
     // we pass them the signal itself, but I feel like this could cause complications in the long run.
 
     bool NeutralElements::match(const NodeObsPtr subtree) {
-        if (get_case(subtree) != Signal::SIG_CLEAR) return true;
+        if (get_case(subtree) != Signal::CLEAR) return true;
         return false;
     }
 
@@ -92,95 +80,41 @@ namespace eloquent::logic {
         // Saves us from running match() and replace() more than once externally.
         // I am unsure whether it may interfere with the wanted order of operations, though.
 
-        while (flag != Signal::SIG_CLEAR) {
+        while (flag != Signal::CLEAR) {
 
-            if (flag == Signal::SIG_CONJUNCTION_CONTRADICTION) {
+            if (flag == Signal::CONJUNCTION_CONTRADICTION) {
                 // code to free children here
-
-                const auto newnode = NodeBuilder::makeNewContradictionNode();
-                node->copy_children(newnode);
-                node->copy_from(newnode);
+                target->set_lexeme(lexeme::make(lexeme_type::Contradiction, symbols::SYMB_CONTRADICTION, 0,0));
+                target->clear_children();
             }
 
-            if (flag == Signal::SIG_DISJUNCTION_TAUTOLOGY) {
-                // code to free children here
-
-                const auto newnode = NodeBuilder::makeNewTautologyNode();
-                node->copy_children(newnode);
-                node->copy_from(newnode);
+            else if (flag == Signal::DISJUNCTION_TAUTOLOGY) {
+                target->set_lexeme(lexeme::make(lexeme_type::Tautology, symbols::SYMB_TAUTOLOGY, 0,0));
+                target->clear_children();
             }
-
-            if (flag == Signal::SIG_CONJUNCTION_TAUTOLOGY_BINARY ||
-                flag == Signal::SIG_DISJUNCTION_CONTRADICTION_BINARY) {
-
-                auto newnode = NodeBuilder::makeNewBlankNode();
-                size_t node_index{0};
-
-                if (node->children[0]->text == ELOQUENT_LIBLOGIC_SYMB_TAUTOLOGY ||
-                    node->children[0]->text == ELOQUENT_LIBLOGIC_SYMB_CONTRADICTION) {
-                    node_index = 1;
+            else {
+                bool ok = true;
+                do
+                {
+                    size_t delete_idx = 0;
+                    ok = true;
+                    size_t idx = 0;
+                    target->traverse_children([&](auto n)
+                    {
+                        if ((target->getType() == NodeType::AndOp && n->getLexeme().type() == lexeme_type::Tautology) ||
+                           (target->getType() == NodeType::OrOp && n->getLexeme().type() == lexeme_type::Contradiction))
+                            delete_idx = idx, ok=false;
+                        ++idx;
+                    });
+                    if (!ok)
+                    {
+                        (void)target->disconnect(delete_idx);
+                    }
                 }
-
-                newnode->copy_children(node->children[node_index]);
-                newnode->copy_from(node->children[node_index]);
-
-                // code to free children here
-
-                // I'm using an intermediary node here because I want to make
-                // sure that nothing breaks after copy_children() is called.
-
-                node->copy_children(newnode);
-                node->copy_from(newnode);
+                while (!ok);
             }
-
-            if (flag == Signal::SIG_CONJUNCTION_TAUTOLOGY_MULTIPLE) {
-                // We want to get rid of all tautologies. If, somehow, all but one node were tautologies,
-                // we copy that into the parent node. If no nodes remain, we know that the parent must be a tautology.
-                std::erase_if(node->children, [](const NodeObsPtr& n) {
-                    const auto l = n;
-                    return l->text == ELOQUENT_LIBLOGIC_SYMB_TAUTOLOGY;
-                });
-
-                if (node->children.empty()) {
-                    const auto newnode = NodeBuilder::makeNewTautologyNode();
-                    node->copy_children(newnode);
-                    node->copy_from(newnode);
-                }
-
-                if (node->children.size() == 1) {
-                    const auto newnode = node->children[0];
-                    node->copy_children(newnode);
-                    node->copy_from(newnode);
-                }
-            }
-
-            if (flag == Signal::SIG_DISJUNCTION_CONTRADICTION_MULTIPLE) {
-                // We want to get rid of all contradictions. If, somehow, all but one node were contradictions,
-                // we copy that into the parent node. If no nodes remain, we know that the parent must be a contradiction.
-                std::erase_if(node->children, [](const NodeObsPtr& n) {
-                    const auto l = n;
-                    return l->text == ELOQUENT_LIBLOGIC_SYMB_CONTRADICTION;
-                });
-
-                if (node->children.empty()) {
-                    const auto newnode = NodeBuilder::makeNewContradictionNode();
-                    node->copy_children(newnode);
-                    node->copy_from(newnode);
-                }
-
-                if (node->children.size() == 1) {
-                    const auto newnode = node->children[0];
-                    node->copy_children(newnode);
-                    node->copy_from(newnode);
-                }
-            }
-
             flag = get_case(node);
         }
-
-        // If the node is a binary operation node, and it has less than 2 children, it's broken.
-        assert( !( (node->getType() == NodeType::AndOp || node->getType() == NodeType::OrOp) && node->children.size() < 2 ) );
-
     }
 
 }

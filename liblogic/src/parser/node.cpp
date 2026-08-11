@@ -72,6 +72,11 @@ namespace eloquent::logic
         }
     }
 
+    void Node::transfer_child_to(NodeObsPtr node, size_t child_idx)
+    {
+        node->adopt(std::move(children[child_idx]));
+    }
+
     void Node::walk(const std::function<void(NodeObsPtr)>& cb)
     {
         for (const NodePtr& n : children)
@@ -192,6 +197,11 @@ namespace eloquent::logic
         children[idx] = std::move(new_child);
     }
 
+    void Node::clear_children()
+    {
+        this->children.clear();
+    }
+
     std::string Node::to_string() const
     {
         std::ostringstream os;
@@ -203,6 +213,17 @@ namespace eloquent::logic
     std::unique_ptr<Node> Node::make_node(const lexeme& l)
     {
         return std::make_unique<Node>(l);
+    }
+
+    std::unique_ptr<Node> Node::duplicate_node(const NodeObsPtr& node)
+    {
+        NodePtr root = make_node(node->getLexeme());
+        node->traverse_children([&](auto n)
+        {
+            NodePtr child = duplicate_node(n);
+            root->adopt(std::move(child));
+        });
+        return root;
     }
 
 
