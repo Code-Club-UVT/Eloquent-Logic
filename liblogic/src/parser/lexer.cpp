@@ -91,12 +91,17 @@ namespace eloquent::logic
             return LexMode::AtomMulticharZeroStart;
         if (isdigit(c))
         {
-            ld.buffer.str().pop_back();// leading zeroes are ignored, unless P_0
+            std::string current = ld.buffer.str();
+            if (!current.empty())
+                current.pop_back(); // leading zeroes are ignored, unless P_0
+            ld.buffer.str(current);
+            ld.buffer.seekp(0, std::ios_base::end);
             ld.buffer<<c;
             return LexMode::AtomMulticharSubscript;
         }
         if (c == '}')//P_{0}
         {
+            ld.buffer<<c;
             ld.lexemeFlag = true;
             ld.type = lexeme_type::Atom;
             return LexMode::None;
@@ -136,7 +141,7 @@ namespace eloquent::logic
         if (isdigit(c))
         {
             ld.buffer<<c;
-            return LexMode::AtomOpenMulticharSubscript;
+            return LexMode::AtomMulticharSubscript;
         }
         if (c == '}')
         {
@@ -151,6 +156,12 @@ namespace eloquent::logic
     {
         if (c != 3) // 3 - ETX
             ld.buffer<<c;
+        if (ld.buffer.str() == symbols::SYMB_NOT)
+        {
+            ld.lexemeFlag = true;
+            ld.type = lexeme_type::NotOp;
+            return LexMode::None;
+        }
         if (ld.buffer.str() == symbols::SYMB_IFF)
         {
             ld.lexemeFlag = true;
@@ -227,6 +238,7 @@ namespace eloquent::logic
             listener->didReadCharacter(text[i]);
             if (isspace(text[i])) continue;
             LexMode new_mode = transition_table.at(mode)(text[i], ld);
+            mode = new_mode;
             if (!in_lexeme)
             {
                 last_change = i;
@@ -248,6 +260,8 @@ namespace eloquent::logic
                 ld.type = lexeme_type::Unknown;
                 ld.buffer.str("");
                 in_lexeme = false;
+                if (new_mode == LexMode::Operator)
+                    ld.buffer << text[i]; // re-seed with the char that triggered atom->operator transition
 
             }
 
@@ -273,6 +287,7 @@ namespace eloquent::logic
         }
         listener->didReachEof();
         lexemes.emplace_back(lexeme::make(lexeme_type::Eof, "",text.size(), text.size()));
+        listener->didFinish();
         return lexemes;
     }
 

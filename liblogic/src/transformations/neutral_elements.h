@@ -3,18 +3,16 @@
 //
 
 #pragma once
-#include <tree_operation_base.h>
+#include "tree_operation_base.h"
 
 namespace eloquent::logic {
     class NeutralElements : public tree_operation_base {
         enum class Signal {
-            SIG_CLEAR = 0,
-            SIG_CONJUNCTION_CONTRADICTION,          // high priority
-            SIG_DISJUNCTION_TAUTOLOGY,              // high priority
-            SIG_CONJUNCTION_TAUTOLOGY_BINARY,
-            SIG_CONJUNCTION_TAUTOLOGY_MULTIPLE,
-            SIG_DISJUNCTION_CONTRADICTION_BINARY,
-            SIG_DISJUNCTION_CONTRADICTION_MULTIPLE
+            CLEAR = 0,
+            CONJUNCTION_CONTRADICTION,          // high priority
+            DISJUNCTION_TAUTOLOGY,              // high priority
+            CONJUNCTION_TAUTOLOGY,
+            DISJUNCTION_CONTRADICTION,
         };
     public:
         static Signal get_case(const NodeObsPtr& node);
