@@ -1,0 +1,20 @@
+{
+  "name": "LibLogic development environment",
+  "build": {
+    "dockerfile": "Dockerfile",
+
+  },
+  "customizations": {
+    "jetbrains": {
+      "settings": {
+        "com.intellij:app:HttpConfigurable.use_proxy_pac": true
+      },
+      "plugins": [
+        "com.jfrog.conan.clion"
+      ]
+    }
+  },
+  "remoteUser": "vscode",
+  "workspaceMount": "source=${localWorkspaceFolder}/liblogic,target=/IdeaProjects/liblogic,type=bind",
+  "workspaceFolder": "/IdeaProjects/liblogic"
+}

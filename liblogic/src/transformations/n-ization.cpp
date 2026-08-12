@@ -2,7 +2,7 @@
 // Created by xcell on 17.12.2024.
 //
 
-#include <liblogic/private/transformations/n-ization.h>
+#include <n-ization.h>
 
 namespace eloquent::logic {
 

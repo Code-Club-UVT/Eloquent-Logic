@@ -2,7 +2,7 @@
 // Created by xcell on 19.12.2024.
 //
 
-#include <liblogic/private/transformations/inverter.h>
+#include <inverter.h>
 
 namespace eloquent::logic {
     bool Inverter::match(const NodeObsPtr subtree) {

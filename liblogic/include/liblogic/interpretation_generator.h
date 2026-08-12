@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 
-#include "private/interpretation.h"
+#include "../../src/interpretation.h"
 #include <cmath>
 namespace eloquent::logic {
     struct interpretation_generator {
