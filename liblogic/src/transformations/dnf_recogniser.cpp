@@ -8,7 +8,7 @@ namespace eloquent
 {
     namespace logic
     {
-        bool dnf_recogniser::match(NodeObsPtr subtree)
+        bool dnf_recogniser::match(NodeObsPtr subtree, const std::shared_ptr<node_transformation_listener_t>& listener)
         {
             bool result = subtree->getType() == NodeType::OrOp;
             subtree->traverse_children([&](auto node1)

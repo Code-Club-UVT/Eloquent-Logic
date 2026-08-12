@@ -10,8 +10,8 @@ namespace eloquent::logic
     class and_distribution : public tree_operation_base
     {
     public:
-        bool match(NodeObsPtr subtree) final;
-        void replace(NodeObsPtr target) final;
+        bool match(NodeObsPtr subtree, const std::shared_ptr<node_transformation_listener_t>& listener) final;
+        void replace(NodeObsPtr target, const std::shared_ptr<node_transformation_listener_t>& listener) final;
         bool should_apply() final;
 
     };
@@ -19,8 +19,8 @@ namespace eloquent::logic
     class or_distribution : public tree_operation_base
     {
     public:
-        bool match(NodeObsPtr subtree) final;
-        void replace(NodeObsPtr target) final;
+        bool match(NodeObsPtr subtree, const std::shared_ptr<node_transformation_listener_t>& listener) final;
+        void replace(NodeObsPtr target, const std::shared_ptr<node_transformation_listener_t>& listener) final;
         bool should_apply() final;
     };
 }

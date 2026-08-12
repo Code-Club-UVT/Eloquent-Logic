@@ -7,7 +7,7 @@
 #include "node.h"
 
 namespace eloquent::logic {
-    bool EquivalenceReduction::match(const NodeObsPtr subtree) {
+    bool EquivalenceReduction::match(const NodeObsPtr subtree, const std::shared_ptr<node_transformation_listener_t>& listener) {
         return subtree->getType() == NodeType::IffOp;
     }
 
@@ -36,7 +36,7 @@ namespace eloquent::logic {
      *          have them copy the children of the input node.
      */
 
-    void EquivalenceReduction::replace(const NodeObsPtr target) {
+    void EquivalenceReduction::replace(const NodeObsPtr target, const std::shared_ptr<node_transformation_listener_t>& listener) {
         NodePtr left_subtree = target->disconnect(0);
         NodePtr right_subtree = target->disconnect(1);
 

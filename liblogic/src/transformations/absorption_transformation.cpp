@@ -8,7 +8,7 @@ namespace eloquent
 {
     namespace logic
     {
-        bool absorption_transformation::match(NodeObsPtr subtree)
+        bool absorption_transformation::match(NodeObsPtr subtree, const std::shared_ptr<node_transformation_listener_t>& listener)
         {
             bool result = subtree->getType() == NodeType::AndOp ||
                      subtree->getType() == NodeType::OrOp;
@@ -16,7 +16,6 @@ namespace eloquent
             NodeObsPtr extra = nullptr;
             if (subtree->getType() == NodeType::AndOp)
             {
-
                 subtree->traverse_children([&](auto node)
                 {
                     if (node->getType() == NodeType::OrOp)
@@ -68,7 +67,7 @@ namespace eloquent
             return result;
 
         }
-        void absorption_transformation::replace(NodeObsPtr target)
+        void absorption_transformation::replace(NodeObsPtr target, const std::shared_ptr<node_transformation_listener_t>& listener)
         {
             (void)target->disconnect(idx);
             if (target->num_children() == 1)

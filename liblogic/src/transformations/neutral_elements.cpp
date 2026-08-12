@@ -34,7 +34,7 @@ namespace eloquent::logic {
     // The following 2 functions could be made more efficient if, instead of the node,
     // we pass them the signal itself, but I feel like this could cause complications in the long run.
 
-    bool NeutralElements::match(const NodeObsPtr subtree) {
+    bool NeutralElements::match(const NodeObsPtr subtree, const std::shared_ptr<node_transformation_listener_t>& listener) {
         if (get_case(subtree) != Signal::CLEAR) return true;
         return false;
     }
@@ -66,7 +66,7 @@ namespace eloquent::logic {
      *     (2)    (\bot)            (2)           (if binary)
      */
 
-    void NeutralElements::replace(const NodeObsPtr target) {
+    void NeutralElements::replace(const NodeObsPtr target, const std::shared_ptr<node_transformation_listener_t>& listener) {
 
         // It is a good idea to free unused nodes from memory.
         // Although freeing the nodes is optional, since we are using smart pointers,

@@ -16,7 +16,7 @@ namespace eloquent::logic {
         const std::string exp = R"(F \\vee \\top)";
         const auto cleanedtree = tests::build_tree(exp); // the root of the cleaned tree
 
-        if (NeutralElements fixer; fixer.match(cleanedtree.root)) { fixer.replace(cleanedtree.root); }
+        if (NeutralElements fixer; fixer.match(cleanedtree.root, listener)) { fixer.replace(cleanedtree.root, listener); }
 
         // create expected tree to compare with finished tree
         const std::string rightexp = R"(\\top)";
@@ -111,8 +111,8 @@ namespace eloquent::logic {
         // Process
         EquivalenceReduction equivalence_reducer;
         auto node = cleanedtree.root;
-        if (equivalence_reducer.match(node)) {
-            equivalence_reducer.replace(node);
+        if (equivalence_reducer.match(node, listener)) {
+            equivalence_reducer.replace(node, listener);
         }
 
         // Create expected tree to compare with the finished tree
@@ -130,8 +130,8 @@ namespace eloquent::logic {
         const auto cleanedtree = tests::build_tree(exp); // the root of the cleaned tree
 
         // Process
-        if (DeMorganDisjunction de_morgan_fixer; de_morgan_fixer.match(cleanedtree.root)) {
-            de_morgan_fixer.replace(cleanedtree.root);
+        if (DeMorganDisjunction de_morgan_fixer; de_morgan_fixer.match(cleanedtree.root, listener)) {
+            de_morgan_fixer.replace(cleanedtree.root, listener);
         }
 
         // Create expected tree to compare with the finished tree
@@ -148,8 +148,8 @@ namespace eloquent::logic {
         const auto cleanedtree = tests::build_tree(exp);
 
         // Process
-        if (DeMorganConjunction de_morgan_fixer; de_morgan_fixer.match(cleanedtree.root)) {
-            de_morgan_fixer.replace(cleanedtree.root);
+        if (DeMorganConjunction de_morgan_fixer; de_morgan_fixer.match(cleanedtree.root, listener)) {
+            de_morgan_fixer.replace(cleanedtree.root, listener);
         }
 
         // Create expected tree to compare with the finished tree
@@ -245,8 +245,8 @@ namespace eloquent::logic {
         const auto cleanedtree = tests::build_tree(exp); // the root of the cleaned tree
 
         // Process
-        if (Inverter inverter; inverter.match(cleanedtree.root)) {
-            inverter.replace(cleanedtree.root);
+        if (Inverter inverter; inverter.match(cleanedtree.root, listener)) {
+            inverter.replace(cleanedtree.root, listener);
         }
 
         // Create expected tree to compare with the finished tree
@@ -261,8 +261,8 @@ namespace eloquent::logic {
         const auto cleanedtree = tests::build_tree(exp); // the root of the cleaned tree
 
         // Process
-        if (Inverter inverter; inverter.match(cleanedtree.root)) {
-            inverter.replace(cleanedtree.root);
+        if (Inverter inverter; inverter.match(cleanedtree.root, listener)) {
+            inverter.replace(cleanedtree.root, listener);
         }
 
         // Create expected tree to compare with the finished tree
@@ -288,7 +288,7 @@ namespace eloquent::logic {
         NeutralElements fixer;
 
         for (const auto& exp : battery_trees) {
-            if (fixer.match(exp.root)) fixer.replace(exp.root);
+            if (fixer.match(exp.root, listener)) fixer.replace(exp.root, listener);
         }
 
         // Creating a battery of answers for each expression and its corresponding tree.
@@ -321,7 +321,7 @@ namespace eloquent::logic {
         NeutralElements fixer;
 
         for (const auto& exp : battery_trees) {
-            if (fixer.match(exp.root)) fixer.replace(exp.root);
+            if (fixer.match(exp.root, listener)) fixer.replace(exp.root, listener);
         }
 
         // Creating a battery of answers for each expression and its corresponding tree.
@@ -354,7 +354,7 @@ namespace eloquent::logic {
         NeutralElements fixer;
 
         for (const auto& exp : battery_trees) {
-            if (fixer.match(exp.root)) fixer.replace(exp.root);
+            if (fixer.match(exp.root, listener)) fixer.replace(exp.root, listener);
         }
 
         // Creating a battery of answers for each expression and its corresponding tree.
@@ -394,7 +394,7 @@ namespace eloquent::logic {
         NeutralElements fixer;
 
         for (const auto& exp : battery_trees) {
-            if (fixer.match(exp.root)) fixer.replace(exp.root);
+            if (fixer.match(exp.root, listener)) fixer.replace(exp.root, listener);
         }
 
         // Creating a battery of answers for each expression and its corresponding tree.

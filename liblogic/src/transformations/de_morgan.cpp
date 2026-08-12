@@ -8,7 +8,7 @@
 
 namespace eloquent::logic {
 
-    bool DeMorganDisjunction::match(const NodeObsPtr subtree) {
+    bool DeMorganDisjunction::match(const NodeObsPtr subtree, const std::shared_ptr<node_transformation_listener_t>& listener) {
         const auto node = subtree;
         return node->getType() == NodeType::NotOp && node->childAt(0)->getType() == NodeType::OrOp;
     }
@@ -23,7 +23,7 @@ namespace eloquent::logic {
      *   (2)    (3)      (2)     (3)
      */
 
-    void DeMorganDisjunction::replace(const NodeObsPtr target) {
+    void DeMorganDisjunction::replace(const NodeObsPtr target, const std::shared_ptr<node_transformation_listener_t>& listener) {
         const auto node = target;
 
         node->set_lexeme(lexeme::make(lexeme_type::AndOp, symbols::SYMB_AND, node->getLexeme().start(), node->getLexeme().end()));
@@ -36,7 +36,7 @@ namespace eloquent::logic {
         }
     }
 
-    bool DeMorganConjunction::match(NodeObsPtr subtree) {
+    bool DeMorganConjunction::match(NodeObsPtr subtree, const std::shared_ptr<node_transformation_listener_t>& listener) {
         const auto node = subtree;
         return node->getType() == NodeType::NotOp && node->childAt(0)->getType() == NodeType::AndOp;
     }
@@ -51,7 +51,7 @@ namespace eloquent::logic {
      *   (2)    (3)      (2)      (3)
      */
 
-    void DeMorganConjunction::replace(const NodeObsPtr target) {
+    void DeMorganConjunction::replace(const NodeObsPtr target, const std::shared_ptr<node_transformation_listener_t>& listener) {
         const auto node = target;
 
         node->set_lexeme(lexeme::make(lexeme_type::OrOp, symbols::SYMB_OR, node->getLexeme().start(), node->getLexeme().end()));

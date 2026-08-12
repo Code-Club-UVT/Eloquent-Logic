@@ -24,8 +24,9 @@ namespace eloquent::logic {
         /**
          * @brief Base function which modifies the tree at given node according to a pattern.
          * @param target Node observer pointer, which represents the place according to which the change occurs.
+         * @param listener
          */
-        virtual void replace(NodeObsPtr target) = 0;
+        virtual void replace(NodeObsPtr target, const std::shared_ptr<node_transformation_listener_t>& listener) = 0;
 
         /**
          * @brief Called to check whether or not operation should be applied automatically. Defaults to true
