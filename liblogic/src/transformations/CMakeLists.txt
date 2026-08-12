@@ -5,10 +5,17 @@ add_library(libLogicTransformations  de_morgan.cpp double_negation.cpp equivalen
         transformation_runner.hpp
         logical_implication.cpp
         logical_implication.hpp
-        and_distribution.cpp
-        and_distribution.hpp
+        distributions.cpp
+        distributions.hpp
         node_transformation_listener_t.cpp
-        node_transformation_listener_t.hpp)
+        node_transformation_listener_t.hpp
+        cnf_recogniser.cpp
+        cnf_recogniser.hpp
+        dnf_recogniser.cpp
+        dnf_recogniser.hpp
+        absorption_transformation.cpp
+        absorption_transformation.hpp
+)
 target_sources(eloquent_logic
         PUBLIC
         FILE_SET transformation_headers

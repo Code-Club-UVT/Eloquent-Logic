@@ -4,13 +4,16 @@
 
 #ifndef ELOQUENTLOGIC_LOGICAL_IMPLICATION_HPP
 #define ELOQUENTLOGIC_LOGICAL_IMPLICATION_HPP
-
+#include "tree_operation_base.h"
 namespace eloquent
 {
     namespace logic
     {
-        class logical_implication
+        class logical_implication : public tree_operation_base
         {
+        public:
+            bool match(NodeObsPtr subtree) override;
+            void replace(NodeObsPtr target) override;
         };
     } // logic
 } // eloquent

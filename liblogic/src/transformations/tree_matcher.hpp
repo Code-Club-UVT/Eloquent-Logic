@@ -13,8 +13,6 @@ namespace eloquent
         {
         public:
             virtual ~tree_matcher() = default;
-
-        private:
             virtual bool match(NodeObsPtr subtree) = 0;
 
         };

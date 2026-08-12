@@ -26,7 +26,7 @@ namespace eloquent::logic {
     void DeMorganDisjunction::replace(const NodeObsPtr target) {
         const auto node = target;
 
-        node->set_lexeme(lexeme::make(lexeme_type::AndOp, symbols::SYMB_AND, node->getLexeme().start(), node->getLexeme().end());
+        node->set_lexeme(lexeme::make(lexeme_type::AndOp, symbols::SYMB_AND, node->getLexeme().start(), node->getLexeme().end()));
 
         NodePtr cChild = node->disconnect(0);
         for (size_t i = 0; i < cChild->num_children(); ++i)
@@ -54,7 +54,7 @@ namespace eloquent::logic {
     void DeMorganConjunction::replace(const NodeObsPtr target) {
         const auto node = target;
 
-        node->set_lexeme(lexeme::make(lexeme_type::OrOp, symbols::SYMB_OR, node->getLexeme().start(), node->getLexeme().end());
+        node->set_lexeme(lexeme::make(lexeme_type::OrOp, symbols::SYMB_OR, node->getLexeme().start(), node->getLexeme().end()));
 
         NodePtr cChild = node->disconnect(0);
         for (size_t i = 0; i < cChild->num_children(); ++i)
