@@ -5,7 +5,7 @@
 #include "implication_reduction.h"
 
 namespace eloquent::logic {
-    bool ImplicationReduction::match(const NodeObsPtr subtree) {
+    bool ImplicationReduction::match(const NodeObsPtr subtree, const std::shared_ptr<node_transformation_listener_t>& listener) {
         return subtree->getType() == NodeType::ImpliesOp;
     }
 
@@ -23,7 +23,7 @@ namespace eloquent::logic {
      * This function feels ugly. Maybe it can be rewritten in a nicer way.
      */
 
-    void ImplicationReduction::replace(const NodeObsPtr target) {
+    void ImplicationReduction::replace(const NodeObsPtr target, const std::shared_ptr<node_transformation_listener_t>& listener) {
         const auto node = target;
 
         NodePtr left_subtree = target->disconnect(0);

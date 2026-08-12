@@ -14,8 +14,8 @@ namespace eloquent
         {
             size_t idx = 0;
         public:
-            bool match(NodeObsPtr subtree) override;
-            void replace(NodeObsPtr target) override;
+            bool match(NodeObsPtr subtree, const std::shared_ptr<node_transformation_listener_t>& listener) override;
+            void replace(NodeObsPtr target, const std::shared_ptr<node_transformation_listener_t>& listener) override;
         };
 
 

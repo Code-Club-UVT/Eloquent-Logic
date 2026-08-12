@@ -9,7 +9,7 @@
 namespace eloquent::logic {
     class EquivalenceReduction : public tree_operation_base {
     public:
-        bool match(NodeObsPtr subtree) override;
-        void replace(NodeObsPtr target) override;
+        bool match(NodeObsPtr subtree, const std::shared_ptr<node_transformation_listener_t>& listener) override;
+        void replace(NodeObsPtr target, const std::shared_ptr<node_transformation_listener_t>& listener) override;
     };
 }

@@ -27,14 +27,14 @@ namespace eloquent
                     NodeObsPtr tgt = nullptr;
                     tree->walk([&](auto node)
                     {
-                        if (transf->match(node))
+                        if (transf->match(node, listener))
                         {
                             tgt = node;
                             is_done = false;
                         }
                     });
                     if (tgt)
-                        transf->replace(tgt);
+                        transf->replace(tgt, listener);
                 }
                 while (!is_done);
             }
@@ -49,20 +49,20 @@ namespace eloquent
                 std::make_unique<and_distribution>(),
                 std::make_unique<absorption_transformation>()
             };
-            while (!recogniser.match(tree->rootRef()))
+            while (!recogniser.match(tree->rootRef(), listener))
             {
                 for (auto& t: ops)
                 {
                     NodeObsPtr tgt = nullptr;
                     tree->walk([&](auto node)
                     {
-                        if (t->match(node))
+                        if (t->match(node, listener))
                         {
                             tgt = node;
                         }
                     });
                     if (tgt)
-                        t->replace(tgt);
+                        t->replace(tgt, listener);
                 }
             }
         }
@@ -76,20 +76,20 @@ namespace eloquent
                 std::make_unique<or_distribution>(),
                 std::make_unique<absorption_transformation>()
             };
-            while (!recogniser.match(tree->rootRef()))
+            while (!recogniser.match(tree->rootRef(), listener))
             {
                 for (auto& t: ops)
                 {
                     NodeObsPtr tgt = nullptr;
                     tree->walk([&](auto node)
                     {
-                        if (t->match(node))
+                        if (t->match(node, listener))
                         {
                             tgt = node;
                         }
                     });
                     if (tgt)
-                        t->replace(tgt);
+                        t->replace(tgt, listener);
                 }
             }
         }

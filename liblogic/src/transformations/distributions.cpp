@@ -23,7 +23,7 @@ namespace eloquent::logic
      * a subsequent match()/replace() pass.
      */
 
-    bool and_distribution::match(NodeObsPtr subtree)
+    bool and_distribution::match(NodeObsPtr subtree, const std::shared_ptr<node_transformation_listener_t>& listener)
     {
         if (subtree->getType() != NodeType::AndOp) return false;
 
@@ -35,7 +35,7 @@ namespace eloquent::logic
         return found;
     }
 
-    void and_distribution::replace(NodeObsPtr target)
+    void and_distribution::replace(NodeObsPtr target, const std::shared_ptr<node_transformation_listener_t>& listener)
     {
         // Detach every child in order. Node::disconnect() is only well-defined
         // at index 0, so we always drain front-to-back rather than indexing in.
@@ -86,7 +86,7 @@ namespace eloquent::logic
      *              (c_1) (c_2)        (o_1)(o_2)(c_1) (o_1)(o_2)(c_2)
      */
 
-    bool or_distribution::match(NodeObsPtr subtree)
+    bool or_distribution::match(NodeObsPtr subtree, const std::shared_ptr<node_transformation_listener_t>& listener)
     {
         if (subtree->getType() != NodeType::OrOp) return false;
 
@@ -98,7 +98,7 @@ namespace eloquent::logic
         return found;
     }
 
-    void or_distribution::replace(NodeObsPtr target)
+    void or_distribution::replace(NodeObsPtr target, const std::shared_ptr<node_transformation_listener_t>& listener)
     {
         std::vector<NodePtr> others;
         while (target->num_children() > 0)

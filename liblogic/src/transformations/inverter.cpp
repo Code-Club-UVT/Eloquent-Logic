@@ -5,7 +5,7 @@
 #include "inverter.h"
 
 namespace eloquent::logic {
-    bool Inverter::match(const NodeObsPtr subtree) {
+    bool Inverter::match(const NodeObsPtr subtree, const std::shared_ptr<node_transformation_listener_t>& listener) {
         return subtree->getType() == NodeType::NotOp && (subtree->childAt(0)->getLexeme().type() == lexeme_type::Tautology ||
                                                          subtree->childAt(0)->getLexeme().type() == lexeme_type::Contradiction);
     }
@@ -17,7 +17,7 @@ namespace eloquent::logic {
      *       |                      (\top OR \bot)
      *   (\bot OR \top)
      */
-    void Inverter::replace(const NodeObsPtr target) {
+    void Inverter::replace(const NodeObsPtr target, const std::shared_ptr<node_transformation_listener_t>& listener) {
         auto child_lexeme = target->childAt(0)->getLexeme();
         auto child_type = child_lexeme.type();
         if (child_type == lexeme_type::Tautology)

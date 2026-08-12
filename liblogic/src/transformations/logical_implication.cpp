@@ -8,12 +8,12 @@ namespace eloquent
 {
     namespace logic
     {
-        bool logical_implication::match(NodeObsPtr subtree)
+        bool logical_implication::match(NodeObsPtr subtree, const std::shared_ptr<node_transformation_listener_t>& listener)
         {
             return subtree->getType() == NodeType::LEquiOp;
         }
 
-        void logical_implication::replace(NodeObsPtr target)
+        void logical_implication::replace(NodeObsPtr target, const std::shared_ptr<node_transformation_listener_t>& listener)
         {
             NodePtr right_subtree = target->disconnect(1);
 

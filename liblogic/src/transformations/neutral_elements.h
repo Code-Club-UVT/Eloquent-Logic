@@ -16,7 +16,7 @@ namespace eloquent::logic {
         };
     public:
         static Signal get_case(const NodeObsPtr& node);
-        bool match(NodeObsPtr subtree) override;
-        void replace(NodeObsPtr target) override;
+        bool match(NodeObsPtr subtree, const std::shared_ptr<node_transformation_listener_t>& listener) override;
+        void replace(NodeObsPtr target, const std::shared_ptr<node_transformation_listener_t>& listener) override;
     };
 }

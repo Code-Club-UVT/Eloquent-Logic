@@ -5,7 +5,7 @@
 #include "double_negation.h"
 
 namespace eloquent::logic {
-    bool DoubleNegation::match(const NodeObsPtr subtree) {
+    bool DoubleNegation::match(const NodeObsPtr subtree, const std::shared_ptr<node_transformation_listener_t>& listener) {
         const auto node = subtree;
         return node->getType() == NodeType::NotOp && node->childAt(0)->getType() == NodeType::NotOp;
     }
@@ -20,7 +20,7 @@ namespace eloquent::logic {
      *   (2)
      */
 
-    void DoubleNegation::replace(const NodeObsPtr target) {
+    void DoubleNegation::replace(const NodeObsPtr target, const std::shared_ptr<node_transformation_listener_t>& listener) {
         NodePtr new_node = target->childAt(0)->disconnect(0);
         target->set_lexeme(new_node->getLexeme());
         for (size_t i = 0; i < new_node->num_children(); ++i)

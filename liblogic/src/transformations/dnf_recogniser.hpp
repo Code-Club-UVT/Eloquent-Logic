@@ -12,7 +12,7 @@ namespace eloquent
         class dnf_recogniser : public tree_matcher
         {
         public:
-            bool match(NodeObsPtr subtree) final;
+            bool match(NodeObsPtr subtree, const std::shared_ptr<node_transformation_listener_t>& listener) final;
         };
     } // logic
 } // eloquent
