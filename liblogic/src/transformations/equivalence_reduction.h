@@ -3,7 +3,8 @@
 //
 
 #pragma once
-#include <tree_operation_base.h>
+#include <node.h>
+#include "tree_operation_base.h"
 
 namespace eloquent::logic {
     class EquivalenceReduction : public tree_operation_base {

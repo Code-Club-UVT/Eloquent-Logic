@@ -21,8 +21,6 @@ namespace eloquent::logic {
     public:
         virtual ~tree_operation_base() = default;
 
-    private:
-
         /**
          * @brief Base function which modifies the tree at given node according to a pattern.
          * @param target Node observer pointer, which represents the place according to which the change occurs.
