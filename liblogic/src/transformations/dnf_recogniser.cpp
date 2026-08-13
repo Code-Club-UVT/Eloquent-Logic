@@ -19,6 +19,7 @@ namespace eloquent
                     result&=(node2->getType() == NodeType::Atom);
                 });
             });
+            listener->didCheckDNF(subtree, result);
             return result;
         }
     } // logic

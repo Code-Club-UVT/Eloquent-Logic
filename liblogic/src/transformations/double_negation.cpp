@@ -7,7 +7,9 @@
 namespace eloquent::logic {
     bool DoubleNegation::match(const NodeObsPtr subtree, const std::shared_ptr<node_transformation_listener_t>& listener) {
         const auto node = subtree;
-        return node->getType() == NodeType::NotOp && node->childAt(0)->getType() == NodeType::NotOp;
+        bool result = node->getType() == NodeType::NotOp && node->childAt(0)->getType() == NodeType::NotOp;
+        if (result) listener->didMatchDoubleNegation(node);
+        return result;
     }
 
     /*
@@ -28,6 +30,8 @@ namespace eloquent::logic {
             new_node->transfer_child_to(target, i);
         }
         (void)target->disconnect(0);
+
+        listener->didEliminateDoubleNegation(target);
     }
 
 }

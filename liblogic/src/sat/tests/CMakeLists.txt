@@ -2,12 +2,14 @@ add_executable(TestDP
         dp_naive.cpp
 )
 target_link_libraries(TestDP PRIVATE dp_naive)
-
+target_compile_options(TestDP PRIVATE -fsanitize=address)
+target_link_options(TestDP PRIVATE -fsanitize=address)
 add_executable(TestDPLL_RAND
         dpll_rand.cpp
 )
 target_link_libraries(TestDPLL_RAND PRIVATE dpll_rand)
-
+target_compile_options(TestDPLL_RAND PRIVATE -fsanitize=address)
+target_link_options(TestDPLL_RAND PRIVATE -fsanitize=address)
 
 add_executable(TestDPLL_MCL
         dpll_mcl.cpp

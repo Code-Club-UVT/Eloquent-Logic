@@ -6,8 +6,10 @@
 
 namespace eloquent::logic {
     bool Inverter::match(const NodeObsPtr subtree, const std::shared_ptr<node_transformation_listener_t>& listener) {
-        return subtree->getType() == NodeType::NotOp && (subtree->childAt(0)->getLexeme().type() == lexeme_type::Tautology ||
+        bool result = subtree->getType() == NodeType::NotOp && (subtree->childAt(0)->getLexeme().type() == lexeme_type::Tautology ||
                                                          subtree->childAt(0)->getLexeme().type() == lexeme_type::Contradiction);
+        if (result) listener->didMatchInverter(subtree);
+        return result;
     }
 
     /*
@@ -26,6 +28,8 @@ namespace eloquent::logic {
             target->set_lexeme(lexeme::make(lexeme_type::Tautology, symbols::SYMB_TAUTOLOGY,child_lexeme.start(), child_lexeme.end()));
 
         (void) target->disconnect(0);
+
+        listener->didInvertConstant(target);
     }
 
 }

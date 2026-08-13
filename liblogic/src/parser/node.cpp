@@ -92,7 +92,7 @@ namespace eloquent::logic
         }
     }
 
-    void Node::condense()
+    void Node::condense(const std::function<void(NodeObsPtr)>& on_merge)
     {
         using enum NodeType;
         if (this->type != AndOp && this->type != OrOp) return;
@@ -110,11 +110,21 @@ namespace eloquent::logic
                     break;
                 }
             }
-            for (auto& child: (*cnode)->children)
+            if (!ok)
             {
-                adopt(std::move(child));
+                // Move the matched child out and erase it *before* adopting
+                // its grandchildren: adopt() appends to this->children, the
+                // very vector cnode points into, and a reallocation there
+                // would invalidate cnode out from under a later erase(cnode).
+                NodePtr matched = std::move(*cnode);
+                children.erase(cnode);
+
+                if (on_merge) on_merge(matched.get());
+                for (auto& child: matched->children)
+                {
+                    adopt(std::move(child));
+                }
             }
-            children.erase(cnode);
         }
         while (!ok);
     }
@@ -152,15 +162,14 @@ namespace eloquent::logic
 
     NodePtr Node::disconnect(size_t idx)
     {
-        for (auto it = children.begin(); it != children.end(); ++it)
-        {
-            NodePtr n = std::move(children.at(idx));
-            n->set_parent(nullptr);
-            this->children.erase(it);
-            return n;
-            break;
-        }
-        throw std::out_of_range(fmt::format("Index {} out of range", idx));
+        if (idx >= children.size())
+            throw std::out_of_range(fmt::format("Index {} out of range", idx));
+
+        auto it = children.begin() + static_cast<std::ptrdiff_t>(idx);
+        NodePtr n = std::move(*it);
+        n->set_parent(nullptr);
+        this->children.erase(it);
+        return n;
     }
 
 

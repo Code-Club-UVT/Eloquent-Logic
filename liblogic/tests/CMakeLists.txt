@@ -1,25 +1,3 @@
-add_executable(liblogic_tests main.cpp
-        transformations.cpp
-        parser/parser_tests.cpp
-        truth_table/truth_table_tests.cpp)
-
-
-find_package(antlr4-runtime REQUIRED)
-
-target_link_libraries(liblogic_tests PRIVATE eloquent_logic eloquent_logic_parser)
-target_include_directories(liblogic_tests PRIVATE ${ANTLR4_INCLUDE_DIR})
-
-target_sources(liblogic_tests PRIVATE
-        FILE_SET test_headers
-        TYPE HEADERS
-        FILES headers/test_wrapper_functions.h
-        BASE_DIRS headers)
-
-add_subdirectory(headers)
-
-target_compile_definitions(liblogic_tests PRIVATE GTEST_COLOR=yes)
-
-
 include(FetchContent)
 FetchContent_Declare(
         googletest
@@ -35,6 +13,4 @@ FetchContent_MakeAvailable(googletest)
 add_subdirectory(common)
 add_subdirectory(parser)
 add_subdirectory(truth_table)
-target_link_libraries(liblogic_tests PRIVATE gtest_main gmock)
-include(GoogleTest)
-gtest_discover_tests(liblogic_tests)
+add_subdirectory(transformations)
