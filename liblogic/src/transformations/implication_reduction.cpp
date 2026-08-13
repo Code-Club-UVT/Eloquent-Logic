@@ -6,7 +6,9 @@
 
 namespace eloquent::logic {
     bool ImplicationReduction::match(const NodeObsPtr subtree, const std::shared_ptr<node_transformation_listener_t>& listener) {
-        return subtree->getType() == NodeType::ImpliesOp;
+        bool result = subtree->getType() == NodeType::ImpliesOp;
+        if (result) listener->didMatchImplication(subtree);
+        return result;
     }
 
     /*
@@ -27,12 +29,16 @@ namespace eloquent::logic {
         const auto node = target;
 
         NodePtr left_subtree = target->disconnect(0);
-        NodePtr right_subtree = target->disconnect(1);
+        // The right child shifts down to index 0 once the left child is
+        // removed, so this must disconnect(0), not disconnect(1).
+        NodePtr right_subtree = target->disconnect(0);
         lexeme l = node->getLexeme();
         node->set_lexeme(lexeme::make(lexeme_type::OrOp, symbols::SYMB_OR, l.start(), l.end()));
 
         node->spawn_new_child(lexeme::make(lexeme_type::NotOp, symbols::SYMB_NOT, 0,0));
         node->childAt(0)->adopt(std::move(left_subtree));
         node->adopt(std::move(right_subtree));
+
+        listener->didReduceImplication(node);
     }
 }

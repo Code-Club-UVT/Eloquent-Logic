@@ -32,6 +32,7 @@ namespace eloquent::logic
         {
             if (child->getType() == NodeType::OrOp) found = true;
         });
+        if (found) listener->didMatchAndDistribution(subtree);
         return found;
     }
 
@@ -67,6 +68,8 @@ namespace eloquent::logic
 
             conjunction->adopt(std::move(disjuncts[i]));
         }
+
+        listener->didDistributeAndOverOr(target);
     }
 
     bool and_distribution::should_apply()
@@ -95,6 +98,7 @@ namespace eloquent::logic
         {
             if (child->getType() == NodeType::AndOp) found = true;
         });
+        if (found) listener->didMatchOrDistribution(subtree);
         return found;
     }
 
@@ -128,6 +132,8 @@ namespace eloquent::logic
 
             disjunction->adopt(std::move(conjuncts[i]));
         }
+
+        listener->didDistributeOrOverAnd(target);
     }
 
     bool or_distribution::should_apply()

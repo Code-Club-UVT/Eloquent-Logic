@@ -19,6 +19,7 @@ namespace eloquent
                     result&=(node2->getType() == NodeType::Atom);
                 });
             });
+            listener->didCheckCNF(subtree, result);
             return result;
         }
     } // logic

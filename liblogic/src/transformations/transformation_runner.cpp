@@ -18,6 +18,7 @@ namespace eloquent
         void transformation_runner::to_nnf(std::shared_ptr<syntax_tree>& tree,
             const std::shared_ptr<node_transformation_listener_t>& listener)
         {
+            listener->didStart();
             for (auto& transf: transformations)
             {
                 bool is_done = true;
@@ -38,11 +39,13 @@ namespace eloquent
                 }
                 while (!is_done);
             }
+            listener->didFinish();
         }
 
         void transformation_runner::to_dnf(std::shared_ptr<syntax_tree>& tree,
             const std::shared_ptr<node_transformation_listener_t>& listener)
         {
+            listener->didStart();
             to_nnf(tree, listener);
             dnf_recogniser recogniser;
             std::array<std::unique_ptr<tree_operation_base>,2> ops = {
@@ -65,11 +68,13 @@ namespace eloquent
                         t->replace(tgt, listener);
                 }
             }
+            listener->didFinish();
         }
 
         void transformation_runner::to_cnf(std::shared_ptr<syntax_tree>& tree,
             const std::shared_ptr<node_transformation_listener_t>& listener)
         {
+            listener->didStart();
             to_nnf(tree, listener);
             cnf_recogniser recogniser;
             std::array<std::unique_ptr<tree_operation_base>,2> ops = {
@@ -92,6 +97,7 @@ namespace eloquent
                         t->replace(tgt, listener);
                 }
             }
+            listener->didFinish();
         }
     } // logic
 } // eloquent

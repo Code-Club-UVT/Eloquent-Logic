@@ -91,34 +91,40 @@ void process_clause_removal(HeuristicsDB_DP &db, const Clause& clause) {
 bool one_literal_clause_rule(ClauseSet &cs, std::set<Literal>& single_literals, SatState &result, HeuristicsDB_DP& db) {
     while (!single_literals.empty()) {
         for (const auto& lit: single_literals) {
-            auto it = cs.begin();
-            while (it != cs.end()) {
-                auto clause = *it;
-                auto next = it;
-                std::advance(next,1);
+            std::vector<Clause> satisfied;
+            std::vector<Clause> to_reduce;
+
+            for (const auto& clause : cs) {
                 if (clause.contains(lit)) {
-                    cs.erase(clause);
-                    if (cs.empty()) {
-                        result = SatState::SAT;
-                        return true;
-                    }
-                    //std::cerr<<"Șterg clauza prin literal pur\n";
-                    process_clause_removal(db,clause);
-                    it = next;
+                    satisfied.push_back(clause);
                     continue;
                 }
                 if (clause.contains(-lit)) {
-                    cs.erase(clause);
-                    //std::cerr<<"Șterg complementarul prin literal pur\n";
-                    clause.erase(-lit);
-                    if (clause.empty()) {
-                        result = SatState::UNSAT;
-                        return true;
-                    }
-                    --db[-lit];
-                    cs.emplace(clause);
+                    to_reduce.push_back(clause);
                 }
-                it=next;
+            }
+
+            for (const auto& clause : satisfied) {
+                cs.erase(clause);
+                if (cs.empty()) {
+                    result = SatState::SAT;
+                    return true;
+                }
+                //std::cerr<<"Șterg clauza prin literal pur\n";
+                process_clause_removal(db, clause);
+            }
+
+            for (const auto& clause : to_reduce) {
+                cs.erase(clause);
+                //std::cerr<<"Șterg complementarul prin literal pur\n";
+                Clause reduced = clause;
+                reduced.erase(-lit);
+                if (reduced.empty()) {
+                    result = SatState::UNSAT;
+                    return true;
+                }
+                --db[-lit];
+                cs.emplace(std::move(reduced));
             }
         }
         single_literals.clear();
@@ -134,20 +140,19 @@ bool one_literal_clause_rule(ClauseSet &cs, std::set<Literal>& single_literals, 
 bool single_polarity_rule(ClauseSet &cs, HeuristicsDB_DP &db, std::set<Literal>& single_polarity_literals, SatState &result) {
     while (!single_polarity_literals.empty()) {
         for (const auto& literal: single_polarity_literals) {
-            for (auto it = cs.begin(); it != cs.end(); ++it) {
-                const auto clause = *it;
-                auto next = it;
-                std::advance(next,1);
+            std::vector<Clause> to_erase;
+            for (const auto& clause : cs) {
                 if (clause.contains(literal)) {
-                    cs.erase(clause);
-                    //std::cerr<<"Șterg clauza prin literal cu aceiași polaritate\n";
-                    process_clause_removal(db,clause);
-                    if (cs.empty()) {
-                        result = SatState::SAT;
-                        return true;
-                    }
-                    it = next;
-                    std::advance(it,-1);
+                    to_erase.push_back(clause);
+                }
+            }
+            for (const auto& clause : to_erase) {
+                cs.erase(clause);
+                //std::cerr<<"Șterg clauza prin literal cu aceiași polaritate\n";
+                process_clause_removal(db, clause);
+                if (cs.empty()) {
+                    result = SatState::SAT;
+                    return true;
                 }
             }
         }

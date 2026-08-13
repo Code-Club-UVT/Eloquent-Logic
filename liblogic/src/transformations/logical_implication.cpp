@@ -10,7 +10,9 @@ namespace eloquent
     {
         bool logical_implication::match(NodeObsPtr subtree, const std::shared_ptr<node_transformation_listener_t>& listener)
         {
-            return subtree->getType() == NodeType::LEquiOp;
+            bool result = subtree->getType() == NodeType::LEquiOp;
+            if (result) listener->didMatchLogicalImplication(subtree);
+            return result;
         }
 
         void logical_implication::replace(NodeObsPtr target, const std::shared_ptr<node_transformation_listener_t>& listener)
@@ -23,7 +25,9 @@ namespace eloquent
             lexeme c_lexeme = target->getLexeme();
             target->set_lexeme(lexeme::make(lexeme_type::AndOp, symbols::SYMB_AND, c_lexeme.start(), c_lexeme.end()));
 
-            target->condense();
+            target->condense([&](NodeObsPtr merged) { listener->didCondenseChild(target, merged); });
+
+            listener->didReduceLogicalImplication(target);
         }
     } // logic
 } // eloquent

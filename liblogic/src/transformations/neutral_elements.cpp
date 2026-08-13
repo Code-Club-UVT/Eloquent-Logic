@@ -25,8 +25,13 @@ namespace eloquent::logic {
         // case 2 (high priority): a tautology in a disjunction subtree
         if (node->getType() == NodeType::OrOp && count_tautology) { return Signal::DISJUNCTION_TAUTOLOGY; }
 
-        // case 4: a tautology in an n-ary conjunction subtree
+        // case 3: a tautology in an n-ary conjunction subtree
         if (node->getType() == NodeType::AndOp && count_tautology ) { return Signal::CONJUNCTION_TAUTOLOGY; }
+
+        // case 4: a contradiction in an n-ary disjunction subtree (dual of
+        // case 3). replace()'s drop-loop already handles this signal; it was
+        // just never produced here, so e.g. "P or bot" was never simplified.
+        if (node->getType() == NodeType::OrOp && count_contradiction) { return Signal::DISJUNCTION_CONTRADICTION; }
         // base case
         return Signal::CLEAR;
     }
@@ -35,7 +40,11 @@ namespace eloquent::logic {
     // we pass them the signal itself, but I feel like this could cause complications in the long run.
 
     bool NeutralElements::match(const NodeObsPtr subtree, const std::shared_ptr<node_transformation_listener_t>& listener) {
-        if (get_case(subtree) != Signal::CLEAR) return true;
+        if (get_case(subtree) != Signal::CLEAR)
+        {
+            listener->didMatchNeutralElement(subtree);
+            return true;
+        }
         return false;
     }
 
@@ -86,11 +95,13 @@ namespace eloquent::logic {
                 // code to free children here
                 target->set_lexeme(lexeme::make(lexeme_type::Contradiction, symbols::SYMB_CONTRADICTION, 0,0));
                 target->clear_children();
+                listener->didCollapseToContradiction(target);
             }
 
             else if (flag == Signal::DISJUNCTION_TAUTOLOGY) {
                 target->set_lexeme(lexeme::make(lexeme_type::Tautology, symbols::SYMB_TAUTOLOGY, 0,0));
                 target->clear_children();
+                listener->didCollapseToTautology(target);
             }
             else {
                 bool ok = true;
@@ -109,6 +120,7 @@ namespace eloquent::logic {
                     if (!ok)
                     {
                         (void)target->disconnect(delete_idx);
+                        listener->didDropNeutralElement(target);
                     }
                 }
                 while (!ok);
