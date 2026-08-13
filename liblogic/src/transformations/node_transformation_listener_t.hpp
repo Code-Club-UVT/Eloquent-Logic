@@ -8,7 +8,7 @@
 #include "feedback_listener.hpp"
 #include "node.h"
 
-#define CB_FULL(n, p) virtual void n p {}
+
 
 namespace eloquent
 {
@@ -69,5 +69,4 @@ namespace eloquent
     } // logic
 } // eloquent
 
-#undef CB_FULL
 #endif //ELOQUENTLOGIC_NODE_TRANSFORMATION_LISTENER_T_HPP

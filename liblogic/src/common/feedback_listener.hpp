@@ -4,7 +4,9 @@
 
 #ifndef ELOQUENTLOGIC_FEEDBACK_LISTENER_HPP
 #define ELOQUENTLOGIC_FEEDBACK_LISTENER_HPP
-
+#define CB_FULL(n, p) virtual void n p {}
+#define CB(n) CB_FULL(n, (const lexeme&))
+#define CB_N(n) CB_FULL(n, ())
 namespace eloquent::logic
 {
     class feedback_listener

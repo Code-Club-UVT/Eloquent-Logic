@@ -1,51 +1,17 @@
-#include <cstring>
 #include <fstream>
-#include <iostream>
-#include <sstream>
-#include <cstdint>
 #include <vector>
 #include <chrono>
-#include <memutils.h>
-#include <csignal>
+
 #include "resolution_naive_first_fit.h"
 
+using eloquent::logic::sat_listener;
 
 ClauseSet clauses;
 
 constexpr std::size_t THRESHOLD = 71000000;
 namespace fs = std::filesystem;
 
-[[nodiscard]] ClauseSet read_clauses(const char *file) {
-    std::ifstream f(file);
-    f.tie(nullptr);
-    size_t clause_count=0, lit_total_count=0;
-    ClauseSet clauses;
-    while (!f.eof()) {
-        std::string line;
-        std::getline(f,line);
-        if (line.empty()) break;
-        if (line =="%" || line=="0") continue;
-        while (line.starts_with('c')) {
-            std::getline(f,line);
-        }
-        if (line.starts_with("p cnf ")) {
-            line = line.substr(strlen("p cnf "));
-            std::istringstream is(line);
-            is>>clause_count>>lit_total_count;
-            continue;
-        }
-        std::istringstream is(line);
-        Clause c;
-        int64_t lit = 0;
-        while (is>>lit) {
-            if (lit == 0) break;
-            c.emplace(lit);
-        }
-        clauses.emplace(c);
-    }
-    f.close();
-    return clauses;
-}
+
 std::pair<bool,int64_t> can_join(const Clause& c1, const Clause& c2) {
     size_t pairs = 0;
     int64_t lit = 0;
@@ -69,7 +35,7 @@ Clause join(const Clause& c1, const Clause& c2, const Literal l) {
     c12.erase(-l);
     return c12;
 }
-[[nodiscard]] SatState resolution(ClauseSet& cs) {
+[[nodiscard]] SatState resolution(ClauseSet& cs, const std::shared_ptr<sat_listener>& listener) {
     bool canMakeNewClause = false;
     do
     {
@@ -80,26 +46,43 @@ Clause join(const Clause& c1, const Clause& c2, const Literal l) {
             std::advance(j,1);
 
             for (jindex=iindex+1; j != cs.end(); ++j,++jindex) {
-                if (cs.size() >= THRESHOLD)
+                if (cs.size() >= THRESHOLD) {
+                    listener->didExceedClauseThreshold(cs.size());
+                    listener->didConcludeUnknown();
                     return SatState::UNKNOWN;
+                }
                 auto result = can_join(*i,*j);
                 if (result.first == false) continue;
 
+                listener->didSelectResolutionCandidates(*i, *j);
                 auto new_clause = join(*i,*j,result.second);
+                listener->didComputeResolvent(*i, *j, result.second, new_clause);
 
-                if (new_clause.empty())
+                if (new_clause.empty()) {
+                    listener->didDeriveEmptyClauseFromResolution();
+                    listener->didConcludeUnsat();
                     return SatState::UNSAT;
+                }
 
-                if (cs.contains(new_clause)) continue;
+                if (cs.contains(new_clause)) {
+                    listener->didSkipDuplicateResolvent(new_clause);
+                    continue;
+                }
 
                 canMakeNewClause = true;
                 cs.emplace(new_clause);
+                listener->didAddResolvent(new_clause);
             }
         }
     }
     while (canMakeNewClause);
+    listener->didReachResolutionSaturation();
+    listener->didConcludeSat();
     return SatState::SAT;
 }
-SatState res(ClauseSet c) {
-    return resolution(c);
+SatState res(ClauseSet c, const std::shared_ptr<sat_listener>& listener) {
+    listener->didStart();
+    auto result = resolution(c, listener);
+    listener->didFinish();
+    return result;
 }

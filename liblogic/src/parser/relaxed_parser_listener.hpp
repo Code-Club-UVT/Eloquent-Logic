@@ -6,9 +6,7 @@
 #define ELOQUENTLOGIC_RELAXED_PARSER_LISTENER_HPP
 #include "feedback_listener.hpp"
 
-#define CB_FULL(n, p) virtual void n p {}
-#define CB(n) CB_FULL(n, (const lexeme&))
-#define CB_N(n) CB_FULL(n, ())
+
 
 namespace eloquent::logic
 {
@@ -27,7 +25,5 @@ namespace eloquent::logic
        CB(didReadLexeme)
     };
 }
-#undef CB_FULL
-#undef CB
-#undef CB_N
+
 #endif //ELOQUENTLOGIC_RELAXED_PARSER_LISTENER_HPP
