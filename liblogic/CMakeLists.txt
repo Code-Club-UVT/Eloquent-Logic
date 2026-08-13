@@ -40,6 +40,7 @@ install(TARGETS eloquent_logic eloquent_logic_parser liblogicCommon liblogicTrut
         RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
         FILE_SET HEADERS
         FILE_SET transformation_headers
+        FILE_SET sanitizer_headers
 )
 install(EXPORT eloquent_logic_targets
         FILE eloquent_logic_targets.cmake
