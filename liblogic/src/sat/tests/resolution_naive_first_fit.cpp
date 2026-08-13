@@ -1,5 +1,10 @@
 #include <gtest/gtest.h>
+#include <memory>
 #include <resolution_naive_first_fit.h>
+
+namespace {
+    auto listener = std::make_shared<eloquent::logic::sat_listener>();
+}
 
 TEST(ResolutionUtilsTest, CanJoin_O_SinguraPerecheComplementara) {
     Clause c1 = {1, 2, 3};
@@ -96,7 +101,7 @@ TEST(ResolutionTest, SATSmallSet) {
         {-1, -2, 3}
     };
 
-    EXPECT_EQ(res(clauses), SatState::SAT);
+    EXPECT_EQ(res(clauses, listener), SatState::SAT);
 }
 
 TEST(ResolutionTest, UNSATSmallSet) {
@@ -108,7 +113,7 @@ TEST(ResolutionTest, UNSATSmallSet) {
         {-1}
     };
 
-    EXPECT_EQ(res(clauses), SatState::UNSAT);
+    EXPECT_EQ(res(clauses, listener), SatState::UNSAT);
 }
 
 // 10 var, 6 clauze
@@ -122,5 +127,5 @@ TEST(ResolutionTest, SATMediumSet) {
         {8, 9, 10},
     };
 
-    EXPECT_EQ(res(clauses), SatState::SAT);
+    EXPECT_EQ(res(clauses, listener), SatState::SAT);
 }

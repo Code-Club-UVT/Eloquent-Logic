@@ -1,5 +1,10 @@
 #include <gtest/gtest.h>
+#include <memory>
 #include <dpll_rand.h>
+
+namespace {
+    auto listener = std::make_shared<eloquent::logic::sat_listener>();
+}
 
 TEST(DPLL_RANDTest, SATSmallSet) {
     ClauseSet clauses = {
@@ -10,7 +15,7 @@ TEST(DPLL_RANDTest, SATSmallSet) {
         {-1, -2, 3}
     };
 
-    EXPECT_EQ(dpll_rand(clauses), SatState::SAT);
+    EXPECT_EQ(dpll_rand(clauses, listener), SatState::SAT);
 }
 
 TEST(DPLL_RANDTest, UNSATSmallSet) {
@@ -21,7 +26,7 @@ TEST(DPLL_RANDTest, UNSATSmallSet) {
         {-3},
         {-1}
     };
-    EXPECT_EQ(dpll_rand(clauses), SatState::UNSAT);
+    EXPECT_EQ(dpll_rand(clauses, listener), SatState::UNSAT);
 }
 
 // 10 var, 15 clauze
@@ -44,7 +49,7 @@ TEST(DPLL_RANDTest, SATMediumSet) {
         {-4, -5, 8}
     };
 
-    EXPECT_EQ(dpll_rand(clauses), SatState::SAT);
+    EXPECT_EQ(dpll_rand(clauses, listener), SatState::SAT);
 }
 
 // 8 var, 16 clauze
@@ -67,7 +72,7 @@ TEST(DPLL_RANDTest, UNSATMediumSet) {
         {6, -8, -1}
     };
 
-    EXPECT_EQ(dpll_rand(clauses), SatState::UNSAT);
+    EXPECT_EQ(dpll_rand(clauses, listener), SatState::UNSAT);
 }
 
 // 20 var, 40 clauze
@@ -115,7 +120,7 @@ TEST(DPLL_RANDTest, SATBigSet) {
         {6, 8, 7}
     };
 
-    EXPECT_EQ(dpll_rand(clauses), SatState::SAT);
+    EXPECT_EQ(dpll_rand(clauses, listener), SatState::SAT);
 }
 
 // 25 var, 46 clauze
@@ -163,6 +168,6 @@ TEST(DPLL_RANDTest, UNSATBigSet) {
         {-11, 12, -13}
     };
 
-    EXPECT_EQ(dpll_rand(clauses), SatState::UNSAT);
+    EXPECT_EQ(dpll_rand(clauses, listener), SatState::UNSAT);
 }
 

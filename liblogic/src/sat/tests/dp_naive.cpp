@@ -1,5 +1,10 @@
 #include <gtest/gtest.h>
+#include <memory>
 #include <dp_naive.h>
+
+namespace {
+    auto listener = std::make_shared<eloquent::logic::sat_listener>();
+}
 
 TEST(HeuristicsTest, GetLitTotalCount_Standard) {
     ClauseSet cs = {
@@ -55,7 +60,7 @@ TEST(HeuristicsTest, BuildHeuristicsDB_FullIntegration) {
     };
 
     HeuristicsDB_DP db;
-    build_heuristics_db(cs, db);
+    build_heuristics_db(cs, db, listener);
 
     EXPECT_EQ(db[1].get_occurrences(), 1);
     EXPECT_EQ(db[-1].get_occurrences(), 1);
@@ -69,7 +74,7 @@ TEST(HeuristicsTest, BuildHeuristicsDB_EmptyFormula) {
     ClauseSet cs;
     HeuristicsDB_DP db;
 
-    build_heuristics_db(cs, db);
+    build_heuristics_db(cs, db, listener);
 
     SUCCEED();
 }
@@ -83,7 +88,7 @@ TEST(DPTest, SATSmallSet) {
         {-1, -2, 3}
     };
 
-    EXPECT_EQ(dp(clauses), SatState::SAT);
+    EXPECT_EQ(dp(clauses, listener), SatState::SAT);
 }
 
 TEST(DPTest, UNSATSmallSet) {
@@ -95,7 +100,7 @@ TEST(DPTest, UNSATSmallSet) {
         {-1}
     };
 
-    EXPECT_EQ(dp(clauses), SatState::UNSAT);
+    EXPECT_EQ(dp(clauses, listener), SatState::UNSAT);
 }
 
 // 10 var, 15 clauze
@@ -109,5 +114,5 @@ TEST(DPTest, SATMediumSet) {
         {8, 9, 10},
     };
 
-    EXPECT_EQ(dp(clauses), SatState::SAT);
+    EXPECT_EQ(dp(clauses, listener), SatState::SAT);
 }

@@ -1,6 +1,7 @@
 #include "dpll_utils.h"
-#include <iostream>
 #include <cmath>
+
+using eloquent::logic::sat_listener;
 
 Sat::Sat(int nrClauses, int nrMax, const ClauseSet &clauses) {
     this->nrClauses = nrClauses;
@@ -14,7 +15,7 @@ Sat::Sat(const Sat &s) {
     this->nrMax = s.nrMax;
 }
 
-void max_freq(Literal &max, int &freq, const Sat &s) {
+void max_freq(Literal &max, int &freq, const Sat &s, const std::shared_ptr<sat_listener>& listener) {
     max = 0;
     freq = 0;
 
@@ -32,14 +33,16 @@ void max_freq(Literal &max, int &freq, const Sat &s) {
             }
         }
     }
+    listener->didChooseBranchingLiteral(max, freq);
 }
 
-void solve_chosen_clause(Sat &s, bool &no_vid_clause, Literal clause) {
+void solve_chosen_clause(Sat &s, bool &no_vid_clause, Literal clause, const std::shared_ptr<sat_listener>& listener) {
     ClauseSet new_clauses;
 
     for (const auto& c : s.clauses) {
         if (c.contains(clause)) {
             s.nrClauses--;
+            listener->didSatisfyClauseByUnitLiteral(c, clause);
             continue;
         }
 
@@ -49,9 +52,12 @@ void solve_chosen_clause(Sat &s, bool &no_vid_clause, Literal clause) {
 
             if (temp.empty()) {
                 no_vid_clause = false;
+                listener->didDeriveEmptyClauseFromUnitPropagation(clause);
+                listener->didDetectConflict();
                 return;
             }
             new_clauses.insert(temp);
+            listener->didReduceClauseByUnitLiteral(c, temp, clause);
         } else {
             new_clauses.insert(c);
         }
@@ -60,7 +66,7 @@ void solve_chosen_clause(Sat &s, bool &no_vid_clause, Literal clause) {
     s.clauses = std::move(new_clauses);
 }
 
-void solve_unit_clauses(Sat &s, bool &no_vid_clause) {
+void solve_unit_clauses(Sat &s, bool &no_vid_clause, const std::shared_ptr<sat_listener>& listener) {
     bool no_change = true;
     while (no_change) {
         no_change = false;
@@ -69,7 +75,8 @@ void solve_unit_clauses(Sat &s, bool &no_vid_clause) {
             if (clause.size() == 1) {
                 no_change = true;
                 Literal unit_lit = *clause.begin();
-                solve_chosen_clause(s, no_vid_clause, unit_lit);
+                listener->didFindUnitLiteral(unit_lit);
+                solve_chosen_clause(s, no_vid_clause, unit_lit, listener);
                 break;
             }
         }
@@ -77,27 +84,42 @@ void solve_unit_clauses(Sat &s, bool &no_vid_clause) {
     }
 }
 
-bool det_satisfiability(Sat &s) {
+bool det_satisfiability(Sat &s, const std::shared_ptr<sat_listener>& listener) {
     bool no_vid_clause = true;
 
-    solve_unit_clauses(s, no_vid_clause);
-    if (s.clauses.empty()) return true;
-    if (!no_vid_clause) return false;
+    solve_unit_clauses(s, no_vid_clause, listener);
+    if (s.clauses.empty()) {
+        listener->didFindSatisfyingAssignment();
+        return true;
+    }
+    if (!no_vid_clause) {
+        listener->didBacktrack();
+        return false;
+    }
 
     Literal max_lit = 0;
     int freq = 0;
-    max_freq(max_lit, freq, s);
+    max_freq(max_lit, freq, s, listener);
 
-    if (freq <= 1) return true;
+    if (freq <= 1) {
+        listener->didFindSatisfyingAssignment();
+        return true;
+    }
 
     Sat copy(s);
-    solve_chosen_clause(copy, no_vid_clause, max_lit);
+    listener->didEnterBranch(max_lit, true);
+    solve_chosen_clause(copy, no_vid_clause, max_lit, listener);
 
-    if (no_vid_clause && det_satisfiability(copy)) return true;
+    if (no_vid_clause && det_satisfiability(copy, listener)) return true;
 
     no_vid_clause = true;
-    solve_chosen_clause(s, no_vid_clause, -max_lit);
+    listener->didBacktrack();
+    listener->didEnterBranch(-max_lit, false);
+    solve_chosen_clause(s, no_vid_clause, -max_lit, listener);
 
-    if (!no_vid_clause) return false;
-    return det_satisfiability(s);
+    if (!no_vid_clause) {
+        listener->didBacktrack();
+        return false;
+    }
+    return det_satisfiability(s, listener);
 }
