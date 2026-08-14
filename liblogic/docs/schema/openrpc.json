@@ -243,13 +243,9 @@
     "schemas": {
       "Uuid": {
         "title": "Uuid",
-        "description": "JSON-serializable mirror of CppCommon::UUID (logic_agent/types/core/uuid_t.hpp), in canonical \"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\" form.",
-        "type": "object",
-        "additionalProperties": false,
-        "required": ["value"],
-        "properties": {
-          "value": { "type": "string" }
-        }
+        "description": "JSON-serializable mirror of CppCommon::UUID (logic_agent/types/core/uuid_t.hpp): a bare string in canonical \"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\" form, not a subobject.",
+        "type": "string",
+        "format": "uuid"
       },
       "LexemeType": {
         "title": "LexemeType",

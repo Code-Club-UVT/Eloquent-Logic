@@ -38,14 +38,14 @@ Notifications streamed while handling it (one JSON value per STDOUT line, matche
 {"jsonrpc":"2.0","method":"lexer/didRecogniseLexeme","params":{"lexeme":{"type":"Atom","token":"A","start":0,"end":1}}}
 {"jsonrpc":"2.0","method":"lexer/didFinish","params":{}}
 {"jsonrpc":"2.0","method":"parser/didStart","params":{}}
-{"jsonrpc":"2.0","method":"parser/didJoin","params":{"target":null,"source":{"id":{"value":"..."},"type":"Atom","lexeme":{"type":"Atom","token":"A","start":0,"end":1},"children":[]}}}
+{"jsonrpc":"2.0","method":"parser/didJoin","params":{"target":null,"source":{"id":"...","type":"Atom","lexeme":{"type":"Atom","token":"A","start":0,"end":1},"children":[]}}}
 {"jsonrpc":"2.0","method":"parser/didFinish","params":{}}
 ```
 
 Final Response (matched by `openrpc.json`'s `parse` method result):
 
 ```json
-{"jsonrpc":"2.0","id":1,"result":{"tree":{"id":{"value":"..."},"type":"AndOp","lexeme":{"type":"AndOp","token":"\\wedge","start":2,"end":8},"children":[{"value":"..."},{"value":"..."}]}}}
+{"jsonrpc":"2.0","id":1,"result":{"tree":{"id":"...","type":"AndOp","lexeme":{"type":"AndOp","token":"\\wedge","start":2,"end":8},"children":["...","..."]}}}
 ```
 
 ## Source of truth
