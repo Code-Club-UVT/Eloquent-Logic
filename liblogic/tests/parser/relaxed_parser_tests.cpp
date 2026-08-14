@@ -3,11 +3,11 @@
 #include <vector>
 #include <string>
 
-#include "relaxed_parser.hpp"
+#include <relaxed_parser.hpp>
 #include "relaxed_parser_listener.hpp"
-#include "unexpected_token_error.hpp"
+#include <unknown_variable_error.hpp>
 #include "lexeme.hpp"
-#include "dictionary.h"
+#include <dictionary.h>
 
 namespace eloquent::logic::testing
 {
@@ -307,7 +307,7 @@ TEST_F(RelaxedParserTest, RejectsPureAtomInParens)
         Sym(lexeme_type::RParen)
     });
 
-    EXPECT_THROW(relaxed_parser::parse(tokens, listener), unexpected_token_error);
+    EXPECT_THROW(relaxed_parser::parse(tokens, listener), unknown_variable_error);
     EXPECT_GT(listener->pure_atom_in_parens_count, 0);
 }
 
@@ -321,7 +321,7 @@ TEST_F(RelaxedParserTest, RejectsMismatchedParens)
         Atom("Q")
     });
 
-    EXPECT_THROW(relaxed_parser::parse(tokens, listener), unexpected_token_error);
+    EXPECT_THROW(relaxed_parser::parse(tokens, listener), unknown_variable_error);
     EXPECT_GT(listener->mismatched_parens_count, 0);
 }
 
@@ -333,7 +333,7 @@ TEST_F(RelaxedParserTest, RejectsEmptyParens)
         Sym(lexeme_type::RParen)
     });
 
-    EXPECT_THROW(relaxed_parser::parse(tokens, listener), unexpected_token_error);
+    EXPECT_THROW(relaxed_parser::parse(tokens, listener), unknown_variable_error);
 }
 
 TEST_F(RelaxedParserTest, RejectsTrailingOperator)
@@ -344,7 +344,7 @@ TEST_F(RelaxedParserTest, RejectsTrailingOperator)
         Sym(lexeme_type::AndOp, symbols::SYMB_AND)
     });
 
-    EXPECT_THROW(relaxed_parser::parse(tokens, listener), unexpected_token_error);
+    EXPECT_THROW(relaxed_parser::parse(tokens, listener), unknown_variable_error);
 }
 
 TEST_F(RelaxedParserTest, ParsesMultipleNegations)
@@ -451,7 +451,7 @@ TEST_F(RelaxedParserTest, RejectsMissingOperator)
         Atom("Q")
     });
 
-    EXPECT_THROW(relaxed_parser::parse(tokens, listener), unexpected_token_error);
+    EXPECT_THROW(relaxed_parser::parse(tokens, listener), unknown_variable_error);
 }
 
 } // namespace eloquent::logic::testing

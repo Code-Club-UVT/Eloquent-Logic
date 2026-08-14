@@ -1,20 +1,17 @@
 /**
  * Pentru acest program vom folosi strategia de alegere 'la întâmplare', numită și RAND
 */
-#include <cstring>
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include <cstdint>
 #include <vector>
 #include <chrono>
-#include <memutils.h>
-#include <csignal>
-#include <queue>
 #include <map>
 #include <random>
 #include <stack>
 #include "dpll_rand.h"
+
+using eloquent::logic::sat_listener;
 
 namespace fs = std::filesystem;
 
@@ -135,15 +132,6 @@ public:
 };
 constexpr std::size_t THRESHOLD = 71000000;
 
-void onCtrlC(int sig) {
-    std::cerr<<"Programul a primit semnalul "<<sig<<"\n Rezultat: UNKNOWN.\n";
-    size_t peakSize = getPeakRSS();
-    std::cerr<<"Memorie consumată: "<< peakSize<<"B."<<'\n';
-    std::cerr<<"Memorie consumată: "<< peakSize/1024<<"KB."<<'\n';
-    std::cerr<<"Memorie consumată: "<< peakSize/1024/1024<<"MB."<<'\n';
-    std::cerr<<"Memorie consumată: "<< peakSize/1024/1024/1024<<"GB."<<'\n';
-    exit(1);
-}
 
 void analyse(const Clause& c, HeuristicsDB_DPLL& db) {
     for (auto& literal: c) {
@@ -169,7 +157,7 @@ int get_lit_total_count(const ClauseSet& c) {
 
     return lit_total_count;
 }
-void build_heuristics_db(const ClauseSet& c, HeuristicsDB_DPLL& db) {
+void build_heuristics_db(const ClauseSet& c, HeuristicsDB_DPLL& db, const std::shared_ptr<sat_listener>& listener) {
     int max_lit = get_lit_total_count(c);
 
     db.resize(max_lit);
@@ -179,6 +167,7 @@ void build_heuristics_db(const ClauseSet& c, HeuristicsDB_DPLL& db) {
     }
 
     db.poppulate_literal_record();
+    listener->didBuildHeuristicsDatabase(c);
 }
 [[nodiscard]] ClauseSet read_clauses(const char *file) {
     std::ifstream f(file);
@@ -218,37 +207,49 @@ void process_clause_removal(HeuristicsDB_DPLL &db, const Clause& clause) {
         --db[c_lit];
 }
 
-bool one_literal_clause_rule(ClauseSet &cs, std::set<Literal>& single_literals, SatState &result, HeuristicsDB_DPLL& db) {
+bool one_literal_clause_rule(ClauseSet &cs, std::set<Literal>& single_literals, SatState &result, HeuristicsDB_DPLL& db, const std::shared_ptr<sat_listener>& listener) {
     while (!single_literals.empty()) {
         for (const auto& lit: single_literals) {
-            auto it = cs.begin();
-            while (it != cs.end()) {
-                auto clause = *it;
-                auto next = it;
-                std::advance(next,1);
+            listener->didFindUnitLiteral(lit);
+            std::vector<Clause> satisfied;
+            std::vector<Clause> to_reduce;
+
+            for (const auto& clause : cs) {
                 if (clause.contains(lit)) {
-                    cs.erase(clause);
-                    if (cs.empty()) {
-                        result = SatState::SAT;
-                        return true;
-                    }
-                    //std::cerr<<"Șterg clauza prin literal pur\n";
-                    process_clause_removal(db, clause);
-                    it = next;
+                    satisfied.push_back(clause);
                     continue;
                 }
                 if (clause.contains(-lit)) {
-                    cs.erase(clause);
-                    //std::cerr<<"Șterg complementarul prin literal pur\n";
-                    clause.erase(-lit);
-                    if (clause.empty()) {
-                        result = SatState::UNSAT;
-                        return true;
-                    }
-                    --db[-lit];
-                    cs.emplace(clause);
+                    to_reduce.push_back(clause);
                 }
-                it=next;
+            }
+
+            for (const auto& clause : satisfied) {
+                cs.erase(clause);
+                listener->didSatisfyClauseByUnitLiteral(clause, lit);
+                if (cs.empty()) {
+                    result = SatState::SAT;
+                    listener->didFindSatisfyingAssignment();
+                    return true;
+                }
+                //std::cerr<<"Șterg clauza prin literal pur\n";
+                process_clause_removal(db, clause);
+            }
+
+            for (const auto& clause : to_reduce) {
+                cs.erase(clause);
+                //std::cerr<<"Șterg complementarul prin literal pur\n";
+                Clause reduced = clause;
+                reduced.erase(-lit);
+                if (reduced.empty()) {
+                    result = SatState::UNSAT;
+                    listener->didDeriveEmptyClauseFromUnitPropagation(lit);
+                    listener->didDetectConflict();
+                    return true;
+                }
+                --db[-lit];
+                cs.emplace(reduced);
+                listener->didReduceClauseByUnitLiteral(clause, reduced, lit);
             }
         }
         single_literals.clear();
@@ -261,23 +262,25 @@ bool one_literal_clause_rule(ClauseSet &cs, std::set<Literal>& single_literals, 
     return false;
 }
 
-bool single_polarity_rule(ClauseSet &cs, HeuristicsDB_DPLL &db, std::set<Literal>& single_polarity_literals, SatState &result) {
+bool single_polarity_rule(ClauseSet &cs, HeuristicsDB_DPLL &db, std::set<Literal>& single_polarity_literals, SatState &result, const std::shared_ptr<sat_listener>& listener) {
     while (!single_polarity_literals.empty()) {
         for (const auto& literal: single_polarity_literals) {
-            for (auto it = cs.begin(); it != cs.end(); ++it) {
-                const auto clause = *it;
-                auto next = it;
-                std::advance(next,1);
+            listener->didFindPureLiteral(literal);
+            std::vector<Clause> to_erase;
+            for (const auto& clause : cs) {
                 if (clause.contains(literal)) {
-                    cs.erase(clause);
-                    //std::cerr<<"Șterg clauza prin literal cu aceiași polaritate\n";
-                    process_clause_removal(db,clause);
-                    if (cs.empty()) {
-                        result = SatState::SAT;
-                        return true;
-                    }
-                    it = next;
-                    std::advance(it,-1);
+                    to_erase.push_back(clause);
+                }
+            }
+            for (const auto& clause : to_erase) {
+                cs.erase(clause);
+                //std::cerr<<"Șterg clauza prin literal cu aceiași polaritate\n";
+                process_clause_removal(db, clause);
+                listener->didEliminateClauseByPureLiteral(clause, literal);
+                if (cs.empty()) {
+                    result = SatState::SAT;
+                    listener->didFindSatisfyingAssignment();
+                    return true;
                 }
             }
         }
@@ -293,7 +296,7 @@ bool single_polarity_rule(ClauseSet &cs, HeuristicsDB_DPLL &db, std::set<Literal
     return false;
 }
 
-bool davis_putnam(ProblemContext& pc, SatState& result) {
+bool davis_putnam(ProblemContext& pc, SatState& result, const std::shared_ptr<sat_listener>& listener) {
 
     std::set<Literal> single_polarity_literals;
     std::set<Literal> single_literals;
@@ -308,20 +311,22 @@ bool davis_putnam(ProblemContext& pc, SatState& result) {
         }
     }
 
-    if (one_literal_clause_rule(pc.get_cs(), single_literals, result, pc.get_db())) return true;
-    if (single_polarity_rule(pc.get_cs(), pc.get_db(), single_polarity_literals, result)) return true;
+    if (one_literal_clause_rule(pc.get_cs(), single_literals, result, pc.get_db(), listener)) return true;
+    if (single_polarity_rule(pc.get_cs(), pc.get_db(), single_polarity_literals, result, listener)) return true;
     return false;
 }
 
 
-Literal pick_literal(ProblemContext & ctx) {
+Literal pick_literal(ProblemContext & ctx, const std::shared_ptr<sat_listener>& listener) {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<size_t> distrib(0, ctx.get_db().get_record().size()-1);
 
-    return ctx.get_db().get_record()[distrib(gen)];
+    Literal l = ctx.get_db().get_record()[distrib(gen)];
+    listener->didChooseRandomLiteral(l);
+    return l;
 }
-SatState davis_putnam_logemann_loveland(const HeuristicsDB_DPLL &db, const ClauseSet &cs) {
+SatState davis_putnam_logemann_loveland(const HeuristicsDB_DPLL &db, const ClauseSet &cs, const std::shared_ptr<sat_listener>& listener) {
     SatState result = SatState::UNKNOWN;
     std::stack<ProblemContext> context_stack;
     context_stack.emplace(db,cs);
@@ -329,13 +334,20 @@ SatState davis_putnam_logemann_loveland(const HeuristicsDB_DPLL &db, const Claus
     while (!context_stack.empty()) {
         auto c_context = context_stack.top();
         context_stack.pop();
-        auto c_solved = davis_putnam(c_context,result);
+        listener->didPopBranchContext();
+        auto c_solved = davis_putnam(c_context,result, listener);
         c_context.get_db().poppulate_literal_record();
         if (c_solved && result == SatState::SAT) {
+            listener->didConcludeSat();
             return SatState::SAT;
         }
+        if (c_solved) {
+            // this context's clause set contains an empty clause (result == UNSAT):
+            // a dead branch, drop it and move on to the next one on the stack.
+            listener->didBacktrack();
+        }
         if (!c_solved){
-            Literal l = pick_literal(c_context);
+            Literal l = pick_literal(c_context, listener);
             Clause literal({l});
             Clause notLiteral({-l});
             ProblemContext literal_ctx = c_context;
@@ -348,68 +360,23 @@ SatState davis_putnam_logemann_loveland(const HeuristicsDB_DPLL &db, const Claus
             ++negative_literal_ctx.get_db()[-l];
             negative_literal_ctx.get_db().poppulate_literal_record();
 
+            listener->didPushBranchContext(-l, false);
             context_stack.push(negative_literal_ctx);
+            listener->didPushBranchContext(l, true);
             context_stack.push(literal_ctx);
         }
 
     }
+    listener->didConcludeUnsat();
     return SatState::UNSAT;
 }
-SatState dpll_rand(ClauseSet clauses) {
+SatState dpll_rand(ClauseSet clauses, const std::shared_ptr<sat_listener>& listener) {
+    listener->didStart();
     HeuristicsDB_DPLL db;
-    build_heuristics_db(clauses, db);
+    build_heuristics_db(clauses, db, listener);
     max_clauses = clauses.size();
 
-    return davis_putnam_logemann_loveland(db, clauses);
+    SatState result = davis_putnam_logemann_loveland(db, clauses, listener);
+    listener->didFinish();
+    return result;
 }
-/*
-int main(int argc, const char* argv[]) {
-    std::ios::sync_with_stdio(false);
-    signal(SIGINT, &onCtrlC);
-    signal(9, &onCtrlC);
-    signal(SIGABRT, &onCtrlC);
-    signal(SIGTERM, &onCtrlC);
-    if (argc != 3) {
-        std::cerr<<"Wrong input. Usage ./resolution_naive_first_fit <path_to_cnf_file> <path_to_log_file>";
-        return 1;
-    }
-    if (!fs::exists(argv[1])) {
-        std::cerr<<"File "<<argv[1]<<" does not exist\n";
-        return 1;
-    }
-
-    ClauseSet clauses = read_clauses(argv[1]);
-    max_clauses = std::max(max_clauses,clauses.size());
-
-    std::ofstream g(argv[2]);
-    g<<"S-a citit "<<argv[1]<<'\n';
-    g<<"Start SAT. Rezultat: ";
-    g.flush();
-    auto start = std::chrono::high_resolution_clock::now();
-    auto result = dpll_rand(clauses);
-    auto end = std::chrono::high_resolution_clock::now();
-    size_t peakSize    = getPeakRSS( );
-    switch (result) {
-        case SatState::SAT:
-            g<<"SAT";
-            break;
-        case SatState::UNSAT:
-            g<<"UNSAT";
-            break;
-        case SatState::UNKNOWN:
-            g<<"UNKNOWN";
-            break;
-    }
-    g<<'\n';
-    g<<"Clauze totale: "<<(result==SatState::UNSAT ? clauses.size()+1 : clauses.size())<<'\n';
-    g<<"Număr maxim de clauze "<<(result==SatState::UNSAT ? max_clauses+1 : max_clauses)<<'\n';
-    auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end-start).count();
-    g<<"Timp de execuție: "<<elapsed<<"μs"<<'\n';
-    g<<"Memorie consumată: "<< peakSize<<"B."<<'\n';
-    g<<"Memorie consumată: "<< peakSize/1024<<"KB."<<'\n';
-    g<<"Memorie consumată: "<< peakSize/1024/1024<<"MB."<<'\n';
-    g<<"Memorie consumată: "<< peakSize/1024/1024/1024<<"GB."<<'\n';
-    g.close();
-    return 0;
-}
-*/

@@ -3,18 +3,18 @@
 //
 
 #pragma once
-#include "tree_recognizer_base.h"
+#include "tree_operation_base.h"
 
 namespace eloquent::logic {
-    class DeMorganDisjunction : public TreeRecognizerBase {
+    class DeMorganDisjunction : public tree_operation_base {
     public:
-        bool match(NodeObsPtr subtree) override;
-        void replace(NodeObsPtr target) override;
+        bool match(NodeObsPtr subtree, const std::shared_ptr<node_transformation_listener_t>& listener) override;
+        void replace(NodeObsPtr target, const std::shared_ptr<node_transformation_listener_t>& listener) override;
     };
 
-    class DeMorganConjunction : public TreeRecognizerBase {
+    class DeMorganConjunction : public tree_operation_base {
     public:
-        bool match(NodeObsPtr subtree) override;
-        void replace(NodeObsPtr target) override;
+        bool match(NodeObsPtr subtree, const std::shared_ptr<node_transformation_listener_t>& listener) override;
+        void replace(NodeObsPtr target, const std::shared_ptr<node_transformation_listener_t>& listener) override;
     };
 }

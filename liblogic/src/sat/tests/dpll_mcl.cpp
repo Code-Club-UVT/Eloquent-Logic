@@ -1,5 +1,10 @@
 #include <gtest/gtest.h>
+#include <memory>
 #include <dpll_mcl.h>
+
+namespace {
+    auto listener = std::make_shared<eloquent::logic::sat_listener>();
+}
 
 TEST(DPLL_MCLTest, SATSmallSet) {
     ClauseSet clauses = {
@@ -10,7 +15,7 @@ TEST(DPLL_MCLTest, SATSmallSet) {
         {-1, -2, 3}
     };
 
-    EXPECT_EQ(dpll_mcl(clauses), SatState::SAT);
+    EXPECT_EQ(dpll_mcl(clauses, listener), SatState::SAT);
 }
 
 TEST(DPLL_MCLTest, UNSATSmallSet) {
@@ -22,7 +27,7 @@ TEST(DPLL_MCLTest, UNSATSmallSet) {
         {-1}
     };
 
-    EXPECT_EQ(dpll_mcl(clauses), SatState::UNSAT);
+    EXPECT_EQ(dpll_mcl(clauses, listener), SatState::UNSAT);
 }
 
 // 10 var, 15 clauze
@@ -45,7 +50,7 @@ TEST(DPLL_MCLTest, SATMediumSet) {
         {-4, -5, 8}
     };
 
-    EXPECT_EQ(dpll_mcl(clauses), SatState::SAT);
+    EXPECT_EQ(dpll_mcl(clauses, listener), SatState::SAT);
 }
 
 TEST(DPLL_MCLTest, UNSATMediumSet) {
@@ -67,7 +72,7 @@ TEST(DPLL_MCLTest, UNSATMediumSet) {
         {6, -8, -1}
     };
 
-    EXPECT_EQ(dpll_mcl(clauses), SatState::UNSAT);
+    EXPECT_EQ(dpll_mcl(clauses, listener), SatState::UNSAT);
 }
 
 // 20 var, 40 clauze
@@ -115,7 +120,7 @@ TEST(DPLL_MCLTest, SATBigSet) {
         {6, 8, 7}
     };
 
-    EXPECT_EQ(dpll_mcl(clauses), SatState::SAT);
+    EXPECT_EQ(dpll_mcl(clauses, listener), SatState::SAT);
 }
 
 TEST(DPLL_MCLTest, UNSATBigSet) {
@@ -162,6 +167,6 @@ TEST(DPLL_MCLTest, UNSATBigSet) {
         {-11, 12, -13}
     };
 
-    EXPECT_EQ(dpll_mcl(clauses), SatState::UNSAT);
+    EXPECT_EQ(dpll_mcl(clauses, listener), SatState::UNSAT);
 }
 

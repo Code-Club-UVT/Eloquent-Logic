@@ -1,0 +1,26 @@
+//
+// Created by Bogdan Petru on 11/08/2026.
+//
+
+#include "dnf_recogniser.hpp"
+
+namespace eloquent
+{
+    namespace logic
+    {
+        bool dnf_recogniser::match(NodeObsPtr subtree, const std::shared_ptr<node_transformation_listener_t>& listener)
+        {
+            bool result = subtree->getType() == NodeType::OrOp;
+            subtree->traverse_children([&](auto node1)
+            {
+                result&=(node1->getType() == NodeType::AndOp || node1->getType() == NodeType::Atom);
+                node1->traverse_children([&](auto node2)
+                {
+                    result&=(node2->getType() == NodeType::Atom);
+                });
+            });
+            listener->didCheckDNF(subtree, result);
+            return result;
+        }
+    } // logic
+} // eloquent

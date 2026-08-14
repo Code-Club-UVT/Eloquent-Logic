@@ -1,6 +1,5 @@
 add_library(eloquent_logic liblogic.cpp)
 
-add_dependencies(eloquent_logic)
 add_dependencies(eloquent_logic liblogicCommon)
 target_link_libraries(eloquent_logic PUBLIC liblogicCommon)
 
