@@ -47,6 +47,8 @@ add_executable(logic_agent agent.cpp
         rpc/methods/transform_method.cpp
         rpc/methods/sat_method.hpp
         rpc/methods/sat_method.cpp
+        rpc/methods/shutdown_method.hpp
+        rpc/methods/shutdown_method.cpp
         rpc/dispatcher.hpp
         rpc/dispatcher.cpp
 )

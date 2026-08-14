@@ -50,12 +50,17 @@ namespace eloquent::logic {
         void transfer_child_to(NodeObsPtr node, size_t child_idx);
         void walk(const std::function<void(NodeObsPtr)>& cb);
         void traverse_children(const std::function<void(const NodeObsPtr&)>& cb) const;
-        // Applies n-isation: merges any direct child that shares this node's
-        // own AndOp/OrOp type into this node, flattening nested chains of the
-        // same operator. If given, on_merge is invoked once per merged child,
-        // right before its grandchildren are absorbed, so callers can report
-        // each individual merge step.
-        void condense(const std::function<void(NodeObsPtr)>& on_merge = {});
+        // Applies n-isation over the whole subtree rooted at this node:
+        // recurses into every child first, then merges any of *this* node's
+        // own direct children that share its AndOp/OrOp type into itself,
+        // flattening nested chains of the same operator anywhere in the
+        // subtree (not just among the node condense() was directly called
+        // on). If given, on_merge is invoked once per merged child as
+        // (parent, merged) — parent is whichever node the merge actually
+        // happened on (not necessarily the node condense() was originally
+        // called on) — right before the merged child's grandchildren are
+        // absorbed, so callers can report each individual merge step.
+        void condense(const std::function<void(NodeObsPtr, NodeObsPtr)>& on_merge = {});
 
         Node(const Node& n) = delete;
         void set_lexeme(const lexeme& l);

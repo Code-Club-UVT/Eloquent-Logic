@@ -42,11 +42,34 @@ namespace eloquent
             listener->didFinish();
         }
 
+        namespace
+        {
+            // Same-precedence operator chains never come out of the parser
+            // (or out of and_distribution/or_distribution's freshly-built
+            // wrapper nodes) as a single flat n-ary AndOp/OrOp — they're
+            // strictly binary/nested (see relaxed_parser.cpp). cnf_recogniser
+            // and dnf_recogniser only accept a flat top level, so without
+            // this, a tree that's already logically in normal form but
+            // structurally nested would make the while loops below spin
+            // forever: nothing else ever matches an AndOp-of-AndOp (or
+            // OrOp-of-OrOp), so the tree would never change and match()
+            // would keep returning false on every iteration.
+            void flatten(std::shared_ptr<syntax_tree>& tree,
+                const std::shared_ptr<node_transformation_listener_t>& listener)
+            {
+                tree->rootRef()->condense([&](NodeObsPtr parent, NodeObsPtr merged)
+                {
+                    listener->didCondenseChild(parent, merged);
+                });
+            }
+        }
+
         void transformation_runner::to_dnf(std::shared_ptr<syntax_tree>& tree,
             const std::shared_ptr<node_transformation_listener_t>& listener)
         {
             listener->didStart();
             to_nnf(tree, listener);
+            flatten(tree, listener);
             dnf_recogniser recogniser;
             std::array<std::unique_ptr<tree_operation_base>,2> ops = {
                 std::make_unique<and_distribution>(),
@@ -67,6 +90,7 @@ namespace eloquent
                     if (tgt)
                         t->replace(tgt, listener);
                 }
+                flatten(tree, listener);
             }
             listener->didFinish();
         }
@@ -76,6 +100,7 @@ namespace eloquent
         {
             listener->didStart();
             to_nnf(tree, listener);
+            flatten(tree, listener);
             cnf_recogniser recogniser;
             std::array<std::unique_ptr<tree_operation_base>,2> ops = {
                 std::make_unique<or_distribution>(),
@@ -96,6 +121,7 @@ namespace eloquent
                     if (tgt)
                         t->replace(tgt, listener);
                 }
+                flatten(tree, listener);
             }
             listener->didFinish();
         }

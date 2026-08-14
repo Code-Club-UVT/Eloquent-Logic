@@ -8,6 +8,8 @@
  * listener callback it fires as a JSON-RPC 2.0 Notification on STDOUT as it
  * happens, and finishes with a Response (result or error) carrying the
  * original id. See logic_agent/rpc/dispatcher.hpp for the method registry.
+ * The loop also ends early, right after sending that Response, when the
+ * dispatched method is "shutdown".
  */
 #include <iostream>
 #include <limits>
@@ -29,6 +31,7 @@ int main()
     {
         nlohmann::json input;
         nlohmann::json id = nullptr;
+        bool should_shutdown = false;
 
         try
         {
@@ -45,9 +48,10 @@ int main()
             id = request.id;
 
             logic_agent::rpc::event_sink sink(std::cout);
-            auto result = logic_agent::rpc::dispatch(request, sink);
+            auto dispatched = logic_agent::rpc::dispatch(request, sink);
+            should_shutdown = dispatched.should_shutdown;
 
-            std::cout << rpc_response::success(request.id, std::move(result)).to_json().dump() << "\n";
+            std::cout << rpc_response::success(request.id, std::move(dispatched.result)).to_json().dump() << "\n";
         }
         catch (const nlohmann::json::parse_error& e)
         {
@@ -68,6 +72,13 @@ int main()
         }
 
         std::cout.flush();
+
+        // Only the success path above can set this — a "shutdown" request
+        // that itself failed to parse/dispatch must not terminate the loop.
+        if (should_shutdown)
+        {
+            break;
+        }
     }
 
     return 0;

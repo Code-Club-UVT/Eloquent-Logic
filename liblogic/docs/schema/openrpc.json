@@ -1,0 +1,344 @@
+{
+  "openrpc": "1.3.2",
+  "info": {
+    "title": "Eloquent Logic Agent",
+    "version": "1.0.0",
+    "description": "logic_agent is a single-threaded JSON-RPC 2.0 server (logic_agent/agent.cpp) that reads Request objects one at a time from STDIN and writes Response objects to STDOUT, one JSON value per line (no HTTP/WebSocket transport), until either STDIN reaches EOF or a \"shutdown\" call is dispatched (the server sends that call's Response, then exits its request loop without reading any further Requests). While handling a request, it also writes zero or more JSON-RPC Notification objects to STDOUT *before* the final Response — one per liblogic listener callback fired along the way (lexing, parsing, transforming, SAT solving, ...). Those notifications are not part of this document: see feedback-events.schema.json for their method names and payload shapes. A malformed Request (invalid JSON, not an object, missing/wrong \"jsonrpc\", missing \"method\") is rejected before dispatch with error -32700 (Parse error) or -32600 (Invalid Request); an unrecognised \"method\" is rejected with -32601 (Method not found). Both are request-parsing-stage errors that apply uniformly to every method, so they are documented under components.errors but not repeated in each method's own errors list.",
+    "contact": {
+      "name": "Eloquent Logic Agent"
+    }
+  },
+  "methods": [
+    {
+      "name": "parse",
+      "summary": "Lex and parse a formula into an AST.",
+      "description": "Lexes `formula` and parses it into a syntax tree (logic_agent/rpc/methods/parse_method.cpp), streaming every lexer/parser callback as a notification along the way (see feedback-events.schema.json, categories lexer/*, parser/* or parser/strict/* depending on `strict`). Throws lexer_exception/unknown_variable_error (reported as -32000 Server error) on malformed input.",
+      "params": [
+        {
+          "name": "params",
+          "description": "The JSON-RPC \"params\" object.",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["formula"],
+            "properties": {
+              "formula": {
+                "type": "string",
+                "description": "The propositional-logic formula to lex and parse."
+              },
+              "strict": {
+                "type": "boolean",
+                "default": false,
+                "description": "When true, use the cursor-based strict_parser (requires fully parenthesized input, e.g. \"(A \\\\wedge B)\") instead of the default Pratt-style relaxed_parser."
+              }
+            }
+          }
+        }
+      ],
+      "result": {
+        "name": "parseResult",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["tree"],
+          "properties": {
+            "tree": {
+              "description": "The parsed AST's root, or null if the formula parsed to no root.",
+              "oneOf": [
+                { "$ref": "#/components/schemas/Node" },
+                { "type": "null" }
+              ]
+            }
+          }
+        }
+      },
+      "errors": [
+        { "$ref": "#/components/errors/InvalidParams" },
+        { "$ref": "#/components/errors/ServerError" },
+        { "$ref": "#/components/errors/InternalError" }
+      ]
+    },
+    {
+      "name": "transform",
+      "summary": "Parse a formula and rewrite it to NNF, CNF, or DNF.",
+      "description": "Parses `formula` (identical first stage to `parse`) then runs eloquent::logic::transformation_runner to rewrite the AST to the requested normal form, streaming every parser and transformation-rule callback as a notification (categories lexer/*, parser/*|parser/strict/*, transform/* — see feedback-events.schema.json). (logic_agent/rpc/methods/transform_method.cpp)",
+      "params": [
+        {
+          "name": "params",
+          "description": "The JSON-RPC \"params\" object.",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["formula"],
+            "properties": {
+              "formula": {
+                "type": "string",
+                "description": "The propositional-logic formula to parse and transform."
+              },
+              "strict": {
+                "type": "boolean",
+                "default": false,
+                "description": "When true, use strict_parser instead of the default relaxed_parser."
+              },
+              "target": {
+                "type": "string",
+                "enum": ["nnf", "cnf", "dnf"],
+                "default": "cnf",
+                "description": "The normal form to rewrite the parsed AST into."
+              }
+            }
+          }
+        }
+      ],
+      "result": {
+        "name": "transformResult",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["tree"],
+          "properties": {
+            "tree": {
+              "description": "The rewritten AST's root, or null if the formula parsed to no root.",
+              "oneOf": [
+                { "$ref": "#/components/schemas/Node" },
+                { "type": "null" }
+              ]
+            }
+          }
+        }
+      },
+      "errors": [
+        { "$ref": "#/components/errors/InvalidParams" },
+        { "$ref": "#/components/errors/ServerError" },
+        { "$ref": "#/components/errors/InternalError" }
+      ]
+    },
+    {
+      "name": "sat",
+      "summary": "Parse a formula, convert it to CNF, and decide satisfiability.",
+      "description": "Parses `formula`, always converts it to CNF first (regardless of `target`, which the `transform` method offers independently), maps it to a DIMACS-style clause set (streamed under mapper/*), then runs the requested SAT algorithm over the clause set (streamed under sat/*). (logic_agent/rpc/methods/sat_method.cpp)",
+      "params": [
+        {
+          "name": "params",
+          "description": "The JSON-RPC \"params\" object.",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["formula"],
+            "properties": {
+              "formula": {
+                "type": "string",
+                "description": "The propositional-logic formula to check for satisfiability."
+              },
+              "strict": {
+                "type": "boolean",
+                "default": false,
+                "description": "When true, use strict_parser instead of the default relaxed_parser."
+              },
+              "algorithm": {
+                "type": "string",
+                "enum": ["dp", "dpll_mcl", "dpll_rand", "resolution"],
+                "default": "dpll_mcl",
+                "description": "The SAT algorithm to run: Davis-Putnam (dp), DPLL with the MOM's/Jeroslow-Wang-style branching heuristic (dpll_mcl), randomized DPLL (dpll_rand), or first-fit resolution (resolution)."
+              }
+            }
+          }
+        }
+      ],
+      "result": {
+        "name": "satResult",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["state", "mapping", "clauses"],
+          "properties": {
+            "state": {
+              "type": "string",
+              "enum": ["SAT", "UNSAT", "UNKNOWN"],
+              "description": "Mirrors eloquent::logic::SatState."
+            },
+            "mapping": {
+              "type": "object",
+              "description": "Atom name -> its positive DIMACS literal id.",
+              "additionalProperties": { "type": "integer" }
+            },
+            "clauses": {
+              "type": "array",
+              "description": "The CNF clause set as DIMACS-style clauses: each clause is an array of nonzero literal ids (negative = negated atom).",
+              "items": {
+                "type": "array",
+                "items": { "type": "integer" }
+              }
+            }
+          }
+        }
+      },
+      "errors": [
+        { "$ref": "#/components/errors/InvalidParams" },
+        { "$ref": "#/components/errors/ServerError" },
+        { "$ref": "#/components/errors/InternalError" }
+      ]
+    },
+    {
+      "name": "truth_table",
+      "summary": "Parse a formula and compute its full truth table.",
+      "description": "Parses `formula` then evaluates it under every assignment of its variables, streaming every parser and truth-table-evaluation callback as a notification (categories lexer/*, parser/*|parser/strict/*, truth_table/* — see feedback-events.schema.json). (logic_agent/rpc/methods/truth_table_method.cpp)",
+      "params": [
+        {
+          "name": "params",
+          "description": "The JSON-RPC \"params\" object.",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["formula"],
+            "properties": {
+              "formula": {
+                "type": "string",
+                "description": "The propositional-logic formula to tabulate."
+              },
+              "strict": {
+                "type": "boolean",
+                "default": false,
+                "description": "When true, use strict_parser instead of the default relaxed_parser."
+              }
+            }
+          }
+        }
+      ],
+      "result": {
+        "name": "truthTableResult",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["headers", "rows"],
+          "properties": {
+            "headers": {
+              "type": "array",
+              "description": "The formula's variable names in column order, followed by the formula text itself as the last (result) column header.",
+              "items": { "type": "string" }
+            },
+            "rows": {
+              "type": "array",
+              "description": "One row per variable assignment: one boolean per variable (in `headers` order) plus a trailing boolean for the whole formula's value under that assignment.",
+              "items": {
+                "type": "array",
+                "items": { "type": "boolean" }
+              }
+            }
+          }
+        }
+      },
+      "errors": [
+        { "$ref": "#/components/errors/InvalidParams" },
+        { "$ref": "#/components/errors/ServerError" },
+        { "$ref": "#/components/errors/InternalError" }
+      ]
+    },
+    {
+      "name": "shutdown",
+      "summary": "Gracefully stop the server.",
+      "description": "Tells logic_agent to exit its request loop after sending this method's Response — no further Requests are read from STDIN once the process has replied. Takes no params and streams no notifications. (logic_agent/rpc/methods/shutdown_method.cpp)",
+      "params": [],
+      "result": {
+        "name": "shutdownResult",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "message": { "type": "string" }
+          }
+        }
+      }
+    }
+  ],
+  "components": {
+    "schemas": {
+      "Uuid": {
+        "title": "Uuid",
+        "description": "JSON-serializable mirror of CppCommon::UUID (logic_agent/types/core/uuid_t.hpp): a bare string in canonical \"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\" form, not a subobject.",
+        "type": "string",
+        "format": "uuid"
+      },
+      "LexemeType": {
+        "title": "LexemeType",
+        "description": "Mirrors eloquent::logic::lexeme_type (src/parser/lexeme.hpp) via logic_agent/types/core/lexeme_t.hpp.",
+        "type": "string",
+        "enum": [
+          "Unknown", "Atom", "Tautology", "Contradiction", "LParen", "RParen",
+          "NotOp", "AndOp", "OrOp", "ImpliesOp", "IffOp", "LEquiOp", "Eof"
+        ]
+      },
+      "Lexeme": {
+        "title": "Lexeme",
+        "description": "Mirrors eloquent::logic::lexeme (src/parser/lexeme.hpp) via logic_agent/types/core/lexeme_t.hpp.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "token", "start", "end"],
+        "properties": {
+          "type": { "$ref": "#/components/schemas/LexemeType" },
+          "token": { "type": "string" },
+          "start": { "type": "integer", "minimum": 0 },
+          "end": { "type": "integer", "minimum": 0 }
+        }
+      },
+      "NodeType": {
+        "title": "NodeType",
+        "description": "Mirrors eloquent::logic::NodeType (src/parser/node.h) via logic_agent/types/core/node_t.hpp.",
+        "type": "string",
+        "enum": ["Blank", "Atom", "NotOp", "AndOp", "OrOp", "ImpliesOp", "IffOp", "LEquiOp"]
+      },
+      "Node": {
+        "title": "Node",
+        "description": "Mirrors eloquent::logic::Node (src/parser/node.h) via logic_agent/types/core/node_t.hpp. A plain value type: no parent pointer, and children are referenced by uuid (each child's own Node, if needed, is reachable the same way this node was) rather than embedded recursively.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "type", "lexeme", "children"],
+        "properties": {
+          "id": { "$ref": "#/components/schemas/Uuid" },
+          "type": { "$ref": "#/components/schemas/NodeType" },
+          "lexeme": { "$ref": "#/components/schemas/Lexeme" },
+          "children": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Uuid" }
+          }
+        }
+      }
+    },
+    "errors": {
+      "ParseError": {
+        "code": -32700,
+        "message": "Parse error",
+        "data": "Invalid JSON was received by the server (nlohmann::json::parse_error while reading a Request line). Request-parsing-stage error, occurs before any method is dispatched."
+      },
+      "InvalidRequest": {
+        "code": -32600,
+        "message": "Invalid Request",
+        "data": "The received JSON is not a valid Request object: not a JSON object, \"jsonrpc\" missing or not \"2.0\", or \"method\" missing or not a string (logic_agent/types/rpc_request.cpp). Request-parsing-stage error, occurs before any method is dispatched."
+      },
+      "MethodNotFound": {
+        "code": -32601,
+        "message": "Method not found",
+        "data": "\"method\" is not one of parse, transform, sat, truth_table (logic_agent/rpc/dispatcher.cpp)."
+      },
+      "InvalidParams": {
+        "code": -32602,
+        "message": "Invalid params",
+        "data": "\"params\" is missing a required field, a field has the wrong type, or an enum field (target/algorithm) has an unrecognised value."
+      },
+      "InternalError": {
+        "code": -32603,
+        "message": "Internal error",
+        "data": "Reserved for JSON-RPC-internal errors; currently unused by any handler in this codebase."
+      },
+      "ServerError": {
+        "code": -32000,
+        "message": "Server error",
+        "data": "Catch-all for any std::exception raised by liblogic itself while handling the request (lexer_exception, unknown_variable_error, unbound_variable_error, unsupported_operator_error, ...) that isn't already an rpc_exception (agent.cpp)."
+      }
+    }
+  }
+}
