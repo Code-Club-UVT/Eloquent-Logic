@@ -6,10 +6,17 @@
 #include <QLineEdit>
 #include <QKeySequence>
 #include <QRegularExpression>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QUrl>
 
 LogicEditorWindow::LogicEditorWindow(QWidget *parent) : QWidget(parent) {
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
 
+    networkManager = new QNetworkAccessManager(this);
     formulaInput = new LogicLineEdit(this);
     formulaInput->setPlaceholderText("Introdu formula aici...");
     QFont font = formulaInput->font();
@@ -95,8 +102,42 @@ LogicEditorWindow::LogicEditorWindow(QWidget *parent) : QWidget(parent) {
     });
 
     connect(btnEval, &QPushButton::clicked, [this]() {
-        resultOutput->setText(getFormulaWithSymbols());
-        //resultOutput->setText("result");
+        resultOutput->setText("Evaluating");
+
+        QJsonObject jsonRequest;
+        jsonRequest["jsonrpc"] = "2.0";
+        jsonRequest["method"] = "evaluate_formula_properties";
+        jsonRequest["id"] = 5;
+
+        QJsonObject params;
+        params["formula"] = getFormulaWithSymbols();
+        jsonRequest["params"] = params;
+
+        QJsonDocument doc(jsonRequest);
+        QByteArray data = doc.toJson();
+
+        QUrl url("http://localhost:8080");
+        QNetworkRequest request(url);
+        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+        QNetworkReply *reply = networkManager->post(request, data);
+
+        connect(reply, &QNetworkReply::finished, [this, reply]() {
+            if (reply->error() == QNetworkReply::NoError) {
+                QByteArray responseData = reply->readAll();
+                QJsonDocument responseDoc = QJsonDocument::fromJson(responseData);
+                QJsonObject responseObj = responseDoc.object();
+
+                if (responseObj.contains("result")) {
+                    QJsonObject resultObj = responseObj["result"].toObject();
+                    QString classification = resultObj["classification"].toString();
+                    resultOutput->setText(classification);
+                }
+            } else {
+                resultOutput->setText("Server connection error.");
+            }
+            reply->deleteLater();
+        });
     });
 }
 
