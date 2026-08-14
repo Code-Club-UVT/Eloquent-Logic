@@ -19,7 +19,7 @@ namespace logic_agent::types::truth_table
         std::string name;
     };
 
-    NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(unknown_variable_event_t, name)
+    NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(unknown_variable_event_t, name);
 
     struct variable_assignment_event_t
     {
@@ -27,7 +27,7 @@ namespace logic_agent::types::truth_table
         bool value = false;
     };
 
-    NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(variable_assignment_event_t, name, value)
+    NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(variable_assignment_event_t, name, value);
 
     struct subexpression_result_event_t
     {
@@ -35,7 +35,7 @@ namespace logic_agent::types::truth_table
         bool value = false;
     };
 
-    NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(subexpression_result_event_t, node_id, value)
+    NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(subexpression_result_event_t, node_id, value);
 }
 
 #endif //ELOQUENTLOGIC_AGENT_TRUTH_TABLE_EVENTS_HPP

@@ -21,6 +21,7 @@ namespace eloquent::logic
     };
     class mapping_generator
     {
+    public:
         static conversion_result_t gen_map(const std::shared_ptr<syntax_tree>& tree, const std::shared_ptr<mapper_listener>& listener);
     };
 }

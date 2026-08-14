@@ -24,7 +24,7 @@ namespace logic_agent::types::parser
         std::string value;
     };
 
-    NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(character_event_t, value)
+    NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(character_event_t, value);
 
     struct unrecognised_operator_event_t
     {
@@ -32,7 +32,7 @@ namespace logic_agent::types::parser
         size_t position = 0;
     };
 
-    NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(unrecognised_operator_event_t, operator_text, position)
+    NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(unrecognised_operator_event_t, operator_text, position);
 
     // Shared by didFindMissingSubscript and didFindUnbalancedSubscript,
     // which both only carry a position.
@@ -41,7 +41,7 @@ namespace logic_agent::types::parser
         size_t position = 0;
     };
 
-    NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(subscript_position_event_t, position)
+    NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(subscript_position_event_t, position);
 
     struct unexpected_sequence_event_t
     {
@@ -49,7 +49,7 @@ namespace logic_agent::types::parser
         size_t position = 0;
     };
 
-    NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(unexpected_sequence_event_t, sequence, position)
+    NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(unexpected_sequence_event_t, sequence, position);
 }
 
 #endif //ELOQUENTLOGIC_AGENT_LEXER_EVENTS_HPP

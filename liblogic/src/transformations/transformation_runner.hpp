@@ -35,11 +35,11 @@ namespace eloquent
                 std::make_unique<absorption_transformation>(),
                 std::make_unique<NeutralElements>()
             };
+        public:
             void to_nnf(std::shared_ptr<syntax_tree>& tree, const std::shared_ptr<node_transformation_listener_t>& listener);
             void to_dnf(std::shared_ptr<syntax_tree>& tree, const std::shared_ptr<node_transformation_listener_t>& listener);
             void to_cnf(std::shared_ptr<syntax_tree>& tree, const std::shared_ptr<node_transformation_listener_t>& listener);
 
-            transformation_runner();
         };
     } // logic
 } // eloquent
