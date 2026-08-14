@@ -92,8 +92,14 @@ namespace eloquent::logic
         }
     }
 
-    void Node::condense(const std::function<void(NodeObsPtr)>& on_merge)
+    void Node::condense(const std::function<void(NodeObsPtr, NodeObsPtr)>& on_merge)
     {
+        // Recurse first so nested same-type chains are flattened everywhere
+        // in the subtree — including inside a differently-typed ancestor —
+        // not just among this node's own direct children.
+        for (auto& child : children)
+            child->condense(on_merge);
+
         using enum NodeType;
         if (this->type != AndOp && this->type != OrOp) return;
         bool ok = true;
@@ -119,7 +125,7 @@ namespace eloquent::logic
                 NodePtr matched = std::move(*cnode);
                 children.erase(cnode);
 
-                if (on_merge) on_merge(matched.get());
+                if (on_merge) on_merge(this, matched.get());
                 for (auto& child: matched->children)
                 {
                     adopt(std::move(child));

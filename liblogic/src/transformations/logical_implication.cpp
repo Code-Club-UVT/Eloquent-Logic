@@ -25,7 +25,7 @@ namespace eloquent
             lexeme c_lexeme = target->getLexeme();
             target->set_lexeme(lexeme::make(lexeme_type::AndOp, symbols::SYMB_AND, c_lexeme.start(), c_lexeme.end()));
 
-            target->condense([&](NodeObsPtr merged) { listener->didCondenseChild(target, merged); });
+            target->condense([&](NodeObsPtr parent, NodeObsPtr merged) { listener->didCondenseChild(parent, merged); });
 
             listener->didReduceLogicalImplication(target);
         }
