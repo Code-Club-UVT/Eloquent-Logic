@@ -3,7 +3,7 @@
   "info": {
     "title": "Eloquent Logic Agent",
     "version": "1.0.0",
-    "description": "logic_agent is a single-threaded JSON-RPC 2.0 server (logic_agent/agent.cpp) that reads Request objects one at a time from STDIN and writes Response objects to STDOUT, one JSON value per line (no HTTP/WebSocket transport). While handling a request, it also writes zero or more JSON-RPC Notification objects to STDOUT *before* the final Response — one per liblogic listener callback fired along the way (lexing, parsing, transforming, SAT solving, ...). Those notifications are not part of this document: see feedback-events.schema.json for their method names and payload shapes. A malformed Request (invalid JSON, not an object, missing/wrong \"jsonrpc\", missing \"method\") is rejected before dispatch with error -32700 (Parse error) or -32600 (Invalid Request); an unrecognised \"method\" is rejected with -32601 (Method not found). Both are request-parsing-stage errors that apply uniformly to every method, so they are documented under components.errors but not repeated in each method's own errors list.",
+    "description": "logic_agent is a single-threaded JSON-RPC 2.0 server (logic_agent/agent.cpp) that reads Request objects one at a time from STDIN and writes Response objects to STDOUT, one JSON value per line (no HTTP/WebSocket transport), until either STDIN reaches EOF or a \"shutdown\" call is dispatched (the server sends that call's Response, then exits its request loop without reading any further Requests). While handling a request, it also writes zero or more JSON-RPC Notification objects to STDOUT *before* the final Response — one per liblogic listener callback fired along the way (lexing, parsing, transforming, SAT solving, ...). Those notifications are not part of this document: see feedback-events.schema.json for their method names and payload shapes. A malformed Request (invalid JSON, not an object, missing/wrong \"jsonrpc\", missing \"method\") is rejected before dispatch with error -32700 (Parse error) or -32600 (Invalid Request); an unrecognised \"method\" is rejected with -32601 (Method not found). Both are request-parsing-stage errors that apply uniformly to every method, so they are documented under components.errors but not repeated in each method's own errors list.",
     "contact": {
       "name": "Eloquent Logic Agent"
     }
@@ -237,6 +237,22 @@
         { "$ref": "#/components/errors/ServerError" },
         { "$ref": "#/components/errors/InternalError" }
       ]
+    },
+    {
+      "name": "shutdown",
+      "summary": "Gracefully stop the server.",
+      "description": "Tells logic_agent to exit its request loop after sending this method's Response — no further Requests are read from STDIN once the process has replied. Takes no params and streams no notifications. (logic_agent/rpc/methods/shutdown_method.cpp)",
+      "params": [],
+      "result": {
+        "name": "shutdownResult",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "message": { "type": "string" }
+          }
+        }
+      }
     }
   ],
   "components": {

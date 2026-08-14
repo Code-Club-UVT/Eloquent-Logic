@@ -7,16 +7,18 @@ fires along the way as a one-way JSON-RPC Notification, ahead of the final Respo
 That gives the protocol two distinct shapes, documented in two separate files:
 
 - **[`openrpc.json`](./openrpc.json)** — an [OpenRPC](https://spec.open-rpc.org/) 1.3.2
-  document for the 4 request/response methods a client actually calls: `parse`,
-  `transform`, `sat`, `truth_table`. Method params/results and the AST (`Node`)
-  shape they share live here.
+  document for the 5 request/response methods a client actually calls: `parse`,
+  `transform`, `sat`, `truth_table`, `shutdown`. Method params/results and the AST
+  (`Node`) shape they share live here. `shutdown` takes no params and, unlike the other
+  four, ends the server's request loop right after its Response is sent.
 - **[`feedback-events.schema.json`](./feedback-events.schema.json)** — a plain
   [JSON Schema](https://json-schema.org/) (2020-12) document, *not* OpenRPC, because
   OpenRPC's method model is request/response and these are fire-and-forget
   notifications. It catalogues all ~104 distinct `"<category>/<callbackName>"`
   notifications logic_agent can stream (lexer/parser/transform/sat/mapper/truth_table
-  callbacks) and their payload shapes. `$defs.AnyFeedbackNotification` validates any one
-  parsed line of the stream without knowing its method name up front.
+  callbacks) and their payload shapes — `shutdown` streams none of its own, it's a bare
+  control command. `$defs.AnyFeedbackNotification` validates any one parsed line of the
+  stream without knowing its method name up front.
 
 Both files are self-contained (no `$ref`s between them) — the handful of DTOs both need
 (`Uuid`, `Lexeme`, `Node`, ...) are duplicated locally in each rather than shared, so
