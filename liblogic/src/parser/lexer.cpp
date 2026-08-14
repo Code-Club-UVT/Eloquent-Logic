@@ -25,6 +25,11 @@ namespace eloquent::logic
         std::vector<lexeme> lexemes;
         std::ostringstream buffer;
         bool lexemeFlag = false;
+        // Set when the character that just finalized lexemeFlag's lexeme
+        // wasn't consumed by it (e.g. '(' / ')' immediately after an atom
+        // name) — it starts its own lexeme and needs to be re-fed through
+        // None mode rather than discarded.
+        bool reprocess = false;
         lexeme_type type;
     };
 
@@ -81,6 +86,15 @@ namespace eloquent::logic
             ld.lexemeFlag = true;
             ld.type = lexeme_type::Atom;
             return LexMode::Operator;
+        }
+        if (c == '(' || c == ')')
+        {
+            // Finalize the atom without consuming c — it starts its own
+            // LParen/RParen lexeme (see lexer::lex's reprocess handling).
+            ld.lexemeFlag = true;
+            ld.type = lexeme_type::Atom;
+            ld.reprocess = true;
+            return LexMode::None;
         }
         return LexMode::Error;
     }
@@ -261,8 +275,37 @@ namespace eloquent::logic
                 ld.buffer.str("");
                 in_lexeme = false;
                 if (new_mode == LexMode::Operator)
+                {
                     ld.buffer << text[i]; // re-seed with the char that triggered atom->operator transition
-
+                }
+                else if (ld.reprocess)
+                {
+                    // text[i] (e.g. '(' or ')') wasn't consumed by the
+                    // lexeme just finalized above — resolve it as its own
+                    // lexeme right away, rather than waiting for the next
+                    // loop iteration (which is what the Operator re-seed
+                    // above does, since Operator accumulates over several
+                    // characters while None resolves '('/')' immediately).
+                    ld.reprocess = false;
+                    LexMode reprocessed_mode = transition_table.at(LexMode::None)(text[i], ld);
+                    mode = reprocessed_mode;
+                    if (reprocessed_mode == LexMode::Error)
+                    {
+                        auto sequence = text.substr(i);
+                        listener->didFindUnexpectedSequence(sequence, i);
+                        listener->didFinish();
+                        throw lexer_exception(sequence, i);
+                    }
+                    if (ld.lexemeFlag)
+                    {
+                        lexeme l2 = lexeme::make(ld.type, ld.buffer.str(), i, i);
+                        lexemes.emplace_back(l2);
+                        listener->didRecogniseLexeme(l2);
+                        ld.lexemeFlag = false;
+                        ld.type = lexeme_type::Unknown;
+                        ld.buffer.str("");
+                    }
+                }
             }
 
         }

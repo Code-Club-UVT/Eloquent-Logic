@@ -7,6 +7,7 @@
 #include <nlohmann/json.hpp>
 
 #include "common_t.hpp"
+#include "../feedback_base.hpp"
 
 // DTOs for eloquent::logic::mapper_listener (src/sat/utilities/mapper_listener.hpp)
 // callback parameters:
@@ -16,14 +17,14 @@
 // didBuildHeuristicsDatabase, which carries the same ClauseSet shape.
 namespace logic_agent::types::sat
 {
-    struct literal_mapping_event_t
+    struct literal_mapping_event_t : public feedback_base
     {
         std::map<std::string, literal_t> mapping;
     };
 
     NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(literal_mapping_event_t, mapping);
 
-    struct clause_set_event_t
+    struct clause_set_event_t : public feedback_base
     {
         clause_set_t clauses;
     };

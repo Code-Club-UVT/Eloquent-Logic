@@ -17,7 +17,7 @@ namespace fs = std::filesystem;
 
 #pragma GCC optimize("O3,fast-math,unroll-loops")
 
-std::size_t max_clauses = 0;
+static std::size_t max_clauses = 0;
 class HeuristicEntryDPLL {
     Literal literal;
     size_t occurrences;
@@ -140,7 +140,7 @@ void analyse(const Clause& c, HeuristicsDB_DPLL& db) {
         db[-literal].set_literal(-literal);
     }
 }
-int get_lit_total_count(const ClauseSet& c) {
+static int get_lit_total_count(const ClauseSet& c) {
     int lit_total_count = 0;
 
     for (const auto& clause : c) {
@@ -169,7 +169,7 @@ void build_heuristics_db(const ClauseSet& c, HeuristicsDB_DPLL& db, const std::s
     db.poppulate_literal_record();
     listener->didBuildHeuristicsDatabase(c);
 }
-[[nodiscard]] ClauseSet read_clauses(const char *file) {
+[[nodiscard]] static ClauseSet read_clauses(const char *file) {
     std::ifstream f(file);
     f.tie(nullptr);
     size_t clause_count=0, lit_total_count=0;

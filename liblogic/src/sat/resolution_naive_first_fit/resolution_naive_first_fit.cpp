@@ -6,7 +6,7 @@
 
 using eloquent::logic::sat_listener;
 
-ClauseSet clauses;
+static ClauseSet clauses;
 
 constexpr std::size_t THRESHOLD = 71000000;
 namespace fs = std::filesystem;

@@ -35,7 +35,7 @@ namespace logic_agent::types::sat
 
     NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(literal_event_t, literal);
 
-    struct clause_literal_event_t
+    struct clause_literal_event_t : public feedback_base
     {
         clause_t clause;
         literal_t literal = 0;
@@ -44,7 +44,7 @@ namespace logic_agent::types::sat
     NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(clause_literal_event_t, clause, literal);
 
     // didReduceClauseByUnitLiteral(original, reduced, literal)
-    struct clause_reduction_event_t
+    struct clause_reduction_event_t : public feedback_base
     {
         clause_t original;
         clause_t reduced;
@@ -53,7 +53,7 @@ namespace logic_agent::types::sat
 
     NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(clause_reduction_event_t, original, reduced, literal);
 
-    struct clause_pair_event_t
+    struct clause_pair_event_t : public feedback_base
     {
         clause_t first;
         clause_t second;
@@ -62,7 +62,7 @@ namespace logic_agent::types::sat
     NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(clause_pair_event_t, first, second);
 
     // didComputeResolvent(first, second, pivot, resolvent)
-    struct resolvent_event_t
+    struct resolvent_event_t : public feedback_base
     {
         clause_t first;
         clause_t second;
@@ -72,14 +72,14 @@ namespace logic_agent::types::sat
 
     NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(resolvent_event_t, first, second, pivot, resolvent);
 
-    struct clause_event_t
+    struct clause_event_t : public feedback_base
     {
         clause_t clause;
     };
 
     NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(clause_event_t, clause);
 
-    struct clause_count_event_t
+    struct clause_count_event_t : public feedback_base
     {
         std::size_t count = 0;
     };
@@ -88,7 +88,7 @@ namespace logic_agent::types::sat
 
     // didChooseBranchingLiteral(literal, frequency) — see
     // src/sat/dpll_mcl/dpll_utils.cpp:36 for the (max, freq) call site.
-    struct branching_literal_event_t
+    struct branching_literal_event_t : public feedback_base
     {
         literal_t literal = 0;
         int frequency = 0;
@@ -98,7 +98,7 @@ namespace logic_agent::types::sat
 
     // Shared by didEnterBranch and didPushBranchContext, which both carry
     // the branching literal and the truth value it was assigned.
-    struct branch_event_t
+    struct branch_event_t : public feedback_base
     {
         literal_t literal = 0;
         bool value = false;

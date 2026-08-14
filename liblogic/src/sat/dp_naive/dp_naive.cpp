@@ -10,8 +10,8 @@ namespace fs = std::filesystem;
 
 #pragma GCC optimize("O3,fast-math,unroll-loops")
 
-ClauseSet clauses;
-std::size_t max_clauses = 0;
+static ClauseSet clauses;
+static std::size_t max_clauses = 0;
 
 constexpr std::size_t THRESHOLD = 71000000;
 
@@ -24,7 +24,7 @@ void analyse(const Clause& c, HeuristicsDB_DP& db) {
 }
 
 bool resolution(ClauseSet& cs, HeuristicsDB_DP& hdb, std::set<Literal>& single_polarity_literals, std::set<Literal>& single_literals, SatState& sat_result, const std::shared_ptr<sat_listener>& listener);
-std::pair<bool,int64_t> can_join(const Clause& c1, const Clause& c2) {
+static std::pair<bool,int64_t> can_join(const Clause& c1, const Clause& c2) {
     size_t pairs = 0;
     int64_t lit = 0;
     for (auto& literal: c1) {
@@ -153,7 +153,7 @@ SatState davis_putnam(ClauseSet& cs, HeuristicsDB_DP& db, const std::shared_ptr<
     }
 }
 
-Clause join(const Clause& c1, const Clause& c2, const Literal l) {
+static Clause join(const Clause& c1, const Clause& c2, const Literal l) {
     Clause c12;
     for (auto& lit : c1) {
         c12.emplace(lit);

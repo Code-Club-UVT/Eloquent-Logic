@@ -6,6 +6,7 @@
 #include <nlohmann/json.hpp>
 
 #include "../core/uuid_t.hpp"
+#include "../feedback_base.hpp"
 
 // DTOs for eloquent::logic::truth_table_listener_t
 // (src/truth_table/truth_table_listener_t.hpp) callback parameters:
@@ -14,14 +15,14 @@
 //   - didComputeSubexpression(UUID node_id, bool value) -> subexpression_result_event_t
 namespace logic_agent::types::truth_table
 {
-    struct unknown_variable_event_t
+    struct unknown_variable_event_t : public feedback_base
     {
         std::string name;
     };
 
     NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(unknown_variable_event_t, name);
 
-    struct variable_assignment_event_t
+    struct variable_assignment_event_t : public feedback_base
     {
         std::string name;
         bool value = false;
@@ -29,7 +30,7 @@ namespace logic_agent::types::truth_table
 
     NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(variable_assignment_event_t, name, value);
 
-    struct subexpression_result_event_t
+    struct subexpression_result_event_t : public feedback_base
     {
         uuid_t node_id;
         bool value = false;
