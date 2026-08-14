@@ -11,7 +11,7 @@ using eloquent::logic::sat_listener;
 
 namespace fs = std::filesystem;
 
-int get_lit_total_count(const ClauseSet& c) {
+static int get_lit_total_count(const ClauseSet& c) {
     int lit_total_count = 0;
 
     for (const auto& clause : c) {
@@ -28,7 +28,7 @@ int get_lit_total_count(const ClauseSet& c) {
 
     return lit_total_count;
 }
-[[nodiscard]] ClauseSet read_clauses(const char *file) {
+[[nodiscard]] static ClauseSet read_clauses(const char *file) {
     std::ifstream f(file);
     f.tie(nullptr);
 

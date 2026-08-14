@@ -7,6 +7,7 @@
 
 #include "../core/node_t.hpp"
 #include "../parser/cursor_events.hpp"
+#include "../feedback_base.hpp"
 
 // DTOs for eloquent::logic::node_transformation_listener_t
 // (src/transformations/node_transformation_listener_t.hpp) callback
@@ -31,7 +32,7 @@ namespace logic_agent::types::transformations
     // didCondenseChild(target, merged) — target is the node being
     // flattened into, merged is the same-type child it absorbed (see
     // src/transformations/logical_implication.cpp).
-    struct condense_child_event_t
+    struct condense_child_event_t : public feedback_base
     {
         std::optional<node_t> parent;
         std::optional<node_t> merged_child;
@@ -41,7 +42,7 @@ namespace logic_agent::types::transformations
 
     // Shared by didCheckCNF and didCheckDNF, which both carry the checked
     // node and whether it is already in that normal form.
-    struct normal_form_check_event_t
+    struct normal_form_check_event_t : public feedback_base
     {
         std::optional<node_t> node;
         bool is_normal_form = false;

@@ -597,12 +597,41 @@ TEST_F(NodeTransformationListenerTest, CnfRecogniserReportsTrueForACnfTree)
 
 TEST_F(NodeTransformationListenerTest, CnfRecogniserReportsFalseForANonCnfTree)
 {
-    NodePtr tree = op(lexeme_type::OrOp, symbols::SYMB_OR, atom("P"), atom("Q"));
+    // (P /\ Q) \/ R: an OrOp (candidate lone clause) whose first disjunct
+    // is itself an AndOp, not a literal — not a valid clause either way.
+    NodePtr tree = op(lexeme_type::OrOp, symbols::SYMB_OR,
+        op(lexeme_type::AndOp, symbols::SYMB_AND, atom("P"), atom("Q")), atom("R"));
     cnf_recogniser recogniser;
 
     EXPECT_FALSE(recogniser.match(tree.get(), listener));
     ASSERT_EQ(listener->checked_cnf.size(), 1u);
     EXPECT_FALSE(listener->checked_cnf[0].second);
+}
+
+TEST_F(NodeTransformationListenerTest, CnfRecogniserReportsTrueForALoneClauseWithNoTopLevelAndOp)
+{
+    // P \/ Q is a single clause: valid CNF even without an outer AndOp
+    // wrapper (a formula with only one clause has nothing to conjoin).
+    NodePtr tree = op(lexeme_type::OrOp, symbols::SYMB_OR, atom("P"), atom("Q"));
+    cnf_recogniser recogniser;
+
+    EXPECT_TRUE(recogniser.match(tree.get(), listener));
+    ASSERT_EQ(listener->checked_cnf.size(), 1u);
+    EXPECT_TRUE(listener->checked_cnf[0].second);
+}
+
+TEST_F(NodeTransformationListenerTest, CnfRecogniserAcceptsNegatedLiteralsInClauses)
+{
+    // (P \/ ~Q) /\ R: negated atoms (NotOp wrapping an Atom) are valid
+    // literals, same as bare atoms.
+    NodePtr tree = op(lexeme_type::AndOp, symbols::SYMB_AND,
+        op(lexeme_type::OrOp, symbols::SYMB_OR, atom("P"), op(lexeme_type::NotOp, symbols::SYMB_NOT, atom("Q"))),
+        atom("R"));
+    cnf_recogniser recogniser;
+
+    EXPECT_TRUE(recogniser.match(tree.get(), listener));
+    ASSERT_EQ(listener->checked_cnf.size(), 1u);
+    EXPECT_TRUE(listener->checked_cnf[0].second);
 }
 
 TEST_F(NodeTransformationListenerTest, DnfRecogniserReportsTrueForADnfTree)
@@ -619,12 +648,41 @@ TEST_F(NodeTransformationListenerTest, DnfRecogniserReportsTrueForADnfTree)
 
 TEST_F(NodeTransformationListenerTest, DnfRecogniserReportsFalseForANonDnfTree)
 {
-    NodePtr tree = op(lexeme_type::AndOp, symbols::SYMB_AND, atom("P"), atom("Q"));
+    // (P \/ Q) /\ R: an AndOp (candidate lone term) whose first conjunct is
+    // itself an OrOp, not a literal — not a valid term either way.
+    NodePtr tree = op(lexeme_type::AndOp, symbols::SYMB_AND,
+        op(lexeme_type::OrOp, symbols::SYMB_OR, atom("P"), atom("Q")), atom("R"));
     dnf_recogniser recogniser;
 
     EXPECT_FALSE(recogniser.match(tree.get(), listener));
     ASSERT_EQ(listener->checked_dnf.size(), 1u);
     EXPECT_FALSE(listener->checked_dnf[0].second);
+}
+
+TEST_F(NodeTransformationListenerTest, DnfRecogniserReportsTrueForALoneTermWithNoTopLevelOrOp)
+{
+    // P /\ Q is a single term: valid DNF even without an outer OrOp
+    // wrapper (a formula with only one term has nothing to disjoin).
+    NodePtr tree = op(lexeme_type::AndOp, symbols::SYMB_AND, atom("P"), atom("Q"));
+    dnf_recogniser recogniser;
+
+    EXPECT_TRUE(recogniser.match(tree.get(), listener));
+    ASSERT_EQ(listener->checked_dnf.size(), 1u);
+    EXPECT_TRUE(listener->checked_dnf[0].second);
+}
+
+TEST_F(NodeTransformationListenerTest, DnfRecogniserAcceptsNegatedLiteralsInTerms)
+{
+    // (P /\ ~Q) \/ R: negated atoms (NotOp wrapping an Atom) are valid
+    // literals, same as bare atoms.
+    NodePtr tree = op(lexeme_type::OrOp, symbols::SYMB_OR,
+        op(lexeme_type::AndOp, symbols::SYMB_AND, atom("P"), op(lexeme_type::NotOp, symbols::SYMB_NOT, atom("Q"))),
+        atom("R"));
+    dnf_recogniser recogniser;
+
+    EXPECT_TRUE(recogniser.match(tree.get(), listener));
+    ASSERT_EQ(listener->checked_dnf.size(), 1u);
+    EXPECT_TRUE(listener->checked_dnf[0].second);
 }
 
 } // namespace eloquent::logic::testing
