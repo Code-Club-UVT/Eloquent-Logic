@@ -9,6 +9,7 @@
 #include <map>
 #include <random>
 #include <stack>
+#include <cstring>
 #include "dpll_rand.h"
 
 using eloquent::logic::sat_listener;

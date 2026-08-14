@@ -4,6 +4,7 @@
 #include <chrono>
 #include <cmath>
 #include <algorithm>
+#include <cstring>
 #include "dpll_utils.h"
 #include "dpll_mcl.h"
 
