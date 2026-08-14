@@ -7,6 +7,8 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
 #include <QStyleOption>
+#include <QPropertyAnimation>
+
 
 Node::Node(GraphWidget *graphWidget,
            const QUuid &id,
@@ -21,6 +23,8 @@ Node::Node(GraphWidget *graphWidget,
     m_parent(parent),
     m_children(children)
 {
+
+    m_highlightColor = Qt::transparent;
     setFlag(ItemIsMovable);
     setFlag(ItemSendsGeometryChanges);
     setCacheMode(DeviceCoordinateCache);
@@ -119,23 +123,28 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     QColor mainColor;
     QColor lightColor;
 
-    switch (m_type) {
-    case NodeType::Operator:
-        mainColor = QColor("#1976D2");
-        lightColor = QColor("#64B5F6");
-        break;
-    case NodeType::Variable:
-        mainColor = QColor("#388E3C");
-        lightColor = QColor("#81C784");
-        break;
-    case NodeType::Constant:
-        mainColor = QColor("#D32F2F");
-        lightColor = QColor("#E57373");
-        break;
-    default:
-        mainColor = Qt::darkGray;
-        lightColor = Qt::lightGray;
-        break;
+    if (m_highlightColor != Qt::transparent) {
+        mainColor = m_highlightColor;
+        lightColor = m_highlightColor.lighter(120);
+    } else {
+        switch (m_type) {
+        case NodeType::Operator:
+            mainColor = QColor("#1976D2");
+            lightColor = QColor("#64B5F6");
+            break;
+        case NodeType::Variable:
+            mainColor = QColor("#388E3C");
+            lightColor = QColor("#81C784");
+            break;
+        case NodeType::Constant:
+            mainColor = QColor("#D32F2F");
+            lightColor = QColor("#E57373");
+            break;
+        default:
+            mainColor = Qt::darkGray;
+            lightColor = Qt::lightGray;
+            break;
+        }
     }
 
     if (option->state & QStyle::State_Sunken) {
@@ -184,4 +193,17 @@ void Node::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     update();
     QGraphicsItem::mouseReleaseEvent(event);
+}
+
+void Node::setHighlightColor(const QColor &color) {
+    m_highlightColor = color;
+    update();
+}
+
+void Node::animateHighlight(const QColor &targetColor, int durationMs) {
+    QPropertyAnimation *anim = new QPropertyAnimation(this, "highlightColor");
+    anim->setDuration(durationMs);
+    anim->setStartValue(m_highlightColor);
+    anim->setEndValue(targetColor);
+    anim->start(QAbstractAnimation::DeleteWhenStopped);
 }
