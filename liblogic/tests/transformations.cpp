@@ -8,7 +8,7 @@
 
 #include <gtest/gtest.h>
 
-#include <liblogic/private/transformations.h>
+#include <../src/transformations.h>
 #include <test_wrapper_functions.h>
 
 namespace eloquent::logic {

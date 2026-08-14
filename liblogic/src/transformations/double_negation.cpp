@@ -2,7 +2,7 @@
 // Created by xcell on 15.12.2024.
 //
 
-#include <liblogic/private/transformations/double_negation.h>
+#include <double_negation.h>
 
 namespace eloquent::logic {
     bool DoubleNegation::match(const NodeObsPtr subtree) {

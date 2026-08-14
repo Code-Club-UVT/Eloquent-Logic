@@ -4,6 +4,5 @@
 
 #ifndef LIBLOGIC_H
 #define LIBLOGIC_H
-#include <liblogic/dictionary.h>
-
+namespace eloquent::logic {}
 #endif //LIBLOGIC_H

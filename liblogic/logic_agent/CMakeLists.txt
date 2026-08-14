@@ -1,0 +1,2 @@
+add_executable(logic_agent agent.cpp feedback_visitor.cpp feedback_visitor.hpp)
+target_link_libraries(logic_agent PRIVATE eloquent_logic)

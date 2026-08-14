@@ -2,7 +2,7 @@
 // Created by xcell on 16.12.2024.
 //
 
-#include <liblogic/private/transformations/implication_reduction.h>
+#include <implication_reduction.h>
 
 namespace eloquent::logic {
     bool ImplicationReduction::match(const NodeObsPtr subtree) {

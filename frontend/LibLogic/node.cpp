@@ -9,6 +9,7 @@
 #include <QStyleOption>
 #include <QPropertyAnimation>
 
+
 Node::Node(GraphWidget *graphWidget,
            const QUuid &id,
            const QString &text,
@@ -22,8 +23,8 @@ Node::Node(GraphWidget *graphWidget,
     m_parent(parent),
     m_children(children)
 {
-    m_highlightColor = Qt::transparent;
 
+    m_highlightColor = Qt::transparent;
     setFlag(ItemIsMovable);
     setFlag(ItemSendsGeometryChanges);
     setCacheMode(DeviceCoordinateCache);
