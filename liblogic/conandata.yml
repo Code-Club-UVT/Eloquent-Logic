@@ -2,6 +2,5 @@
 # To keep your changes, remove these comment lines, but the plugin won't be able to modify your requirements
 
 requirements:
-  - "libcoro/0.15.0"
   - "cppcommon/1.0.4.0"
   - "nlohmann_json/3.12.0"
