@@ -2,7 +2,7 @@
 #define SAT_ALGORITHMS_COMMON_TYPES_H
 
 #include <set>
-
+#include <cstdint>
 enum class SatState {
     SAT,
     UNSAT,
