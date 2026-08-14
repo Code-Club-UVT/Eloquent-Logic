@@ -3,7 +3,7 @@
 //
 
 #include <cassert>
-#include <liblogic/private/transformations/neutral_elements.h>
+#include <neutral_elements.h>
 
 namespace eloquent::logic {
     NeutralElements::Signal NeutralElements::get_case(const NodeObsPtr& node) {

@@ -20,11 +20,13 @@ class QLineEdit;
 class QPushButton;
 class QNetworkAccessManager;
 
+
 class LogicEditorWindow : public QWidget {
     Q_OBJECT
     QLineEdit *formulaInput;
     QLineEdit *resultOutput;
     QNetworkAccessManager *networkManager;
+
 
 public:
     LogicEditorWindow(QWidget *parent = nullptr);

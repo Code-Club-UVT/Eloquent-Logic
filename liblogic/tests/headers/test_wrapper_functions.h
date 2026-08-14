@@ -3,7 +3,7 @@
 //
 
 #pragma once
-#include <../../include/liblogic/tree_sanitizer.h>
+#include <tree_sanitizer.h>
 
 namespace eloquent::logic::tests{
     CursorPrivate build_tree(const std::string& exp, bool n_izer_switch = false);

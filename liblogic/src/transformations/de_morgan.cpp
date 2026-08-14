@@ -2,7 +2,7 @@
 // Created by xcell on 16.12.2024.
 //
 
-#include <liblogic/private/transformations/de_morgan.h>
+#include <de_morgan.h>
 
 // OPTIMIZATION: due to the high similarity of the classes, they may be fused into one single class.
 
