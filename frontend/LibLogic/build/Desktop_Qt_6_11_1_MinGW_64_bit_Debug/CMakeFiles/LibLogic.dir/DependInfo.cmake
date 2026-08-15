@@ -10,8 +10,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "" "LibLogic_autogen/timestamp" "custom" "LibLogic_autogen/deps"
   "C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/build/Desktop_Qt_6_11_1_MinGW_64_bit_Debug/LibLogic_autogen/mocs_compilation.cpp" "CMakeFiles/LibLogic.dir/LibLogic_autogen/mocs_compilation.cpp.obj" "gcc" "CMakeFiles/LibLogic.dir/LibLogic_autogen/mocs_compilation.cpp.obj.d"
+  "C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/agentconnection.cpp" "CMakeFiles/LibLogic.dir/agentconnection.cpp.obj" "gcc" "CMakeFiles/LibLogic.dir/agentconnection.cpp.obj.d"
   "C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/edge.cpp" "CMakeFiles/LibLogic.dir/edge.cpp.obj" "gcc" "CMakeFiles/LibLogic.dir/edge.cpp.obj.d"
-  "C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/launcherwidget.cpp" "CMakeFiles/LibLogic.dir/launcherwidget.cpp.obj" "gcc" "CMakeFiles/LibLogic.dir/launcherwidget.cpp.obj.d"
   "C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/logiceditorwindow.cpp" "CMakeFiles/LibLogic.dir/logiceditorwindow.cpp.obj" "gcc" "CMakeFiles/LibLogic.dir/logiceditorwindow.cpp.obj.d"
   "C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/logiclineedit.cpp" "CMakeFiles/LibLogic.dir/logiclineedit.cpp.obj" "gcc" "CMakeFiles/LibLogic.dir/logiclineedit.cpp.obj.d"
   "C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/main.cpp" "CMakeFiles/LibLogic.dir/main.cpp.obj" "gcc" "CMakeFiles/LibLogic.dir/main.cpp.obj.d"

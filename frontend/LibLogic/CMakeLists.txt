@@ -31,8 +31,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         truthtableviewer.h truthtableviewer.cpp
         edge.h edge.cpp
         node.h node.cpp
-        launcherwidget.h launcherwidget.cpp
+
         syntactictreeviewer.h syntactictreeviewer.cpp
+        agentconnection.h agentconnection.cpp
 
 
     )

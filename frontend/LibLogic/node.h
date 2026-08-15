@@ -15,7 +15,7 @@ enum class NodeType {
     Constant
 };
 
-class Node : public QGraphicsItem
+class Node : public QGraphicsObject
 {
 public:
     Node(GraphWidget *graphWidget,
@@ -50,6 +50,7 @@ protected:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 
 private:
+    Q_OBJECT
     QList<Edge *> edgeList;
     QPointF newPos;
     GraphWidget *graph;

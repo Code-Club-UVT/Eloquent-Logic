@@ -385,7 +385,42 @@ CMakeFiles/LibLogic.dir/main.cpp.obj: \
  C:/Qt/6.11.1/mingw_64/include/QtGui/qcursor.h \
  C:/Qt/6.11.1/mingw_64/include/QtGui/qbitmap.h \
  C:/Qt/6.11.1/mingw_64/include/QtCore/QString \
- C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\launcherwidget.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/QMap \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/QTextEdit \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/qtextedit.h \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/qabstractscrollarea.h \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/qframe.h \
+ C:/Qt/6.11.1/mingw_64/include/QtGui/qtextdocument.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qurl.h \
+ C:/Qt/6.11.1/mingw_64/include/QtGui/qtextoption.h \
+ C:/Qt/6.11.1/mingw_64/include/QtGui/qtextcursor.h \
+ C:/Qt/6.11.1/mingw_64/include/QtGui/qtextformat.h \
+ C:/Qt/6.11.1/mingw_64/include/QtGui/qpen.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/QJsonArray \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qjsonarray.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qjsonvalue.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qcborvalue.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qcborcommon.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qdatetime.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qcalendar.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qlocale.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qregularexpression.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/quuid.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qjsondocument.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qjsonparseerror.h \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/QComboBox \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/qcombobox.h \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/qabstractitemdelegate.h \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/qstyleoption.h \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/qabstractspinbox.h \
+ C:/Qt/6.11.1/mingw_64/include/QtGui/qvalidator.h \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/qslider.h \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/qabstractslider.h \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/qstyle.h \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/qtabbar.h \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/qtabwidget.h \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/qrubberband.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qabstractitemmodel.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/QApplication \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qapplication.h \
  C:/Qt/6.11.1/mingw_64/include/QtCore/qcoreapplication.h \
@@ -398,10 +433,4 @@ CMakeFiles/LibLogic.dir/main.cpp.obj: \
  C:/Qt/6.11.1/mingw_64/include/QtCore/qcoreapplication_platform.h \
  C:/Qt/6.11.1/mingw_64/include/QtGui/qguiapplication.h \
  C:/Qt/6.11.1/mingw_64/include/QtGui/qinputmethod.h \
- C:/Qt/6.11.1/mingw_64/include/QtCore/qlocale.h \
- C:/Qt/6.11.1/mingw_64/include/QtGui/qguiapplication_platform.h \
- C:/Qt/6.11.1/mingw_64/include/QtWidgets/QMainWindow \
- C:/Qt/6.11.1/mingw_64/include/QtWidgets/qmainwindow.h \
- C:/Qt/6.11.1/mingw_64/include/QtWidgets/qtabwidget.h \
- C:/Qt/6.11.1/mingw_64/include/QtCore/QStringList \
- C:/Qt/6.11.1/mingw_64/include/QtCore/QList
+ C:/Qt/6.11.1/mingw_64/include/QtGui/qguiapplication_platform.h

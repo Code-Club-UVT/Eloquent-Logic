@@ -38,10 +38,17 @@ template <> constexpr inline auto SyntacticTreeViewer::qt_create_metaobjectdata<
 {
     namespace QMC = QtMocConstants;
     QtMocHelpers::StringRefStorage qt_stringData {
-        "SyntacticTreeViewer"
+        "SyntacticTreeViewer",
+        "goToStep",
+        "",
+        "step"
     };
 
     QtMocHelpers::UintData qt_methods {
+        // Slot 'goToStep'
+        QtMocHelpers::SlotData<void(int)>(1, 2, QMC::AccessPrivate, QMetaType::Void, {{
+            { QMetaType::Int, 3 },
+        }}),
     };
     QtMocHelpers::UintData qt_properties {
     };
@@ -51,7 +58,7 @@ template <> constexpr inline auto SyntacticTreeViewer::qt_create_metaobjectdata<
             qt_methods, qt_properties, qt_enums);
 }
 Q_CONSTINIT const QMetaObject SyntacticTreeViewer::staticMetaObject = { {
-    QMetaObject::SuperData::link<QGraphicsView::staticMetaObject>(),
+    QMetaObject::SuperData::link<QWidget::staticMetaObject>(),
     qt_staticMetaObjectStaticContent<qt_meta_tag_ZN19SyntacticTreeViewerE_t>.stringdata,
     qt_staticMetaObjectStaticContent<qt_meta_tag_ZN19SyntacticTreeViewerE_t>.data,
     qt_static_metacall,
@@ -63,10 +70,12 @@ Q_CONSTINIT const QMetaObject SyntacticTreeViewer::staticMetaObject = { {
 void SyntacticTreeViewer::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
     auto *_t = static_cast<SyntacticTreeViewer *>(_o);
-    (void)_t;
-    (void)_c;
-    (void)_id;
-    (void)_a;
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        switch (_id) {
+        case 0: _t->goToStep((*reinterpret_cast<std::add_pointer_t<int>>(_a[1]))); break;
+        default: ;
+        }
+    }
 }
 
 const QMetaObject *SyntacticTreeViewer::metaObject() const
@@ -79,12 +88,24 @@ void *SyntacticTreeViewer::qt_metacast(const char *_clname)
     if (!_clname) return nullptr;
     if (!strcmp(_clname, qt_staticMetaObjectStaticContent<qt_meta_tag_ZN19SyntacticTreeViewerE_t>.strings))
         return static_cast<void*>(this);
-    return QGraphicsView::qt_metacast(_clname);
+    return QWidget::qt_metacast(_clname);
 }
 
 int SyntacticTreeViewer::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
-    _id = QGraphicsView::qt_metacall(_c, _id, _a);
+    _id = QWidget::qt_metacall(_c, _id, _a);
+    if (_id < 0)
+        return _id;
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        if (_id < 1)
+            qt_static_metacall(this, _c, _id, _a);
+        _id -= 1;
+    }
+    if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
+        if (_id < 1)
+            *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
+        _id -= 1;
+    }
     return _id;
 }
 QT_WARNING_POP

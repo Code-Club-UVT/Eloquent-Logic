@@ -180,26 +180,11 @@ CMakeFiles/LibLogic.dir/node.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/LibLogic.dir/node.cpp.s"
 	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\node.cpp -o CMakeFiles\LibLogic.dir\node.cpp.s
 
-CMakeFiles/LibLogic.dir/launcherwidget.cpp.obj: CMakeFiles/LibLogic.dir/flags.make
-CMakeFiles/LibLogic.dir/launcherwidget.cpp.obj: CMakeFiles/LibLogic.dir/includes_CXX.rsp
-CMakeFiles/LibLogic.dir/launcherwidget.cpp.obj: C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/launcherwidget.cpp
-CMakeFiles/LibLogic.dir/launcherwidget.cpp.obj: CMakeFiles/LibLogic.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/LibLogic.dir/launcherwidget.cpp.obj"
-	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LibLogic.dir/launcherwidget.cpp.obj -MF CMakeFiles\LibLogic.dir\launcherwidget.cpp.obj.d -o CMakeFiles\LibLogic.dir\launcherwidget.cpp.obj -c C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\launcherwidget.cpp
-
-CMakeFiles/LibLogic.dir/launcherwidget.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/LibLogic.dir/launcherwidget.cpp.i"
-	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\launcherwidget.cpp > CMakeFiles\LibLogic.dir\launcherwidget.cpp.i
-
-CMakeFiles/LibLogic.dir/launcherwidget.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/LibLogic.dir/launcherwidget.cpp.s"
-	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\launcherwidget.cpp -o CMakeFiles\LibLogic.dir\launcherwidget.cpp.s
-
 CMakeFiles/LibLogic.dir/syntactictreeviewer.cpp.obj: CMakeFiles/LibLogic.dir/flags.make
 CMakeFiles/LibLogic.dir/syntactictreeviewer.cpp.obj: CMakeFiles/LibLogic.dir/includes_CXX.rsp
 CMakeFiles/LibLogic.dir/syntactictreeviewer.cpp.obj: C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/syntactictreeviewer.cpp
 CMakeFiles/LibLogic.dir/syntactictreeviewer.cpp.obj: CMakeFiles/LibLogic.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/LibLogic.dir/syntactictreeviewer.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/LibLogic.dir/syntactictreeviewer.cpp.obj"
 	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LibLogic.dir/syntactictreeviewer.cpp.obj -MF CMakeFiles\LibLogic.dir\syntactictreeviewer.cpp.obj.d -o CMakeFiles\LibLogic.dir\syntactictreeviewer.cpp.obj -c C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\syntactictreeviewer.cpp
 
 CMakeFiles/LibLogic.dir/syntactictreeviewer.cpp.i: cmake_force
@@ -210,6 +195,21 @@ CMakeFiles/LibLogic.dir/syntactictreeviewer.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/LibLogic.dir/syntactictreeviewer.cpp.s"
 	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\syntactictreeviewer.cpp -o CMakeFiles\LibLogic.dir\syntactictreeviewer.cpp.s
 
+CMakeFiles/LibLogic.dir/agentconnection.cpp.obj: CMakeFiles/LibLogic.dir/flags.make
+CMakeFiles/LibLogic.dir/agentconnection.cpp.obj: CMakeFiles/LibLogic.dir/includes_CXX.rsp
+CMakeFiles/LibLogic.dir/agentconnection.cpp.obj: C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/agentconnection.cpp
+CMakeFiles/LibLogic.dir/agentconnection.cpp.obj: CMakeFiles/LibLogic.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/LibLogic.dir/agentconnection.cpp.obj"
+	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LibLogic.dir/agentconnection.cpp.obj -MF CMakeFiles\LibLogic.dir\agentconnection.cpp.obj.d -o CMakeFiles\LibLogic.dir\agentconnection.cpp.obj -c C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\agentconnection.cpp
+
+CMakeFiles/LibLogic.dir/agentconnection.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/LibLogic.dir/agentconnection.cpp.i"
+	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\agentconnection.cpp > CMakeFiles\LibLogic.dir\agentconnection.cpp.i
+
+CMakeFiles/LibLogic.dir/agentconnection.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/LibLogic.dir/agentconnection.cpp.s"
+	C:\Qt\Tools\mingw1310_64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\agentconnection.cpp -o CMakeFiles\LibLogic.dir\agentconnection.cpp.s
+
 # Object files for target LibLogic
 LibLogic_OBJECTS = \
 "CMakeFiles/LibLogic.dir/LibLogic_autogen/mocs_compilation.cpp.obj" \
@@ -219,8 +219,8 @@ LibLogic_OBJECTS = \
 "CMakeFiles/LibLogic.dir/truthtableviewer.cpp.obj" \
 "CMakeFiles/LibLogic.dir/edge.cpp.obj" \
 "CMakeFiles/LibLogic.dir/node.cpp.obj" \
-"CMakeFiles/LibLogic.dir/launcherwidget.cpp.obj" \
-"CMakeFiles/LibLogic.dir/syntactictreeviewer.cpp.obj"
+"CMakeFiles/LibLogic.dir/syntactictreeviewer.cpp.obj" \
+"CMakeFiles/LibLogic.dir/agentconnection.cpp.obj"
 
 # External object files for target LibLogic
 LibLogic_EXTERNAL_OBJECTS =
@@ -232,8 +232,8 @@ LibLogic.exe: CMakeFiles/LibLogic.dir/logiclineedit.cpp.obj
 LibLogic.exe: CMakeFiles/LibLogic.dir/truthtableviewer.cpp.obj
 LibLogic.exe: CMakeFiles/LibLogic.dir/edge.cpp.obj
 LibLogic.exe: CMakeFiles/LibLogic.dir/node.cpp.obj
-LibLogic.exe: CMakeFiles/LibLogic.dir/launcherwidget.cpp.obj
 LibLogic.exe: CMakeFiles/LibLogic.dir/syntactictreeviewer.cpp.obj
+LibLogic.exe: CMakeFiles/LibLogic.dir/agentconnection.cpp.obj
 LibLogic.exe: CMakeFiles/LibLogic.dir/build.make
 LibLogic.exe: C:/Qt/6.11.1/mingw_64/lib/libQt6Widgets.a
 LibLogic.exe: C:/Qt/6.11.1/mingw_64/lib/libQt6Gui.a

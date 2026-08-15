@@ -1662,18 +1662,6 @@
 			"value" : "C:/Qt/6.11.1/mingw_64/lib/cmake/Qt6"
 		},
 		{
-			"name" : "QT_ENABLE_QML_DEBUG",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "No help, variable specified on the command line."
-				}
-			],
-			"type" : "BOOL",
-			"value" : "ON"
-		},
-		{
 			"name" : "QT_FEATURE_abstractbutton",
 			"properties" : 
 			[

@@ -430,4 +430,15 @@ CMakeFiles/LibLogic.dir/launcherwidget.cpp.obj: \
  C:/Qt/6.11.1/mingw_64/include/QtGui/qpainter.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qscrollarea.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qgraphicsscene.h \
- C:/Qt/6.11.1/mingw_64/include/QtWidgets/QGraphicsScene
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/QGraphicsScene \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/QJsonObject \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qjsonobject.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qjsonvalue.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qcborvalue.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qcborcommon.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qdatetime.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qcalendar.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/quuid.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qjsondocument.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qjsonparseerror.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/QUuid

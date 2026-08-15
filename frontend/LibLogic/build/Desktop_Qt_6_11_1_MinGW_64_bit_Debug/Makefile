@@ -223,6 +223,30 @@ LibLogic_autogen/mocs_compilation.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\LibLogic.dir\build.make CMakeFiles/LibLogic.dir/LibLogic_autogen/mocs_compilation.cpp.s
 .PHONY : LibLogic_autogen/mocs_compilation.cpp.s
 
+agentconnection.obj: agentconnection.cpp.obj
+.PHONY : agentconnection.obj
+
+# target to build an object file
+agentconnection.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\LibLogic.dir\build.make CMakeFiles/LibLogic.dir/agentconnection.cpp.obj
+.PHONY : agentconnection.cpp.obj
+
+agentconnection.i: agentconnection.cpp.i
+.PHONY : agentconnection.i
+
+# target to preprocess a source file
+agentconnection.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\LibLogic.dir\build.make CMakeFiles/LibLogic.dir/agentconnection.cpp.i
+.PHONY : agentconnection.cpp.i
+
+agentconnection.s: agentconnection.cpp.s
+.PHONY : agentconnection.s
+
+# target to generate assembly for a file
+agentconnection.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\LibLogic.dir\build.make CMakeFiles/LibLogic.dir/agentconnection.cpp.s
+.PHONY : agentconnection.cpp.s
+
 edge.obj: edge.cpp.obj
 .PHONY : edge.obj
 
@@ -246,30 +270,6 @@ edge.s: edge.cpp.s
 edge.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\LibLogic.dir\build.make CMakeFiles/LibLogic.dir/edge.cpp.s
 .PHONY : edge.cpp.s
-
-launcherwidget.obj: launcherwidget.cpp.obj
-.PHONY : launcherwidget.obj
-
-# target to build an object file
-launcherwidget.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\LibLogic.dir\build.make CMakeFiles/LibLogic.dir/launcherwidget.cpp.obj
-.PHONY : launcherwidget.cpp.obj
-
-launcherwidget.i: launcherwidget.cpp.i
-.PHONY : launcherwidget.i
-
-# target to preprocess a source file
-launcherwidget.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\LibLogic.dir\build.make CMakeFiles/LibLogic.dir/launcherwidget.cpp.i
-.PHONY : launcherwidget.cpp.i
-
-launcherwidget.s: launcherwidget.cpp.s
-.PHONY : launcherwidget.s
-
-# target to generate assembly for a file
-launcherwidget.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\LibLogic.dir\build.make CMakeFiles/LibLogic.dir/launcherwidget.cpp.s
-.PHONY : launcherwidget.cpp.s
 
 logiceditorwindow.obj: logiceditorwindow.cpp.obj
 .PHONY : logiceditorwindow.obj
@@ -433,12 +433,12 @@ help:
 	@echo ... LibLogic_autogen/mocs_compilation.obj
 	@echo ... LibLogic_autogen/mocs_compilation.i
 	@echo ... LibLogic_autogen/mocs_compilation.s
+	@echo ... agentconnection.obj
+	@echo ... agentconnection.i
+	@echo ... agentconnection.s
 	@echo ... edge.obj
 	@echo ... edge.i
 	@echo ... edge.s
-	@echo ... launcherwidget.obj
-	@echo ... launcherwidget.i
-	@echo ... launcherwidget.s
 	@echo ... logiceditorwindow.obj
 	@echo ... logiceditorwindow.i
 	@echo ... logiceditorwindow.s

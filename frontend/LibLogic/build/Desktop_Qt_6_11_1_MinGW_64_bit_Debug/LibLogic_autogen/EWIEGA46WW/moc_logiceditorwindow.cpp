@@ -7,6 +7,7 @@
 *****************************************************************************/
 
 #include "../../../../logiceditorwindow.h"
+#include <QtGui/qtextcursor.h>
 #include <QtCore/qmetatype.h>
 
 #include <QtCore/qtmochelpers.h>
@@ -38,10 +39,32 @@ template <> constexpr inline auto LogicEditorWindow::qt_create_metaobjectdata<qt
 {
     namespace QMC = QtMocConstants;
     QtMocHelpers::StringRefStorage qt_stringData {
-        "LogicEditorWindow"
+        "LogicEditorWindow",
+        "onAgentResponse",
+        "",
+        "id",
+        "QJsonObject",
+        "result",
+        "onAgentError",
+        "error",
+        "onAgentNotification",
+        "method",
+        "params"
     };
 
     QtMocHelpers::UintData qt_methods {
+        // Slot 'onAgentResponse'
+        QtMocHelpers::SlotData<void(int, const QJsonObject &)>(1, 2, QMC::AccessPrivate, QMetaType::Void, {{
+            { QMetaType::Int, 3 }, { 0x80000000 | 4, 5 },
+        }}),
+        // Slot 'onAgentError'
+        QtMocHelpers::SlotData<void(int, const QJsonObject &)>(6, 2, QMC::AccessPrivate, QMetaType::Void, {{
+            { QMetaType::Int, 3 }, { 0x80000000 | 4, 7 },
+        }}),
+        // Slot 'onAgentNotification'
+        QtMocHelpers::SlotData<void(const QString &, const QJsonObject &)>(8, 2, QMC::AccessPrivate, QMetaType::Void, {{
+            { QMetaType::QString, 9 }, { 0x80000000 | 4, 10 },
+        }}),
     };
     QtMocHelpers::UintData qt_properties {
     };
@@ -63,10 +86,14 @@ Q_CONSTINIT const QMetaObject LogicEditorWindow::staticMetaObject = { {
 void LogicEditorWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
     auto *_t = static_cast<LogicEditorWindow *>(_o);
-    (void)_t;
-    (void)_c;
-    (void)_id;
-    (void)_a;
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        switch (_id) {
+        case 0: _t->onAgentResponse((*reinterpret_cast<std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<QJsonObject>>(_a[2]))); break;
+        case 1: _t->onAgentError((*reinterpret_cast<std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<QJsonObject>>(_a[2]))); break;
+        case 2: _t->onAgentNotification((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<QJsonObject>>(_a[2]))); break;
+        default: ;
+        }
+    }
 }
 
 const QMetaObject *LogicEditorWindow::metaObject() const
@@ -85,6 +112,18 @@ void *LogicEditorWindow::qt_metacast(const char *_clname)
 int LogicEditorWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
     _id = QWidget::qt_metacall(_c, _id, _a);
+    if (_id < 0)
+        return _id;
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        if (_id < 3)
+            qt_static_metacall(this, _c, _id, _a);
+        _id -= 3;
+    }
+    if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
+        if (_id < 3)
+            *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
+        _id -= 3;
+    }
     return _id;
 }
 QT_WARNING_POP

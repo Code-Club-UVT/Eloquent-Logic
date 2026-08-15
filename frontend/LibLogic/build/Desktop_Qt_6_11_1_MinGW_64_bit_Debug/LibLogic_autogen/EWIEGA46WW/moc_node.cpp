@@ -1,12 +1,12 @@
 /****************************************************************************
-** Meta object code from reading C++ file 'launcherwidget.h'
+** Meta object code from reading C++ file 'node.h'
 **
 ** Created by: The Qt Meta Object Compiler version 69 (Qt 6.11.1)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
 
-#include "../../../../launcherwidget.h"
+#include "../../../../node.h"
 #include <QtCore/qmetatype.h>
 
 #include <QtCore/qtmochelpers.h>
@@ -16,7 +16,7 @@
 
 #include <QtCore/qxptype_traits.h>
 #if !defined(Q_MOC_OUTPUT_REVISION)
-#error "The header file 'launcherwidget.h' doesn't include <QObject>."
+#error "The header file 'node.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 69
 #error "This file was generated using the moc from 6.11.1. It"
 #error "cannot be used with the include files from this version of Qt."
@@ -31,14 +31,14 @@ QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 QT_WARNING_DISABLE_GCC("-Wuseless-cast")
 namespace {
-struct qt_meta_tag_ZN14LauncherWidgetE_t {};
+struct qt_meta_tag_ZN4NodeE_t {};
 } // unnamed namespace
 
-template <> constexpr inline auto LauncherWidget::qt_create_metaobjectdata<qt_meta_tag_ZN14LauncherWidgetE_t>()
+template <> constexpr inline auto Node::qt_create_metaobjectdata<qt_meta_tag_ZN4NodeE_t>()
 {
     namespace QMC = QtMocConstants;
     QtMocHelpers::StringRefStorage qt_stringData {
-        "LauncherWidget"
+        "Node"
     };
 
     QtMocHelpers::UintData qt_methods {
@@ -47,44 +47,44 @@ template <> constexpr inline auto LauncherWidget::qt_create_metaobjectdata<qt_me
     };
     QtMocHelpers::UintData qt_enums {
     };
-    return QtMocHelpers::metaObjectData<LauncherWidget, qt_meta_tag_ZN14LauncherWidgetE_t>(QMC::MetaObjectFlag{}, qt_stringData,
+    return QtMocHelpers::metaObjectData<Node, qt_meta_tag_ZN4NodeE_t>(QMC::MetaObjectFlag{}, qt_stringData,
             qt_methods, qt_properties, qt_enums);
 }
-Q_CONSTINIT const QMetaObject LauncherWidget::staticMetaObject = { {
-    QMetaObject::SuperData::link<QWidget::staticMetaObject>(),
-    qt_staticMetaObjectStaticContent<qt_meta_tag_ZN14LauncherWidgetE_t>.stringdata,
-    qt_staticMetaObjectStaticContent<qt_meta_tag_ZN14LauncherWidgetE_t>.data,
+Q_CONSTINIT const QMetaObject Node::staticMetaObject = { {
+    QMetaObject::SuperData::link<QGraphicsObject::staticMetaObject>(),
+    qt_staticMetaObjectStaticContent<qt_meta_tag_ZN4NodeE_t>.stringdata,
+    qt_staticMetaObjectStaticContent<qt_meta_tag_ZN4NodeE_t>.data,
     qt_static_metacall,
     nullptr,
-    qt_staticMetaObjectRelocatingContent<qt_meta_tag_ZN14LauncherWidgetE_t>.metaTypes,
+    qt_staticMetaObjectRelocatingContent<qt_meta_tag_ZN4NodeE_t>.metaTypes,
     nullptr
 } };
 
-void LauncherWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+void Node::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
-    auto *_t = static_cast<LauncherWidget *>(_o);
+    auto *_t = static_cast<Node *>(_o);
     (void)_t;
     (void)_c;
     (void)_id;
     (void)_a;
 }
 
-const QMetaObject *LauncherWidget::metaObject() const
+const QMetaObject *Node::metaObject() const
 {
     return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
 }
 
-void *LauncherWidget::qt_metacast(const char *_clname)
+void *Node::qt_metacast(const char *_clname)
 {
     if (!_clname) return nullptr;
-    if (!strcmp(_clname, qt_staticMetaObjectStaticContent<qt_meta_tag_ZN14LauncherWidgetE_t>.strings))
+    if (!strcmp(_clname, qt_staticMetaObjectStaticContent<qt_meta_tag_ZN4NodeE_t>.strings))
         return static_cast<void*>(this);
-    return QWidget::qt_metacast(_clname);
+    return QGraphicsObject::qt_metacast(_clname);
 }
 
-int LauncherWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+int Node::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
-    _id = QWidget::qt_metacall(_c, _id, _a);
+    _id = QGraphicsObject::qt_metacall(_c, _id, _a);
     return _id;
 }
 QT_WARNING_POP

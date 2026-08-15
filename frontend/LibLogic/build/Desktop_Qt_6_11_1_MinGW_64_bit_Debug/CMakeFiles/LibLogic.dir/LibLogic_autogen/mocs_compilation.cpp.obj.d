@@ -1,11 +1,11 @@
 CMakeFiles/LibLogic.dir/LibLogic_autogen/mocs_compilation.cpp.obj: \
  C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\LibLogic_autogen\mocs_compilation.cpp \
- C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\LibLogic_autogen\EWIEGA46WW/moc_launcherwidget.cpp \
- C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/launcherwidget.h \
- C:/Qt/6.11.1/mingw_64/include/QtWidgets/QWidget \
- C:/Qt/6.11.1/mingw_64/include/QtWidgets/qwidget.h \
- C:/Qt/6.11.1/mingw_64/include/QtWidgets/qtwidgetsglobal.h \
- C:/Qt/6.11.1/mingw_64/include/QtGui/qtguiglobal.h \
+ C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\LibLogic_autogen\EWIEGA46WW/moc_agentconnection.cpp \
+ C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/agentconnection.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/QObject \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qobject.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qobjectdefs.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qnamespace.h \
  C:/Qt/6.11.1/mingw_64/include/QtCore/qglobal.h \
  C:/Qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/type_traits \
  C:/Qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32/bits/c++config.h \
@@ -153,13 +153,6 @@ CMakeFiles/LibLogic.dir/LibLogic_autogen/mocs_compilation.cpp.obj: \
  C:/Qt/6.11.1/mingw_64/include/QtCore/qtresource.h \
  C:/Qt/6.11.1/mingw_64/include/QtCore/qttranslation.h \
  C:/Qt/6.11.1/mingw_64/include/QtCore/qversiontagging.h \
- C:/Qt/6.11.1/mingw_64/include/QtGui/qtgui-config.h \
- C:/Qt/6.11.1/mingw_64/include/QtGui/qtguiexports.h \
- C:/Qt/6.11.1/mingw_64/include/QtWidgets/qtwidgets-config.h \
- C:/Qt/6.11.1/mingw_64/include/QtWidgets/qtwidgetsexports.h \
- C:/Qt/6.11.1/mingw_64/include/QtGui/qwindowdefs.h \
- C:/Qt/6.11.1/mingw_64/include/QtCore/qobjectdefs.h \
- C:/Qt/6.11.1/mingw_64/include/QtCore/qnamespace.h \
  C:/Qt/6.11.1/mingw_64/include/QtCore/qcompare.h \
  C:/Qt/6.11.1/mingw_64/include/QtCore/qstdlibdetection.h \
  C:/Qt/6.11.1/mingw_64/include/QtCore/qcomparehelpers.h \
@@ -231,8 +224,6 @@ CMakeFiles/LibLogic.dir/LibLogic_autogen/mocs_compilation.cpp.obj: \
  C:/Qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/shared_ptr_atomic.h \
  C:/Qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/backward/auto_ptr.h \
  C:/Qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/pstl/glue_memory_defs.h \
- C:/Qt/6.11.1/mingw_64/include/QtGui/qwindowdefs_win.h \
- C:/Qt/6.11.1/mingw_64/include/QtCore/qobject.h \
  C:/Qt/6.11.1/mingw_64/include/QtCore/qstring.h \
  C:/Qt/6.11.1/mingw_64/include/QtCore/qchar.h \
  C:/Qt/6.11.1/mingw_64/include/QtCore/qstringview.h \
@@ -332,31 +323,21 @@ CMakeFiles/LibLogic.dir/LibLogic_autogen/mocs_compilation.cpp.obj: \
  C:/Qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/chrono.h \
  C:/Qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/ratio \
  C:/Qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/ctime \
- C:/Qt/6.11.1/mingw_64/include/QtCore/qmargins.h \
- C:/Qt/6.11.1/mingw_64/include/QtCore/qcheckedint_impl.h \
- C:/Qt/6.11.1/mingw_64/include/QtCore/q23utility.h \
- C:/Qt/6.11.1/mingw_64/include/QtCore/q20utility.h \
- C:/Qt/6.11.1/mingw_64/include/QtGui/qaction.h \
- C:/Qt/6.11.1/mingw_64/include/QtGui/qkeysequence.h \
- C:/Qt/6.11.1/mingw_64/include/QtGui/qicon.h \
- C:/Qt/6.11.1/mingw_64/include/QtCore/qsize.h \
- C:/Qt/6.11.1/mingw_64/include/QtGui/qpixmap.h \
- C:/Qt/6.11.1/mingw_64/include/QtGui/qpaintdevice.h \
- C:/Qt/6.11.1/mingw_64/include/QtCore/qrect.h \
- C:/Qt/6.11.1/mingw_64/include/QtCore/qpoint.h \
- C:/Qt/6.11.1/mingw_64/include/QtGui/qcolor.h \
- C:/Qt/6.11.1/mingw_64/include/QtGui/qrgb.h \
- C:/Qt/6.11.1/mingw_64/include/QtGui/qrgba64.h \
- C:/Qt/6.11.1/mingw_64/include/QtCore/qshareddata.h \
- C:/Qt/6.11.1/mingw_64/include/QtGui/qimage.h \
- C:/Qt/6.11.1/mingw_64/include/QtGui/qpixelformat.h \
- C:/Qt/6.11.1/mingw_64/include/QtGui/qtransform.h \
- C:/Qt/6.11.1/mingw_64/include/QtGui/qpolygon.h \
- C:/Qt/6.11.1/mingw_64/include/QtGui/qregion.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/QProcess \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qprocess.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qiodevice.h \
  C:/Qt/6.11.1/mingw_64/include/QtCore/qspan.h \
  C:/Qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/cassert \
  C:/Qt/6.11.1/mingw_64/include/QtCore/q20iterator.h \
- C:/Qt/6.11.1/mingw_64/include/QtCore/qline.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qshareddata.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/QJsonObject \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qjsonobject.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qjsonvalue.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qcborvalue.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qcborcommon.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qdatetime.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qcalendar.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qlocale.h \
  C:/Qt/6.11.1/mingw_64/include/QtCore/qvariant.h \
  C:/Qt/6.11.1/mingw_64/include/QtCore/qdebug.h \
  C:/Qt/6.11.1/mingw_64/include/QtCore/qtextstream.h \
@@ -375,33 +356,87 @@ CMakeFiles/LibLogic.dir/LibLogic_autogen/mocs_compilation.cpp.obj: \
  C:/Qt/6.11.1/mingw_64/include/QtCore/qhash.h \
  C:/Qt/6.11.1/mingw_64/include/QtCore/qvarlengtharray.h \
  C:/Qt/6.11.1/mingw_64/include/QtCore/qalloc.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/q23utility.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/q20utility.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qregularexpression.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qurl.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/quuid.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qendian.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qjsondocument.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qjsonparseerror.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qtmochelpers.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qtmocconstants.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/q20algorithm.h \
+ C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\LibLogic_autogen\EWIEGA46WW/moc_logiceditorwindow.cpp \
+ C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/logiceditorwindow.h \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/QWidget \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/qwidget.h \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/qtwidgetsglobal.h \
+ C:/Qt/6.11.1/mingw_64/include/QtGui/qtguiglobal.h \
+ C:/Qt/6.11.1/mingw_64/include/QtGui/qtgui-config.h \
+ C:/Qt/6.11.1/mingw_64/include/QtGui/qtguiexports.h \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/qtwidgets-config.h \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/qtwidgetsexports.h \
+ C:/Qt/6.11.1/mingw_64/include/QtGui/qwindowdefs.h \
+ C:/Qt/6.11.1/mingw_64/include/QtGui/qwindowdefs_win.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qmargins.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qcheckedint_impl.h \
+ C:/Qt/6.11.1/mingw_64/include/QtGui/qaction.h \
+ C:/Qt/6.11.1/mingw_64/include/QtGui/qkeysequence.h \
+ C:/Qt/6.11.1/mingw_64/include/QtGui/qicon.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qsize.h \
+ C:/Qt/6.11.1/mingw_64/include/QtGui/qpixmap.h \
+ C:/Qt/6.11.1/mingw_64/include/QtGui/qpaintdevice.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qrect.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qpoint.h \
+ C:/Qt/6.11.1/mingw_64/include/QtGui/qcolor.h \
+ C:/Qt/6.11.1/mingw_64/include/QtGui/qrgb.h \
+ C:/Qt/6.11.1/mingw_64/include/QtGui/qrgba64.h \
+ C:/Qt/6.11.1/mingw_64/include/QtGui/qimage.h \
+ C:/Qt/6.11.1/mingw_64/include/QtGui/qpixelformat.h \
+ C:/Qt/6.11.1/mingw_64/include/QtGui/qtransform.h \
+ C:/Qt/6.11.1/mingw_64/include/QtGui/qpolygon.h \
+ C:/Qt/6.11.1/mingw_64/include/QtGui/qregion.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qline.h \
  C:/Qt/6.11.1/mingw_64/include/QtGui/qpalette.h \
  C:/Qt/6.11.1/mingw_64/include/QtGui/qbrush.h \
  C:/Qt/6.11.1/mingw_64/include/QtGui/qfont.h \
- C:/Qt/6.11.1/mingw_64/include/QtCore/qendian.h \
  C:/Qt/6.11.1/mingw_64/include/QtGui/qfontmetrics.h \
  C:/Qt/6.11.1/mingw_64/include/QtGui/qfontinfo.h \
  C:/Qt/6.11.1/mingw_64/include/QtGui/qfontvariableaxis.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qsizepolicy.h \
  C:/Qt/6.11.1/mingw_64/include/QtGui/qcursor.h \
  C:/Qt/6.11.1/mingw_64/include/QtGui/qbitmap.h \
- C:/Qt/6.11.1/mingw_64/include/QtCore/qtmochelpers.h \
- C:/Qt/6.11.1/mingw_64/include/QtCore/qtmocconstants.h \
- C:/Qt/6.11.1/mingw_64/include/QtCore/q20algorithm.h \
- C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\LibLogic_autogen\EWIEGA46WW/moc_logiceditorwindow.cpp \
- C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/logiceditorwindow.h \
  C:/Qt/6.11.1/mingw_64/include/QtCore/QString \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/QMap \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/QTextEdit \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/qtextedit.h \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/qabstractscrollarea.h \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/qframe.h \
+ C:/Qt/6.11.1/mingw_64/include/QtGui/qtextdocument.h \
+ C:/Qt/6.11.1/mingw_64/include/QtGui/qtextoption.h \
+ C:/Qt/6.11.1/mingw_64/include/QtGui/qtextcursor.h \
+ C:/Qt/6.11.1/mingw_64/include/QtGui/qtextformat.h \
+ C:/Qt/6.11.1/mingw_64/include/QtGui/qpen.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/QJsonArray \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qjsonarray.h \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/QComboBox \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/qcombobox.h \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/qabstractitemdelegate.h \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/qstyleoption.h \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/qabstractspinbox.h \
+ C:/Qt/6.11.1/mingw_64/include/QtGui/qvalidator.h \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/qslider.h \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/qabstractslider.h \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/qstyle.h \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/qtabbar.h \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/qtabwidget.h \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/qrubberband.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qabstractitemmodel.h \
  C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\LibLogic_autogen\EWIEGA46WW/moc_logiclineedit.cpp \
  C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/logiclineedit.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/QLineEdit \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qlineedit.h \
- C:/Qt/6.11.1/mingw_64/include/QtWidgets/qframe.h \
- C:/Qt/6.11.1/mingw_64/include/QtGui/qtextcursor.h \
- C:/Qt/6.11.1/mingw_64/include/QtGui/qtextdocument.h \
- C:/Qt/6.11.1/mingw_64/include/QtCore/qurl.h \
- C:/Qt/6.11.1/mingw_64/include/QtGui/qtextformat.h \
- C:/Qt/6.11.1/mingw_64/include/QtGui/qpen.h \
- C:/Qt/6.11.1/mingw_64/include/QtGui/qtextoption.h \
  C:/Qt/6.11.1/mingw_64/include/QtGui/QKeyEvent \
  C:/Qt/6.11.1/mingw_64/include/QtGui/qevent.h \
  C:/Qt/6.11.1/mingw_64/include/QtCore/qcoreevent.h \
@@ -409,7 +444,6 @@ CMakeFiles/LibLogic.dir/LibLogic_autogen/mocs_compilation.cpp.obj: \
  C:/Qt/6.11.1/mingw_64/include/QtCore/qabstracteventdispatcher.h \
  C:/Qt/6.11.1/mingw_64/include/QtCore/qeventloop.h \
  C:/Qt/6.11.1/mingw_64/include/QtCore/qdeadlinetimer.h \
- C:/Qt/6.11.1/mingw_64/include/QtCore/qiodevice.h \
  C:/Qt/6.11.1/mingw_64/include/QtGui/qeventpoint.h \
  C:/Qt/6.11.1/mingw_64/include/QtGui/qvector2d.h \
  C:/Qt/6.11.1/mingw_64/include/QtGui/qvectornd.h \
@@ -428,35 +462,29 @@ CMakeFiles/LibLogic.dir/LibLogic_autogen/mocs_compilation.cpp.obj: \
  C:/Qt/6.11.1/mingw_64/include/QtCore/qcoreapplication.h \
  C:/Qt/6.11.1/mingw_64/include/QtCore/qcoreapplication_platform.h \
  C:/Qt/6.11.1/mingw_64/include/QtGui/qinputmethod.h \
- C:/Qt/6.11.1/mingw_64/include/QtCore/qlocale.h \
  C:/Qt/6.11.1/mingw_64/include/QtGui/qguiapplication_platform.h \
- C:/Qt/6.11.1/mingw_64/include/QtCore/QMap \
+ C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\LibLogic_autogen\EWIEGA46WW/moc_node.cpp \
+ C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/node.h \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/QGraphicsItem \
+ C:/Qt/6.11.1/mingw_64/include/QtWidgets/qgraphicsitem.h \
+ C:/Qt/6.11.1/mingw_64/include/QtGui/qpainterpath.h \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/QList \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/QUuid \
  C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\LibLogic_autogen\EWIEGA46WW/moc_syntactictreeviewer.cpp \
  C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/syntactictreeviewer.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/QGraphicsView \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qgraphicsview.h \
  C:/Qt/6.11.1/mingw_64/include/QtGui/qpainter.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qscrollarea.h \
- C:/Qt/6.11.1/mingw_64/include/QtWidgets/qabstractscrollarea.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qgraphicsscene.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/QGraphicsScene \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/QTimer \
+ C:/Qt/6.11.1/mingw_64/include/QtCore/qtimer.h \
  C:\Users\gvend\OneDrive\Documente\GitHub\Eloquent-Logic\frontend\LibLogic\build\Desktop_Qt_6_11_1_MinGW_64_bit_Debug\LibLogic_autogen\EWIEGA46WW/moc_truthtableviewer.cpp \
  C:/Users/gvend/OneDrive/Documente/GitHub/Eloquent-Logic/frontend/LibLogic/truthtableviewer.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/QTableWidget \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qtablewidget.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qtableview.h \
  C:/Qt/6.11.1/mingw_64/include/QtWidgets/qabstractitemview.h \
- C:/Qt/6.11.1/mingw_64/include/QtCore/qabstractitemmodel.h \
  C:/Qt/6.11.1/mingw_64/include/QtCore/qitemselectionmodel.h \
- C:/Qt/6.11.1/mingw_64/include/QtWidgets/qabstractitemdelegate.h \
- C:/Qt/6.11.1/mingw_64/include/QtWidgets/qstyleoption.h \
- C:/Qt/6.11.1/mingw_64/include/QtWidgets/qabstractspinbox.h \
- C:/Qt/6.11.1/mingw_64/include/QtGui/qvalidator.h \
- C:/Qt/6.11.1/mingw_64/include/QtCore/qregularexpression.h \
- C:/Qt/6.11.1/mingw_64/include/QtWidgets/qslider.h \
- C:/Qt/6.11.1/mingw_64/include/QtWidgets/qabstractslider.h \
- C:/Qt/6.11.1/mingw_64/include/QtWidgets/qstyle.h \
- C:/Qt/6.11.1/mingw_64/include/QtWidgets/qtabbar.h \
- C:/Qt/6.11.1/mingw_64/include/QtWidgets/qtabwidget.h \
- C:/Qt/6.11.1/mingw_64/include/QtWidgets/qrubberband.h \
  C:/Qt/6.11.1/mingw_64/include/QtCore/QStringList
