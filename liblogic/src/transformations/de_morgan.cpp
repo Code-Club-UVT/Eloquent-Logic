@@ -2,14 +2,17 @@
 // Created by xcell on 16.12.2024.
 //
 
-#include <liblogic/private/transformations/de_morgan.h>
+#include "de_morgan.h"
 
 // OPTIMIZATION: due to the high similarity of the classes, they may be fused into one single class.
 
 namespace eloquent::logic {
-    bool DeMorganDisjunction::match(const NodeObsPtr subtree) {
-        const auto node = subtree.lock();
-        return node->type == NodeType::NotOp && node->children[0]->type == NodeType::OrOp;
+
+    bool DeMorganDisjunction::match(const NodeObsPtr subtree, const std::shared_ptr<node_transformation_listener_t>& listener) {
+        const auto node = subtree;
+        bool result = node->getType() == NodeType::NotOp && node->childAt(0)->getType() == NodeType::OrOp;
+        if (result) listener->didMatchDeMorganDisjunction(node);
+        return result;
     }
 
     /*
@@ -22,24 +25,26 @@ namespace eloquent::logic {
      *   (2)    (3)      (2)     (3)
      */
 
-    void DeMorganDisjunction::replace(const NodeObsPtr target) {
-        const auto node = target.lock();
-        const auto newNode = NodeBuilder::makeNewAndNode();
+    void DeMorganDisjunction::replace(const NodeObsPtr target, const std::shared_ptr<node_transformation_listener_t>& listener) {
+        const auto node = target;
 
-        for (size_t i = 0; i < node->children[0]->children.size(); i++) {
-            newNode->spawn_new_child();
-            newNode->children[i] = NodeBuilder::makeNewNotNode();
-            newNode->children[i]->spawn_new_child();
-            newNode->children[i]->children[0] = node->children[0]->children[i];
+        node->set_lexeme(lexeme::make(lexeme_type::AndOp, symbols::SYMB_AND, node->getLexeme().start(), node->getLexeme().end()));
+
+        NodePtr cChild = node->disconnect(0);
+        for (size_t i = 0; i < cChild->num_children(); ++i)
+        {
+            node->spawn_new_child(lexeme::make(lexeme_type::NotOp, symbols::SYMB_NOT, 0, 0));
+            cChild->transfer_child_to(node->childAt(i), i);
         }
 
-        node->copy_from(newNode);
-        node->copy_children(newNode);
+        listener->didApplyDeMorganDisjunction(node);
     }
 
-    bool DeMorganConjunction::match(NodeObsPtr subtree) {
-        const auto node = subtree.lock();
-        return node->type == NodeType::NotOp && node->children[0]->type == NodeType::AndOp;
+    bool DeMorganConjunction::match(NodeObsPtr subtree, const std::shared_ptr<node_transformation_listener_t>& listener) {
+        const auto node = subtree;
+        bool result = node->getType() == NodeType::NotOp && node->childAt(0)->getType() == NodeType::AndOp;
+        if (result) listener->didMatchDeMorganConjunction(node);
+        return result;
     }
 
     /*
@@ -52,18 +57,18 @@ namespace eloquent::logic {
      *   (2)    (3)      (2)      (3)
      */
 
-    void DeMorganConjunction::replace(const NodeObsPtr target) {
-        const auto node = target.lock();
-        const auto newNode = NodeBuilder::makeNewOrNode();
+    void DeMorganConjunction::replace(const NodeObsPtr target, const std::shared_ptr<node_transformation_listener_t>& listener) {
+        const auto node = target;
 
-        for (size_t i = 0; i < node->children[0]->children.size(); i++) {
-            newNode->spawn_new_child();
-            newNode->children[i] = NodeBuilder::makeNewNotNode();
-            newNode->children[i]->spawn_new_child();
-            newNode->children[i]->children[0] = node->children[0]->children[i];
+        node->set_lexeme(lexeme::make(lexeme_type::OrOp, symbols::SYMB_OR, node->getLexeme().start(), node->getLexeme().end()));
+
+        NodePtr cChild = node->disconnect(0);
+        for (size_t i = 0; i < cChild->num_children(); ++i)
+        {
+            node->spawn_new_child(lexeme::make(lexeme_type::NotOp, symbols::SYMB_NOT, 0, 0));
+            cChild->transfer_child_to(node->childAt(i), i);
         }
 
-        node->copy_from(newNode);
-        node->copy_children(newNode);
+        listener->didApplyDeMorganConjunction(node);
     }
 }

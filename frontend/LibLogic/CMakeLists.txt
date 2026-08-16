@@ -81,3 +81,7 @@ install(TARGETS LibLogic
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(LibLogic)
 endif()
+
+
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Network)
+target_link_libraries(LibLogic PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets Qt6::Network)

@@ -1,0 +1,6 @@
+# This file is managed by Conan, contents will be overwritten.
+# To keep your changes, remove these comment lines, but the plugin won't be able to modify your requirements
+
+requirements:
+  - "cppcommon/1.0.4.0"
+  - "nlohmann_json/3.12.0"

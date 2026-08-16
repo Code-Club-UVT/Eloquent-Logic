@@ -1,0 +1,718 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eloquent-logic.example/schema/feedback-events.schema.json",
+  "title": "Eloquent Logic Agent — feedback/notification events",
+  "description": "Every liblogic feedback_listener callback fired while logic_agent (logic_agent/agent.cpp) handles a request is streamed to STDOUT ahead of the final Response, as a JSON-RPC 2.0 Notification object: {\"jsonrpc\":\"2.0\",\"method\":\"<category>/<callbackName>\",\"params\":{...}} — one per line, no \"id\" field (logic_agent/rpc/event_sink.hpp). This is NOT an OpenRPC document: OpenRPC models request/response method pairs, and these are one-way, fire-and-forget notifications interleaved with a request's eventual Response, so they're catalogued here as plain JSON Schema instead. See openrpc.json for the 4 request/response methods (parse, transform, sat, truth_table) that produce this notification stream as a side effect. Every notification def below is named after the exact listener callback it mirrors and traces back to the streaming_*_listener.cpp file that emits it; use $defs.AnyFeedbackNotification to validate an arbitrary line of the stream without knowing its method name up front.",
+  "$defs": {
+    "Uuid": {
+      "title": "Uuid",
+      "description": "JSON-serializable mirror of CppCommon::UUID (logic_agent/types/core/uuid_t.hpp): a bare string in canonical \"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\" form, not a subobject.",
+      "type": "string",
+      "format": "uuid"
+    },
+    "LexemeType": {
+      "title": "LexemeType",
+      "description": "Mirrors eloquent::logic::lexeme_type (logic_agent/types/core/lexeme_t.hpp).",
+      "type": "string",
+      "enum": [
+        "Unknown", "Atom", "Tautology", "Contradiction", "LParen", "RParen",
+        "NotOp", "AndOp", "OrOp", "ImpliesOp", "IffOp", "LEquiOp", "Eof"
+      ]
+    },
+    "Lexeme": {
+      "title": "Lexeme",
+      "description": "Mirrors eloquent::logic::lexeme (logic_agent/types/core/lexeme_t.hpp).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "token", "start", "end"],
+      "properties": {
+        "type": { "$ref": "#/$defs/LexemeType" },
+        "token": { "type": "string" },
+        "start": { "type": "integer", "minimum": 0 },
+        "end": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "NodeType": {
+      "title": "NodeType",
+      "description": "Mirrors eloquent::logic::NodeType (logic_agent/types/core/node_t.hpp).",
+      "type": "string",
+      "enum": ["Blank", "Atom", "NotOp", "AndOp", "OrOp", "ImpliesOp", "IffOp", "LEquiOp"]
+    },
+    "Node": {
+      "title": "Node",
+      "description": "Mirrors eloquent::logic::Node (logic_agent/types/core/node_t.hpp). Children are referenced by uuid, not embedded recursively.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "lexeme", "children"],
+      "properties": {
+        "id": { "$ref": "#/$defs/Uuid" },
+        "type": { "$ref": "#/$defs/NodeType" },
+        "lexeme": { "$ref": "#/$defs/Lexeme" },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Uuid" }
+        }
+      }
+    },
+    "OptionalNode": {
+      "description": "A std::optional<node_t> field: the node, or null when the optional was empty (e.g. a NodeObsPtr that was null).",
+      "oneOf": [
+        { "$ref": "#/$defs/Node" },
+        { "type": "null" }
+      ]
+    },
+    "Cursor": {
+      "title": "Cursor",
+      "description": "Mirrors eloquent::logic::Cursor (logic_agent/types/parser/cursor_t.hpp): a snapshot of where the cursor sits plus the tree root it is building.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["current_node", "tree_root"],
+      "properties": {
+        "current_node": { "$ref": "#/$defs/OptionalNode" },
+        "tree_root": { "$ref": "#/$defs/OptionalNode" }
+      }
+    },
+    "Literal": {
+      "title": "Literal",
+      "description": "A DIMACS-style literal id (logic_agent/types/sat/common_t.hpp::literal_t, mirrors the library's Literal = int64_t). Negative = negated atom.",
+      "type": "integer"
+    },
+    "Clause": {
+      "title": "Clause",
+      "description": "logic_agent/types/sat/common_t.hpp::clause_t — a disjunction of literals.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/Literal" }
+    },
+    "ClauseSet": {
+      "title": "ClauseSet",
+      "description": "logic_agent/types/sat/common_t.hpp::clause_set_t — a conjunction of clauses.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/Clause" }
+    },
+
+    "EmptyParams": {
+      "title": "EmptyParams",
+      "description": "Payload for a listener callback that carries no data (event_sink::emit_empty).",
+      "type": "object",
+      "additionalProperties": false
+    },
+
+    "SingleLexemeEvent": {
+      "description": "logic_agent/types/parser/lexer_events.hpp::single_lexeme_event_t — wraps any callback carrying exactly one lexeme.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lexeme"],
+      "properties": {
+        "lexeme": { "$ref": "#/$defs/Lexeme" }
+      }
+    },
+    "CharacterEvent": {
+      "description": "logic_agent/types/parser/lexer_events.hpp::character_event_t — lexer_listener_t::didReadCharacter(const char&).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value"],
+      "properties": {
+        "value": { "type": "string", "minLength": 1, "maxLength": 1 }
+      }
+    },
+    "UnrecognisedOperatorEvent": {
+      "description": "logic_agent/types/parser/lexer_events.hpp::unrecognised_operator_event_t — lexer_listener_t::didFindUnrecognisedOperator(string_view, size_t).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["operator_text", "position"],
+      "properties": {
+        "operator_text": { "type": "string" },
+        "position": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "SubscriptPositionEvent": {
+      "description": "logic_agent/types/parser/lexer_events.hpp::subscript_position_event_t — shared by lexer_listener_t::didFindMissingSubscript(size_t) and didFindUnbalancedSubscript(size_t).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["position"],
+      "properties": {
+        "position": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "UnexpectedSequenceEvent": {
+      "description": "logic_agent/types/parser/lexer_events.hpp::unexpected_sequence_event_t — lexer_listener_t::didFindUnexpectedSequence(string_view, size_t).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sequence", "position"],
+      "properties": {
+        "sequence": { "type": "string" },
+        "position": { "type": "integer", "minimum": 0 }
+      }
+    },
+
+    "SingleNodeEvent": {
+      "description": "logic_agent/types/parser/cursor_events.hpp::single_node_event_t — wraps any callback carrying exactly one NodeObsPtr (cursor_listener_t::didTrySpawiningOverExistingNode, strict_parser_listener_t::didMakeNode/didPlaceNodeAtCursor/wrongArityForNode, relaxed_parser_listener_t::didMakeNewSubtree, node_transformation_listener_t's match/reduce/apply callbacks).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["node"],
+      "properties": {
+        "node": { "$ref": "#/$defs/OptionalNode" }
+      }
+    },
+    "InvalidPositionEvent": {
+      "description": "logic_agent/types/parser/cursor_events.hpp::invalid_position_event_t — cursor_listener_t::didTryInvalidPosition(NodeObsPtr, size_t); index is the out-of-range child index the cursor tried to move to.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["node", "index"],
+      "properties": {
+        "node": { "$ref": "#/$defs/OptionalNode" },
+        "index": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "SpawnedChildEvent": {
+      "description": "logic_agent/types/parser/cursor_events.hpp::spawned_child_event_t — cursor_listener_t::spawnedNewChildNode(NodeObsPtr parent, NodeObsPtr child).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["parent", "child"],
+      "properties": {
+        "parent": { "$ref": "#/$defs/OptionalNode" },
+        "child": { "$ref": "#/$defs/OptionalNode" }
+      }
+    },
+
+    "AstErrorEvent": {
+      "description": "logic_agent/types/parser/strict_parser_events.hpp::ast_error_event_t — strict_parser_listener_t::foundAstError(const Cursor&).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["cursor"],
+      "properties": {
+        "cursor": { "$ref": "#/$defs/Cursor" }
+      }
+    },
+
+    "PureAtomInParensEvent": {
+      "description": "logic_agent/types/parser/relaxed_parser_events.hpp::pure_atom_in_parens_event_t — relaxed_parser_listener_t::didFindPureAtomInParens(open, atom, close).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["open_paren", "atom", "close_paren"],
+      "properties": {
+        "open_paren": { "$ref": "#/$defs/Lexeme" },
+        "atom": { "$ref": "#/$defs/Lexeme" },
+        "close_paren": { "$ref": "#/$defs/Lexeme" }
+      }
+    },
+    "JoinEvent": {
+      "description": "logic_agent/types/parser/relaxed_parser_events.hpp::join_event_t — relaxed_parser_listener_t::didJoin(NodeObsPtr target, NodeObsPtr source); target is the node being grown, source is the subtree merged into it.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target", "source"],
+      "properties": {
+        "target": { "$ref": "#/$defs/OptionalNode" },
+        "source": { "$ref": "#/$defs/OptionalNode" }
+      }
+    },
+
+    "CondenseChildEvent": {
+      "description": "logic_agent/types/transformations/node_transformation_events.hpp::condense_child_event_t — node_transformation_listener_t::didCondenseChild(parent, merged); merged is the same-type child absorbed into parent.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["parent", "merged_child"],
+      "properties": {
+        "parent": { "$ref": "#/$defs/OptionalNode" },
+        "merged_child": { "$ref": "#/$defs/OptionalNode" }
+      }
+    },
+    "NormalFormCheckEvent": {
+      "description": "logic_agent/types/transformations/node_transformation_events.hpp::normal_form_check_event_t — shared by node_transformation_listener_t::didCheckCNF(node, bool) and didCheckDNF(node, bool).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["node", "is_normal_form"],
+      "properties": {
+        "node": { "$ref": "#/$defs/OptionalNode" },
+        "is_normal_form": { "type": "boolean" }
+      }
+    },
+
+    "UnknownVariableEvent": {
+      "description": "logic_agent/types/truth_table/truth_table_events.hpp::unknown_variable_event_t — truth_table_listener_t::didFindUnknownVariable(string_view).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string" }
+      }
+    },
+    "VariableAssignmentEvent": {
+      "description": "logic_agent/types/truth_table/truth_table_events.hpp::variable_assignment_event_t — truth_table_listener_t::didSetVariable(string_view, bool).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "value"],
+      "properties": {
+        "name": { "type": "string" },
+        "value": { "type": "boolean" }
+      }
+    },
+    "SubexpressionResultEvent": {
+      "description": "logic_agent/types/truth_table/truth_table_events.hpp::subexpression_result_event_t — truth_table_listener_t::didComputeSubexpression(const CppCommon::UUID&, bool).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["node_id", "value"],
+      "properties": {
+        "node_id": { "$ref": "#/$defs/Uuid" },
+        "value": { "type": "boolean" }
+      }
+    },
+
+    "LiteralMappingEvent": {
+      "description": "logic_agent/types/sat/mapper_events.hpp::literal_mapping_event_t — mapper_listener::did_map_literals(const std::map<std::string, Literal>&).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mapping"],
+      "properties": {
+        "mapping": {
+          "type": "object",
+          "description": "Atom name -> its DIMACS literal id.",
+          "additionalProperties": { "$ref": "#/$defs/Literal" }
+        }
+      }
+    },
+    "ClauseSetEvent": {
+      "description": "logic_agent/types/sat/mapper_events.hpp::clause_set_event_t — mapper_listener::did_map_clauses(const ClauseSet&); also reused by sat_listener::didBuildHeuristicsDatabase(const ClauseSet&).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["clauses"],
+      "properties": {
+        "clauses": { "$ref": "#/$defs/ClauseSet" }
+      }
+    },
+
+    "LiteralEvent": {
+      "description": "logic_agent/types/sat/sat_events.hpp::literal_event_t — shared by sat_listener::didFindUnitLiteral, didDeriveEmptyClauseFromUnitPropagation, didFindPureLiteral, didChooseRandomLiteral (all take a single Literal).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["literal"],
+      "properties": {
+        "literal": { "$ref": "#/$defs/Literal" }
+      }
+    },
+    "ClauseLiteralEvent": {
+      "description": "logic_agent/types/sat/sat_events.hpp::clause_literal_event_t — shared by sat_listener::didSatisfyClauseByUnitLiteral and didEliminateClauseByPureLiteral (both take a Clause and a Literal).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["clause", "literal"],
+      "properties": {
+        "clause": { "$ref": "#/$defs/Clause" },
+        "literal": { "$ref": "#/$defs/Literal" }
+      }
+    },
+    "ClauseReductionEvent": {
+      "description": "logic_agent/types/sat/sat_events.hpp::clause_reduction_event_t — sat_listener::didReduceClauseByUnitLiteral(original, reduced, literal).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["original", "reduced", "literal"],
+      "properties": {
+        "original": { "$ref": "#/$defs/Clause" },
+        "reduced": { "$ref": "#/$defs/Clause" },
+        "literal": { "$ref": "#/$defs/Literal" }
+      }
+    },
+    "ClausePairEvent": {
+      "description": "logic_agent/types/sat/sat_events.hpp::clause_pair_event_t — sat_listener::didSelectResolutionCandidates(first, second).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["first", "second"],
+      "properties": {
+        "first": { "$ref": "#/$defs/Clause" },
+        "second": { "$ref": "#/$defs/Clause" }
+      }
+    },
+    "ResolventEvent": {
+      "description": "logic_agent/types/sat/sat_events.hpp::resolvent_event_t — sat_listener::didComputeResolvent(first, second, pivot, resolvent).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["first", "second", "pivot", "resolvent"],
+      "properties": {
+        "first": { "$ref": "#/$defs/Clause" },
+        "second": { "$ref": "#/$defs/Clause" },
+        "pivot": { "$ref": "#/$defs/Literal" },
+        "resolvent": { "$ref": "#/$defs/Clause" }
+      }
+    },
+    "ClauseEvent": {
+      "description": "logic_agent/types/sat/sat_events.hpp::clause_event_t — shared by sat_listener::didSkipDuplicateResolvent and didAddResolvent (both take a single Clause).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["clause"],
+      "properties": {
+        "clause": { "$ref": "#/$defs/Clause" }
+      }
+    },
+    "ClauseCountEvent": {
+      "description": "logic_agent/types/sat/sat_events.hpp::clause_count_event_t — sat_listener::didExceedClauseThreshold(size_t).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["count"],
+      "properties": {
+        "count": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "BranchingLiteralEvent": {
+      "description": "logic_agent/types/sat/sat_events.hpp::branching_literal_event_t — sat_listener::didChooseBranchingLiteral(literal, frequency).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["literal", "frequency"],
+      "properties": {
+        "literal": { "$ref": "#/$defs/Literal" },
+        "frequency": { "type": "integer" }
+      }
+    },
+    "BranchEvent": {
+      "description": "logic_agent/types/sat/sat_events.hpp::branch_event_t — shared by sat_listener::didEnterBranch and didPushBranchContext (both take a Literal and the truth value it was assigned).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["literal", "value"],
+      "properties": {
+        "literal": { "$ref": "#/$defs/Literal" },
+        "value": { "type": "boolean" }
+      }
+    },
+
+    "Notification_lexer_didStart": { "$ref": "#/$defs/_NotificationTemplates/Empty", "properties": { "method": { "const": "lexer/didStart" } }, "description": "lexer_listener_t::didStart() (streaming_lexer_listener.cpp)." },
+    "Notification_lexer_didFinish": { "$ref": "#/$defs/_NotificationTemplates/Empty", "properties": { "method": { "const": "lexer/didFinish" } }, "description": "lexer_listener_t::didFinish() (streaming_lexer_listener.cpp)." },
+    "Notification_lexer_didRecogniseLexeme": { "$ref": "#/$defs/_NotificationTemplates/SingleLexemeEvent", "properties": { "method": { "const": "lexer/didRecogniseLexeme" } }, "description": "lexer_listener_t::didRecogniseLexeme(const lexeme&) (streaming_lexer_listener.cpp)." },
+    "Notification_lexer_didReadCharacter": { "$ref": "#/$defs/_NotificationTemplates/CharacterEvent", "properties": { "method": { "const": "lexer/didReadCharacter" } }, "description": "lexer_listener_t::didReadCharacter(const char&) (streaming_lexer_listener.cpp)." },
+    "Notification_lexer_didFindUnrecognisedOperator": { "$ref": "#/$defs/_NotificationTemplates/UnrecognisedOperatorEvent", "properties": { "method": { "const": "lexer/didFindUnrecognisedOperator" } }, "description": "lexer_listener_t::didFindUnrecognisedOperator(string_view, size_t) (streaming_lexer_listener.cpp)." },
+    "Notification_lexer_didFindMissingSubscript": { "$ref": "#/$defs/_NotificationTemplates/SubscriptPositionEvent", "properties": { "method": { "const": "lexer/didFindMissingSubscript" } }, "description": "lexer_listener_t::didFindMissingSubscript(size_t) (streaming_lexer_listener.cpp)." },
+    "Notification_lexer_didFindUnbalancedSubscript": { "$ref": "#/$defs/_NotificationTemplates/SubscriptPositionEvent", "properties": { "method": { "const": "lexer/didFindUnbalancedSubscript" } }, "description": "lexer_listener_t::didFindUnbalancedSubscript(size_t) (streaming_lexer_listener.cpp)." },
+    "Notification_lexer_didFindUnexpectedSequence": { "$ref": "#/$defs/_NotificationTemplates/UnexpectedSequenceEvent", "properties": { "method": { "const": "lexer/didFindUnexpectedSequence" } }, "description": "lexer_listener_t::didFindUnexpectedSequence(string_view, size_t) (streaming_lexer_listener.cpp)." },
+    "Notification_lexer_didReachEof": { "$ref": "#/$defs/_NotificationTemplates/Empty", "properties": { "method": { "const": "lexer/didReachEof" } }, "description": "lexer_listener_t::didReachEof() (streaming_lexer_listener.cpp)." },
+
+    "Notification_parser_strict_didStart": { "$ref": "#/$defs/_NotificationTemplates/Empty", "properties": { "method": { "const": "parser/strict/didStart" } }, "description": "strict_parser_listener_t::didStart() (streaming_strict_parser_listener.cpp)." },
+    "Notification_parser_strict_didFinish": { "$ref": "#/$defs/_NotificationTemplates/Empty", "properties": { "method": { "const": "parser/strict/didFinish" } }, "description": "strict_parser_listener_t::didFinish() (streaming_strict_parser_listener.cpp)." },
+    "Notification_parser_strict_didGoUp": { "$ref": "#/$defs/_NotificationTemplates/Empty", "properties": { "method": { "const": "parser/strict/didGoUp" } }, "description": "cursor_listener_t::didGoUp() (streaming_strict_parser_listener.cpp)." },
+    "Notification_parser_strict_didTryInvalidPosition": { "$ref": "#/$defs/_NotificationTemplates/InvalidPositionEvent", "properties": { "method": { "const": "parser/strict/didTryInvalidPosition" } }, "description": "cursor_listener_t::didTryInvalidPosition(NodeObsPtr, size_t) (streaming_strict_parser_listener.cpp)." },
+    "Notification_parser_strict_didTrySpawiningOverExistingNode": { "$ref": "#/$defs/_NotificationTemplates/SingleNodeEvent", "properties": { "method": { "const": "parser/strict/didTrySpawiningOverExistingNode" } }, "description": "cursor_listener_t::didTrySpawiningOverExistingNode(NodeObsPtr) (streaming_strict_parser_listener.cpp)." },
+    "Notification_parser_strict_spawnedNewChildNode": { "$ref": "#/$defs/_NotificationTemplates/SpawnedChildEvent", "properties": { "method": { "const": "parser/strict/spawnedNewChildNode" } }, "description": "cursor_listener_t::spawnedNewChildNode(NodeObsPtr parent, NodeObsPtr child) (streaming_strict_parser_listener.cpp)." },
+    "Notification_parser_strict_didPlaceNode": { "$ref": "#/$defs/_NotificationTemplates/Empty", "properties": { "method": { "const": "parser/strict/didPlaceNode" } }, "description": "cursor_listener_t::didPlaceNode() (streaming_strict_parser_listener.cpp)." },
+    "Notification_parser_strict_alreadyUp": { "$ref": "#/$defs/_NotificationTemplates/Empty", "properties": { "method": { "const": "parser/strict/alreadyUp" } }, "description": "cursor_listener_t::alreadyUp() (streaming_strict_parser_listener.cpp)." },
+    "Notification_parser_strict_didProcessLexeme": { "$ref": "#/$defs/_NotificationTemplates/SingleLexemeEvent", "properties": { "method": { "const": "parser/strict/didProcessLexeme" } }, "description": "strict_parser_listener_t::didProcessLexeme(const lexeme&) (streaming_strict_parser_listener.cpp)." },
+    "Notification_parser_strict_didMakeNode": { "$ref": "#/$defs/_NotificationTemplates/SingleNodeEvent", "properties": { "method": { "const": "parser/strict/didMakeNode" } }, "description": "strict_parser_listener_t::didMakeNode(const NodeObsPtr&) (streaming_strict_parser_listener.cpp)." },
+    "Notification_parser_strict_didPlaceNodeAtCursor": { "$ref": "#/$defs/_NotificationTemplates/SingleNodeEvent", "properties": { "method": { "const": "parser/strict/didPlaceNodeAtCursor" } }, "description": "strict_parser_listener_t::didPlaceNodeAtCursor(const NodeObsPtr&) (streaming_strict_parser_listener.cpp)." },
+    "Notification_parser_strict_foundUnexpectedToken": { "$ref": "#/$defs/_NotificationTemplates/SingleLexemeEvent", "properties": { "method": { "const": "parser/strict/foundUnexpectedToken" } }, "description": "strict_parser_listener_t::foundUnexpectedToken(const lexeme&) (streaming_strict_parser_listener.cpp)." },
+    "Notification_parser_strict_foundMismatchedParanthesis": { "$ref": "#/$defs/_NotificationTemplates/Empty", "properties": { "method": { "const": "parser/strict/foundMismatchedParanthesis" } }, "description": "strict_parser_listener_t::foundMismatchedParanthesis() (streaming_strict_parser_listener.cpp)." },
+    "Notification_parser_strict_startedProcessingParanthesis": { "$ref": "#/$defs/_NotificationTemplates/Empty", "properties": { "method": { "const": "parser/strict/startedProcessingParanthesis" } }, "description": "strict_parser_listener_t::startedProcessingParanthesis() (streaming_strict_parser_listener.cpp)." },
+    "Notification_parser_strict_foundAstError": { "$ref": "#/$defs/_NotificationTemplates/AstErrorEvent", "properties": { "method": { "const": "parser/strict/foundAstError" } }, "description": "strict_parser_listener_t::foundAstError(const Cursor&) (streaming_strict_parser_listener.cpp)." },
+    "Notification_parser_strict_acceptUnaryOpVariant": { "$ref": "#/$defs/_NotificationTemplates/Empty", "properties": { "method": { "const": "parser/strict/acceptUnaryOpVariant" } }, "description": "strict_parser_listener_t::acceptUnaryOpVariant() (streaming_strict_parser_listener.cpp)." },
+    "Notification_parser_strict_acceptBinaryOpVariant": { "$ref": "#/$defs/_NotificationTemplates/Empty", "properties": { "method": { "const": "parser/strict/acceptBinaryOpVariant" } }, "description": "strict_parser_listener_t::acceptBinaryOpVariant() (streaming_strict_parser_listener.cpp)." },
+    "Notification_parser_strict_wrongArityForNode": { "$ref": "#/$defs/_NotificationTemplates/SingleNodeEvent", "properties": { "method": { "const": "parser/strict/wrongArityForNode" } }, "description": "strict_parser_listener_t::wrongArityForNode(NodeObsPtr) (streaming_strict_parser_listener.cpp)." },
+
+    "Notification_parser_didStart": { "$ref": "#/$defs/_NotificationTemplates/Empty", "properties": { "method": { "const": "parser/didStart" } }, "description": "relaxed_parser_listener_t::didStart() (streaming_relaxed_parser_listener.cpp)." },
+    "Notification_parser_didFinish": { "$ref": "#/$defs/_NotificationTemplates/Empty", "properties": { "method": { "const": "parser/didFinish" } }, "description": "relaxed_parser_listener_t::didFinish() (streaming_relaxed_parser_listener.cpp)." },
+    "Notification_parser_didParseExpression": { "$ref": "#/$defs/_NotificationTemplates/Empty", "properties": { "method": { "const": "parser/didParseExpression" } }, "description": "relaxed_parser_listener_t::didParseExpression() (streaming_relaxed_parser_listener.cpp)." },
+    "Notification_parser_foundUnexpectedToken": { "$ref": "#/$defs/_NotificationTemplates/SingleLexemeEvent", "properties": { "method": { "const": "parser/foundUnexpectedToken" } }, "description": "relaxed_parser_listener_t::foundUnexpectedToken(const lexeme&) (streaming_relaxed_parser_listener.cpp)." },
+    "Notification_parser_parenthesisClosedTooEarly": { "$ref": "#/$defs/_NotificationTemplates/Empty", "properties": { "method": { "const": "parser/parenthesisClosedTooEarly" } }, "description": "relaxed_parser_listener_t::parenthesisClosedTooEarly() (streaming_relaxed_parser_listener.cpp)." },
+    "Notification_parser_mismatchedParens": { "$ref": "#/$defs/_NotificationTemplates/SingleLexemeEvent", "properties": { "method": { "const": "parser/mismatchedParens" } }, "description": "relaxed_parser_listener_t::mismatchedParens(const lexeme&) (streaming_relaxed_parser_listener.cpp)." },
+    "Notification_parser_didFindPureAtomInParens": { "$ref": "#/$defs/_NotificationTemplates/PureAtomInParensEvent", "properties": { "method": { "const": "parser/didFindPureAtomInParens" } }, "description": "relaxed_parser_listener_t::didFindPureAtomInParens(open, atom, close) (streaming_relaxed_parser_listener.cpp)." },
+    "Notification_parser_startParsingParens": { "$ref": "#/$defs/_NotificationTemplates/SingleLexemeEvent", "properties": { "method": { "const": "parser/startParsingParens" } }, "description": "relaxed_parser_listener_t::startParsingParens(const lexeme&) (streaming_relaxed_parser_listener.cpp)." },
+    "Notification_parser_didMakeNewSubtree": { "$ref": "#/$defs/_NotificationTemplates/SingleNodeEvent", "properties": { "method": { "const": "parser/didMakeNewSubtree" } }, "description": "relaxed_parser_listener_t::didMakeNewSubtree(const NodeObsPtr&) (streaming_relaxed_parser_listener.cpp)." },
+    "Notification_parser_didJoin": { "$ref": "#/$defs/_NotificationTemplates/JoinEvent", "properties": { "method": { "const": "parser/didJoin" } }, "description": "relaxed_parser_listener_t::didJoin(target, source) (streaming_relaxed_parser_listener.cpp)." },
+    "Notification_parser_didFindLowerPrecendenceOperator": { "$ref": "#/$defs/_NotificationTemplates/SingleLexemeEvent", "properties": { "method": { "const": "parser/didFindLowerPrecendenceOperator" } }, "description": "relaxed_parser_listener_t::didFindLowerPrecendenceOperator(const lexeme&) (streaming_relaxed_parser_listener.cpp)." },
+    "Notification_parser_didReadLexeme": { "$ref": "#/$defs/_NotificationTemplates/SingleLexemeEvent", "properties": { "method": { "const": "parser/didReadLexeme" } }, "description": "relaxed_parser_listener_t::didReadLexeme(const lexeme&) (streaming_relaxed_parser_listener.cpp)." },
+
+    "Notification_transform_didStart": { "$ref": "#/$defs/_NotificationTemplates/Empty", "properties": { "method": { "const": "transform/didStart" } }, "description": "node_transformation_listener_t::didStart() (streaming_transformation_listener.cpp)." },
+    "Notification_transform_didFinish": { "$ref": "#/$defs/_NotificationTemplates/Empty", "properties": { "method": { "const": "transform/didFinish" } }, "description": "node_transformation_listener_t::didFinish() (streaming_transformation_listener.cpp)." },
+    "Notification_transform_didMatchLogicalImplication": { "$ref": "#/$defs/_NotificationTemplates/SingleNodeEvent", "properties": { "method": { "const": "transform/didMatchLogicalImplication" } }, "description": "node_transformation_listener_t::didMatchLogicalImplication(NodeObsPtr) (streaming_transformation_listener.cpp)." },
+    "Notification_transform_didReduceLogicalImplication": { "$ref": "#/$defs/_NotificationTemplates/SingleNodeEvent", "properties": { "method": { "const": "transform/didReduceLogicalImplication" } }, "description": "node_transformation_listener_t::didReduceLogicalImplication(NodeObsPtr) (streaming_transformation_listener.cpp)." },
+    "Notification_transform_didCondenseChild": { "$ref": "#/$defs/_NotificationTemplates/CondenseChildEvent", "properties": { "method": { "const": "transform/didCondenseChild" } }, "description": "node_transformation_listener_t::didCondenseChild(parent, merged) (streaming_transformation_listener.cpp)." },
+    "Notification_transform_didMatchEquivalence": { "$ref": "#/$defs/_NotificationTemplates/SingleNodeEvent", "properties": { "method": { "const": "transform/didMatchEquivalence" } }, "description": "node_transformation_listener_t::didMatchEquivalence(NodeObsPtr) (streaming_transformation_listener.cpp)." },
+    "Notification_transform_didReduceEquivalence": { "$ref": "#/$defs/_NotificationTemplates/SingleNodeEvent", "properties": { "method": { "const": "transform/didReduceEquivalence" } }, "description": "node_transformation_listener_t::didReduceEquivalence(NodeObsPtr) (streaming_transformation_listener.cpp)." },
+    "Notification_transform_didMatchImplication": { "$ref": "#/$defs/_NotificationTemplates/SingleNodeEvent", "properties": { "method": { "const": "transform/didMatchImplication" } }, "description": "node_transformation_listener_t::didMatchImplication(NodeObsPtr) (streaming_transformation_listener.cpp)." },
+    "Notification_transform_didReduceImplication": { "$ref": "#/$defs/_NotificationTemplates/SingleNodeEvent", "properties": { "method": { "const": "transform/didReduceImplication" } }, "description": "node_transformation_listener_t::didReduceImplication(NodeObsPtr) (streaming_transformation_listener.cpp)." },
+    "Notification_transform_didMatchDeMorganConjunction": { "$ref": "#/$defs/_NotificationTemplates/SingleNodeEvent", "properties": { "method": { "const": "transform/didMatchDeMorganConjunction" } }, "description": "node_transformation_listener_t::didMatchDeMorganConjunction(NodeObsPtr) (streaming_transformation_listener.cpp)." },
+    "Notification_transform_didApplyDeMorganConjunction": { "$ref": "#/$defs/_NotificationTemplates/SingleNodeEvent", "properties": { "method": { "const": "transform/didApplyDeMorganConjunction" } }, "description": "node_transformation_listener_t::didApplyDeMorganConjunction(NodeObsPtr) (streaming_transformation_listener.cpp)." },
+    "Notification_transform_didMatchDeMorganDisjunction": { "$ref": "#/$defs/_NotificationTemplates/SingleNodeEvent", "properties": { "method": { "const": "transform/didMatchDeMorganDisjunction" } }, "description": "node_transformation_listener_t::didMatchDeMorganDisjunction(NodeObsPtr) (streaming_transformation_listener.cpp)." },
+    "Notification_transform_didApplyDeMorganDisjunction": { "$ref": "#/$defs/_NotificationTemplates/SingleNodeEvent", "properties": { "method": { "const": "transform/didApplyDeMorganDisjunction" } }, "description": "node_transformation_listener_t::didApplyDeMorganDisjunction(NodeObsPtr) (streaming_transformation_listener.cpp)." },
+    "Notification_transform_didMatchDoubleNegation": { "$ref": "#/$defs/_NotificationTemplates/SingleNodeEvent", "properties": { "method": { "const": "transform/didMatchDoubleNegation" } }, "description": "node_transformation_listener_t::didMatchDoubleNegation(NodeObsPtr) (streaming_transformation_listener.cpp)." },
+    "Notification_transform_didEliminateDoubleNegation": { "$ref": "#/$defs/_NotificationTemplates/SingleNodeEvent", "properties": { "method": { "const": "transform/didEliminateDoubleNegation" } }, "description": "node_transformation_listener_t::didEliminateDoubleNegation(NodeObsPtr) (streaming_transformation_listener.cpp)." },
+    "Notification_transform_didMatchInverter": { "$ref": "#/$defs/_NotificationTemplates/SingleNodeEvent", "properties": { "method": { "const": "transform/didMatchInverter" } }, "description": "node_transformation_listener_t::didMatchInverter(NodeObsPtr) (streaming_transformation_listener.cpp)." },
+    "Notification_transform_didInvertConstant": { "$ref": "#/$defs/_NotificationTemplates/SingleNodeEvent", "properties": { "method": { "const": "transform/didInvertConstant" } }, "description": "node_transformation_listener_t::didInvertConstant(NodeObsPtr) (streaming_transformation_listener.cpp)." },
+    "Notification_transform_didMatchNeutralElement": { "$ref": "#/$defs/_NotificationTemplates/SingleNodeEvent", "properties": { "method": { "const": "transform/didMatchNeutralElement" } }, "description": "node_transformation_listener_t::didMatchNeutralElement(NodeObsPtr) (streaming_transformation_listener.cpp)." },
+    "Notification_transform_didCollapseToContradiction": { "$ref": "#/$defs/_NotificationTemplates/SingleNodeEvent", "properties": { "method": { "const": "transform/didCollapseToContradiction" } }, "description": "node_transformation_listener_t::didCollapseToContradiction(NodeObsPtr) (streaming_transformation_listener.cpp)." },
+    "Notification_transform_didCollapseToTautology": { "$ref": "#/$defs/_NotificationTemplates/SingleNodeEvent", "properties": { "method": { "const": "transform/didCollapseToTautology" } }, "description": "node_transformation_listener_t::didCollapseToTautology(NodeObsPtr) (streaming_transformation_listener.cpp)." },
+    "Notification_transform_didDropNeutralElement": { "$ref": "#/$defs/_NotificationTemplates/SingleNodeEvent", "properties": { "method": { "const": "transform/didDropNeutralElement" } }, "description": "node_transformation_listener_t::didDropNeutralElement(NodeObsPtr) (streaming_transformation_listener.cpp)." },
+    "Notification_transform_didMatchAbsorption": { "$ref": "#/$defs/_NotificationTemplates/SingleNodeEvent", "properties": { "method": { "const": "transform/didMatchAbsorption" } }, "description": "node_transformation_listener_t::didMatchAbsorption(NodeObsPtr) (streaming_transformation_listener.cpp)." },
+    "Notification_transform_didApplyAbsorption": { "$ref": "#/$defs/_NotificationTemplates/SingleNodeEvent", "properties": { "method": { "const": "transform/didApplyAbsorption" } }, "description": "node_transformation_listener_t::didApplyAbsorption(NodeObsPtr) (streaming_transformation_listener.cpp)." },
+    "Notification_transform_didMatchAndDistribution": { "$ref": "#/$defs/_NotificationTemplates/SingleNodeEvent", "properties": { "method": { "const": "transform/didMatchAndDistribution" } }, "description": "node_transformation_listener_t::didMatchAndDistribution(NodeObsPtr) (streaming_transformation_listener.cpp)." },
+    "Notification_transform_didDistributeAndOverOr": { "$ref": "#/$defs/_NotificationTemplates/SingleNodeEvent", "properties": { "method": { "const": "transform/didDistributeAndOverOr" } }, "description": "node_transformation_listener_t::didDistributeAndOverOr(NodeObsPtr) (streaming_transformation_listener.cpp)." },
+    "Notification_transform_didMatchOrDistribution": { "$ref": "#/$defs/_NotificationTemplates/SingleNodeEvent", "properties": { "method": { "const": "transform/didMatchOrDistribution" } }, "description": "node_transformation_listener_t::didMatchOrDistribution(NodeObsPtr) (streaming_transformation_listener.cpp)." },
+    "Notification_transform_didDistributeOrOverAnd": { "$ref": "#/$defs/_NotificationTemplates/SingleNodeEvent", "properties": { "method": { "const": "transform/didDistributeOrOverAnd" } }, "description": "node_transformation_listener_t::didDistributeOrOverAnd(NodeObsPtr) (streaming_transformation_listener.cpp)." },
+    "Notification_transform_didCheckCNF": { "$ref": "#/$defs/_NotificationTemplates/NormalFormCheckEvent", "properties": { "method": { "const": "transform/didCheckCNF" } }, "description": "node_transformation_listener_t::didCheckCNF(NodeObsPtr, bool) (streaming_transformation_listener.cpp)." },
+    "Notification_transform_didCheckDNF": { "$ref": "#/$defs/_NotificationTemplates/NormalFormCheckEvent", "properties": { "method": { "const": "transform/didCheckDNF" } }, "description": "node_transformation_listener_t::didCheckDNF(NodeObsPtr, bool) (streaming_transformation_listener.cpp)." },
+
+    "Notification_mapper_didStart": { "$ref": "#/$defs/_NotificationTemplates/Empty", "properties": { "method": { "const": "mapper/didStart" } }, "description": "mapper_listener::didStart() (streaming_mapper_listener.cpp)." },
+    "Notification_mapper_didFinish": { "$ref": "#/$defs/_NotificationTemplates/Empty", "properties": { "method": { "const": "mapper/didFinish" } }, "description": "mapper_listener::didFinish() (streaming_mapper_listener.cpp)." },
+    "Notification_mapper_did_map_literals": { "$ref": "#/$defs/_NotificationTemplates/LiteralMappingEvent", "properties": { "method": { "const": "mapper/did_map_literals" } }, "description": "mapper_listener::did_map_literals(const std::map<std::string, Literal>&); emitted inline by sat_method.cpp's own clause-mapping step, matching streaming_mapper_listener.cpp's shape." },
+    "Notification_mapper_did_map_clauses": { "$ref": "#/$defs/_NotificationTemplates/ClauseSetEvent", "properties": { "method": { "const": "mapper/did_map_clauses" } }, "description": "mapper_listener::did_map_clauses(const ClauseSet&); emitted inline by sat_method.cpp's own clause-mapping step, matching streaming_mapper_listener.cpp's shape." },
+
+    "Notification_sat_didStart": { "$ref": "#/$defs/_NotificationTemplates/Empty", "properties": { "method": { "const": "sat/didStart" } }, "description": "sat_listener::didStart() (streaming_sat_listener.cpp)." },
+    "Notification_sat_didFinish": { "$ref": "#/$defs/_NotificationTemplates/Empty", "properties": { "method": { "const": "sat/didFinish" } }, "description": "sat_listener::didFinish() (streaming_sat_listener.cpp)." },
+    "Notification_sat_didBuildHeuristicsDatabase": { "$ref": "#/$defs/_NotificationTemplates/ClauseSetEvent", "properties": { "method": { "const": "sat/didBuildHeuristicsDatabase" } }, "description": "sat_listener::didBuildHeuristicsDatabase(const ClauseSet&) (streaming_sat_listener.cpp)." },
+    "Notification_sat_didFindUnitLiteral": { "$ref": "#/$defs/_NotificationTemplates/LiteralEvent", "properties": { "method": { "const": "sat/didFindUnitLiteral" } }, "description": "sat_listener::didFindUnitLiteral(Literal) (streaming_sat_listener.cpp)." },
+    "Notification_sat_didSatisfyClauseByUnitLiteral": { "$ref": "#/$defs/_NotificationTemplates/ClauseLiteralEvent", "properties": { "method": { "const": "sat/didSatisfyClauseByUnitLiteral" } }, "description": "sat_listener::didSatisfyClauseByUnitLiteral(const Clause&, Literal) (streaming_sat_listener.cpp)." },
+    "Notification_sat_didReduceClauseByUnitLiteral": { "$ref": "#/$defs/_NotificationTemplates/ClauseReductionEvent", "properties": { "method": { "const": "sat/didReduceClauseByUnitLiteral" } }, "description": "sat_listener::didReduceClauseByUnitLiteral(original, reduced, Literal) (streaming_sat_listener.cpp)." },
+    "Notification_sat_didDeriveEmptyClauseFromUnitPropagation": { "$ref": "#/$defs/_NotificationTemplates/LiteralEvent", "properties": { "method": { "const": "sat/didDeriveEmptyClauseFromUnitPropagation" } }, "description": "sat_listener::didDeriveEmptyClauseFromUnitPropagation(Literal) (streaming_sat_listener.cpp)." },
+    "Notification_sat_didFindPureLiteral": { "$ref": "#/$defs/_NotificationTemplates/LiteralEvent", "properties": { "method": { "const": "sat/didFindPureLiteral" } }, "description": "sat_listener::didFindPureLiteral(Literal) (streaming_sat_listener.cpp)." },
+    "Notification_sat_didEliminateClauseByPureLiteral": { "$ref": "#/$defs/_NotificationTemplates/ClauseLiteralEvent", "properties": { "method": { "const": "sat/didEliminateClauseByPureLiteral" } }, "description": "sat_listener::didEliminateClauseByPureLiteral(const Clause&, Literal) (streaming_sat_listener.cpp)." },
+    "Notification_sat_didSelectResolutionCandidates": { "$ref": "#/$defs/_NotificationTemplates/ClausePairEvent", "properties": { "method": { "const": "sat/didSelectResolutionCandidates" } }, "description": "sat_listener::didSelectResolutionCandidates(const Clause&, const Clause&) (streaming_sat_listener.cpp)." },
+    "Notification_sat_didComputeResolvent": { "$ref": "#/$defs/_NotificationTemplates/ResolventEvent", "properties": { "method": { "const": "sat/didComputeResolvent" } }, "description": "sat_listener::didComputeResolvent(first, second, pivot, resolvent) (streaming_sat_listener.cpp)." },
+    "Notification_sat_didDeriveEmptyClauseFromResolution": { "$ref": "#/$defs/_NotificationTemplates/Empty", "properties": { "method": { "const": "sat/didDeriveEmptyClauseFromResolution" } }, "description": "sat_listener::didDeriveEmptyClauseFromResolution() (streaming_sat_listener.cpp)." },
+    "Notification_sat_didSkipDuplicateResolvent": { "$ref": "#/$defs/_NotificationTemplates/ClauseEvent", "properties": { "method": { "const": "sat/didSkipDuplicateResolvent" } }, "description": "sat_listener::didSkipDuplicateResolvent(const Clause&) (streaming_sat_listener.cpp)." },
+    "Notification_sat_didAddResolvent": { "$ref": "#/$defs/_NotificationTemplates/ClauseEvent", "properties": { "method": { "const": "sat/didAddResolvent" } }, "description": "sat_listener::didAddResolvent(const Clause&) (streaming_sat_listener.cpp)." },
+    "Notification_sat_didReachResolutionSaturation": { "$ref": "#/$defs/_NotificationTemplates/Empty", "properties": { "method": { "const": "sat/didReachResolutionSaturation" } }, "description": "sat_listener::didReachResolutionSaturation() (streaming_sat_listener.cpp)." },
+    "Notification_sat_didExceedClauseThreshold": { "$ref": "#/$defs/_NotificationTemplates/ClauseCountEvent", "properties": { "method": { "const": "sat/didExceedClauseThreshold" } }, "description": "sat_listener::didExceedClauseThreshold(size_t) (streaming_sat_listener.cpp)." },
+    "Notification_sat_didChooseBranchingLiteral": { "$ref": "#/$defs/_NotificationTemplates/BranchingLiteralEvent", "properties": { "method": { "const": "sat/didChooseBranchingLiteral" } }, "description": "sat_listener::didChooseBranchingLiteral(Literal, int frequency) (streaming_sat_listener.cpp)." },
+    "Notification_sat_didChooseRandomLiteral": { "$ref": "#/$defs/_NotificationTemplates/LiteralEvent", "properties": { "method": { "const": "sat/didChooseRandomLiteral" } }, "description": "sat_listener::didChooseRandomLiteral(Literal) (streaming_sat_listener.cpp)." },
+    "Notification_sat_didEnterBranch": { "$ref": "#/$defs/_NotificationTemplates/BranchEvent", "properties": { "method": { "const": "sat/didEnterBranch" } }, "description": "sat_listener::didEnterBranch(Literal, bool) (streaming_sat_listener.cpp)." },
+    "Notification_sat_didPushBranchContext": { "$ref": "#/$defs/_NotificationTemplates/BranchEvent", "properties": { "method": { "const": "sat/didPushBranchContext" } }, "description": "sat_listener::didPushBranchContext(Literal, bool) (streaming_sat_listener.cpp)." },
+    "Notification_sat_didPopBranchContext": { "$ref": "#/$defs/_NotificationTemplates/Empty", "properties": { "method": { "const": "sat/didPopBranchContext" } }, "description": "sat_listener::didPopBranchContext() (streaming_sat_listener.cpp)." },
+    "Notification_sat_didFindSatisfyingAssignment": { "$ref": "#/$defs/_NotificationTemplates/Empty", "properties": { "method": { "const": "sat/didFindSatisfyingAssignment" } }, "description": "sat_listener::didFindSatisfyingAssignment() (streaming_sat_listener.cpp)." },
+    "Notification_sat_didDetectConflict": { "$ref": "#/$defs/_NotificationTemplates/Empty", "properties": { "method": { "const": "sat/didDetectConflict" } }, "description": "sat_listener::didDetectConflict() (streaming_sat_listener.cpp)." },
+    "Notification_sat_didBacktrack": { "$ref": "#/$defs/_NotificationTemplates/Empty", "properties": { "method": { "const": "sat/didBacktrack" } }, "description": "sat_listener::didBacktrack() (streaming_sat_listener.cpp)." },
+    "Notification_sat_didConcludeSat": { "$ref": "#/$defs/_NotificationTemplates/Empty", "properties": { "method": { "const": "sat/didConcludeSat" } }, "description": "sat_listener::didConcludeSat() (streaming_sat_listener.cpp)." },
+    "Notification_sat_didConcludeUnsat": { "$ref": "#/$defs/_NotificationTemplates/Empty", "properties": { "method": { "const": "sat/didConcludeUnsat" } }, "description": "sat_listener::didConcludeUnsat() (streaming_sat_listener.cpp)." },
+    "Notification_sat_didConcludeUnknown": { "$ref": "#/$defs/_NotificationTemplates/Empty", "properties": { "method": { "const": "sat/didConcludeUnknown" } }, "description": "sat_listener::didConcludeUnknown() (streaming_sat_listener.cpp)." },
+
+    "Notification_truth_table_didStart": { "$ref": "#/$defs/_NotificationTemplates/Empty", "properties": { "method": { "const": "truth_table/didStart" } }, "description": "truth_table_listener_t::didStart() (streaming_truth_table_listener.cpp)." },
+    "Notification_truth_table_didFinish": { "$ref": "#/$defs/_NotificationTemplates/Empty", "properties": { "method": { "const": "truth_table/didFinish" } }, "description": "truth_table_listener_t::didFinish() (streaming_truth_table_listener.cpp)." },
+    "Notification_truth_table_didFindUnknownVariable": { "$ref": "#/$defs/_NotificationTemplates/UnknownVariableEvent", "properties": { "method": { "const": "truth_table/didFindUnknownVariable" } }, "description": "truth_table_listener_t::didFindUnknownVariable(string_view) (streaming_truth_table_listener.cpp)." },
+    "Notification_truth_table_didSetVariable": { "$ref": "#/$defs/_NotificationTemplates/VariableAssignmentEvent", "properties": { "method": { "const": "truth_table/didSetVariable" } }, "description": "truth_table_listener_t::didSetVariable(string_view, bool) (streaming_truth_table_listener.cpp)." },
+    "Notification_truth_table_didComputeSubexpression": { "$ref": "#/$defs/_NotificationTemplates/SubexpressionResultEvent", "properties": { "method": { "const": "truth_table/didComputeSubexpression" } }, "description": "truth_table_listener_t::didComputeSubexpression(const CppCommon::UUID&, bool) (streaming_truth_table_listener.cpp)." },
+
+    "_NotificationTemplates": {
+      "Empty": {
+        "type": "object", "additionalProperties": false, "required": ["jsonrpc", "method", "params"],
+        "properties": { "jsonrpc": { "const": "2.0" }, "method": {}, "params": { "$ref": "#/$defs/EmptyParams" } }
+      },
+      "SingleLexemeEvent": {
+        "type": "object", "additionalProperties": false, "required": ["jsonrpc", "method", "params"],
+        "properties": { "jsonrpc": { "const": "2.0" }, "method": {}, "params": { "$ref": "#/$defs/SingleLexemeEvent" } }
+      },
+      "CharacterEvent": {
+        "type": "object", "additionalProperties": false, "required": ["jsonrpc", "method", "params"],
+        "properties": { "jsonrpc": { "const": "2.0" }, "method": {}, "params": { "$ref": "#/$defs/CharacterEvent" } }
+      },
+      "UnrecognisedOperatorEvent": {
+        "type": "object", "additionalProperties": false, "required": ["jsonrpc", "method", "params"],
+        "properties": { "jsonrpc": { "const": "2.0" }, "method": {}, "params": { "$ref": "#/$defs/UnrecognisedOperatorEvent" } }
+      },
+      "SubscriptPositionEvent": {
+        "type": "object", "additionalProperties": false, "required": ["jsonrpc", "method", "params"],
+        "properties": { "jsonrpc": { "const": "2.0" }, "method": {}, "params": { "$ref": "#/$defs/SubscriptPositionEvent" } }
+      },
+      "UnexpectedSequenceEvent": {
+        "type": "object", "additionalProperties": false, "required": ["jsonrpc", "method", "params"],
+        "properties": { "jsonrpc": { "const": "2.0" }, "method": {}, "params": { "$ref": "#/$defs/UnexpectedSequenceEvent" } }
+      },
+      "SingleNodeEvent": {
+        "type": "object", "additionalProperties": false, "required": ["jsonrpc", "method", "params"],
+        "properties": { "jsonrpc": { "const": "2.0" }, "method": {}, "params": { "$ref": "#/$defs/SingleNodeEvent" } }
+      },
+      "InvalidPositionEvent": {
+        "type": "object", "additionalProperties": false, "required": ["jsonrpc", "method", "params"],
+        "properties": { "jsonrpc": { "const": "2.0" }, "method": {}, "params": { "$ref": "#/$defs/InvalidPositionEvent" } }
+      },
+      "SpawnedChildEvent": {
+        "type": "object", "additionalProperties": false, "required": ["jsonrpc", "method", "params"],
+        "properties": { "jsonrpc": { "const": "2.0" }, "method": {}, "params": { "$ref": "#/$defs/SpawnedChildEvent" } }
+      },
+      "AstErrorEvent": {
+        "type": "object", "additionalProperties": false, "required": ["jsonrpc", "method", "params"],
+        "properties": { "jsonrpc": { "const": "2.0" }, "method": {}, "params": { "$ref": "#/$defs/AstErrorEvent" } }
+      },
+      "PureAtomInParensEvent": {
+        "type": "object", "additionalProperties": false, "required": ["jsonrpc", "method", "params"],
+        "properties": { "jsonrpc": { "const": "2.0" }, "method": {}, "params": { "$ref": "#/$defs/PureAtomInParensEvent" } }
+      },
+      "JoinEvent": {
+        "type": "object", "additionalProperties": false, "required": ["jsonrpc", "method", "params"],
+        "properties": { "jsonrpc": { "const": "2.0" }, "method": {}, "params": { "$ref": "#/$defs/JoinEvent" } }
+      },
+      "CondenseChildEvent": {
+        "type": "object", "additionalProperties": false, "required": ["jsonrpc", "method", "params"],
+        "properties": { "jsonrpc": { "const": "2.0" }, "method": {}, "params": { "$ref": "#/$defs/CondenseChildEvent" } }
+      },
+      "NormalFormCheckEvent": {
+        "type": "object", "additionalProperties": false, "required": ["jsonrpc", "method", "params"],
+        "properties": { "jsonrpc": { "const": "2.0" }, "method": {}, "params": { "$ref": "#/$defs/NormalFormCheckEvent" } }
+      },
+      "UnknownVariableEvent": {
+        "type": "object", "additionalProperties": false, "required": ["jsonrpc", "method", "params"],
+        "properties": { "jsonrpc": { "const": "2.0" }, "method": {}, "params": { "$ref": "#/$defs/UnknownVariableEvent" } }
+      },
+      "VariableAssignmentEvent": {
+        "type": "object", "additionalProperties": false, "required": ["jsonrpc", "method", "params"],
+        "properties": { "jsonrpc": { "const": "2.0" }, "method": {}, "params": { "$ref": "#/$defs/VariableAssignmentEvent" } }
+      },
+      "SubexpressionResultEvent": {
+        "type": "object", "additionalProperties": false, "required": ["jsonrpc", "method", "params"],
+        "properties": { "jsonrpc": { "const": "2.0" }, "method": {}, "params": { "$ref": "#/$defs/SubexpressionResultEvent" } }
+      },
+      "LiteralMappingEvent": {
+        "type": "object", "additionalProperties": false, "required": ["jsonrpc", "method", "params"],
+        "properties": { "jsonrpc": { "const": "2.0" }, "method": {}, "params": { "$ref": "#/$defs/LiteralMappingEvent" } }
+      },
+      "ClauseSetEvent": {
+        "type": "object", "additionalProperties": false, "required": ["jsonrpc", "method", "params"],
+        "properties": { "jsonrpc": { "const": "2.0" }, "method": {}, "params": { "$ref": "#/$defs/ClauseSetEvent" } }
+      },
+      "LiteralEvent": {
+        "type": "object", "additionalProperties": false, "required": ["jsonrpc", "method", "params"],
+        "properties": { "jsonrpc": { "const": "2.0" }, "method": {}, "params": { "$ref": "#/$defs/LiteralEvent" } }
+      },
+      "ClauseLiteralEvent": {
+        "type": "object", "additionalProperties": false, "required": ["jsonrpc", "method", "params"],
+        "properties": { "jsonrpc": { "const": "2.0" }, "method": {}, "params": { "$ref": "#/$defs/ClauseLiteralEvent" } }
+      },
+      "ClauseReductionEvent": {
+        "type": "object", "additionalProperties": false, "required": ["jsonrpc", "method", "params"],
+        "properties": { "jsonrpc": { "const": "2.0" }, "method": {}, "params": { "$ref": "#/$defs/ClauseReductionEvent" } }
+      },
+      "ClausePairEvent": {
+        "type": "object", "additionalProperties": false, "required": ["jsonrpc", "method", "params"],
+        "properties": { "jsonrpc": { "const": "2.0" }, "method": {}, "params": { "$ref": "#/$defs/ClausePairEvent" } }
+      },
+      "ResolventEvent": {
+        "type": "object", "additionalProperties": false, "required": ["jsonrpc", "method", "params"],
+        "properties": { "jsonrpc": { "const": "2.0" }, "method": {}, "params": { "$ref": "#/$defs/ResolventEvent" } }
+      },
+      "ClauseEvent": {
+        "type": "object", "additionalProperties": false, "required": ["jsonrpc", "method", "params"],
+        "properties": { "jsonrpc": { "const": "2.0" }, "method": {}, "params": { "$ref": "#/$defs/ClauseEvent" } }
+      },
+      "ClauseCountEvent": {
+        "type": "object", "additionalProperties": false, "required": ["jsonrpc", "method", "params"],
+        "properties": { "jsonrpc": { "const": "2.0" }, "method": {}, "params": { "$ref": "#/$defs/ClauseCountEvent" } }
+      },
+      "BranchingLiteralEvent": {
+        "type": "object", "additionalProperties": false, "required": ["jsonrpc", "method", "params"],
+        "properties": { "jsonrpc": { "const": "2.0" }, "method": {}, "params": { "$ref": "#/$defs/BranchingLiteralEvent" } }
+      },
+      "BranchEvent": {
+        "type": "object", "additionalProperties": false, "required": ["jsonrpc", "method", "params"],
+        "properties": { "jsonrpc": { "const": "2.0" }, "method": {}, "params": { "$ref": "#/$defs/BranchEvent" } }
+      }
+    },
+
+    "AnyFeedbackNotification": {
+      "description": "Matches any single notification line logic_agent can stream, regardless of category. Validate one parsed JSON line at a time against this.",
+      "anyOf": [
+        { "$ref": "#/$defs/Notification_lexer_didStart" },
+        { "$ref": "#/$defs/Notification_lexer_didFinish" },
+        { "$ref": "#/$defs/Notification_lexer_didRecogniseLexeme" },
+        { "$ref": "#/$defs/Notification_lexer_didReadCharacter" },
+        { "$ref": "#/$defs/Notification_lexer_didFindUnrecognisedOperator" },
+        { "$ref": "#/$defs/Notification_lexer_didFindMissingSubscript" },
+        { "$ref": "#/$defs/Notification_lexer_didFindUnbalancedSubscript" },
+        { "$ref": "#/$defs/Notification_lexer_didFindUnexpectedSequence" },
+        { "$ref": "#/$defs/Notification_lexer_didReachEof" },
+
+        { "$ref": "#/$defs/Notification_parser_strict_didStart" },
+        { "$ref": "#/$defs/Notification_parser_strict_didFinish" },
+        { "$ref": "#/$defs/Notification_parser_strict_didGoUp" },
+        { "$ref": "#/$defs/Notification_parser_strict_didTryInvalidPosition" },
+        { "$ref": "#/$defs/Notification_parser_strict_didTrySpawiningOverExistingNode" },
+        { "$ref": "#/$defs/Notification_parser_strict_spawnedNewChildNode" },
+        { "$ref": "#/$defs/Notification_parser_strict_didPlaceNode" },
+        { "$ref": "#/$defs/Notification_parser_strict_alreadyUp" },
+        { "$ref": "#/$defs/Notification_parser_strict_didProcessLexeme" },
+        { "$ref": "#/$defs/Notification_parser_strict_didMakeNode" },
+        { "$ref": "#/$defs/Notification_parser_strict_didPlaceNodeAtCursor" },
+        { "$ref": "#/$defs/Notification_parser_strict_foundUnexpectedToken" },
+        { "$ref": "#/$defs/Notification_parser_strict_foundMismatchedParanthesis" },
+        { "$ref": "#/$defs/Notification_parser_strict_startedProcessingParanthesis" },
+        { "$ref": "#/$defs/Notification_parser_strict_foundAstError" },
+        { "$ref": "#/$defs/Notification_parser_strict_acceptUnaryOpVariant" },
+        { "$ref": "#/$defs/Notification_parser_strict_acceptBinaryOpVariant" },
+        { "$ref": "#/$defs/Notification_parser_strict_wrongArityForNode" },
+
+        { "$ref": "#/$defs/Notification_parser_didStart" },
+        { "$ref": "#/$defs/Notification_parser_didFinish" },
+        { "$ref": "#/$defs/Notification_parser_didParseExpression" },
+        { "$ref": "#/$defs/Notification_parser_foundUnexpectedToken" },
+        { "$ref": "#/$defs/Notification_parser_parenthesisClosedTooEarly" },
+        { "$ref": "#/$defs/Notification_parser_mismatchedParens" },
+        { "$ref": "#/$defs/Notification_parser_didFindPureAtomInParens" },
+        { "$ref": "#/$defs/Notification_parser_startParsingParens" },
+        { "$ref": "#/$defs/Notification_parser_didMakeNewSubtree" },
+        { "$ref": "#/$defs/Notification_parser_didJoin" },
+        { "$ref": "#/$defs/Notification_parser_didFindLowerPrecendenceOperator" },
+        { "$ref": "#/$defs/Notification_parser_didReadLexeme" },
+
+        { "$ref": "#/$defs/Notification_transform_didStart" },
+        { "$ref": "#/$defs/Notification_transform_didFinish" },
+        { "$ref": "#/$defs/Notification_transform_didMatchLogicalImplication" },
+        { "$ref": "#/$defs/Notification_transform_didReduceLogicalImplication" },
+        { "$ref": "#/$defs/Notification_transform_didCondenseChild" },
+        { "$ref": "#/$defs/Notification_transform_didMatchEquivalence" },
+        { "$ref": "#/$defs/Notification_transform_didReduceEquivalence" },
+        { "$ref": "#/$defs/Notification_transform_didMatchImplication" },
+        { "$ref": "#/$defs/Notification_transform_didReduceImplication" },
+        { "$ref": "#/$defs/Notification_transform_didMatchDeMorganConjunction" },
+        { "$ref": "#/$defs/Notification_transform_didApplyDeMorganConjunction" },
+        { "$ref": "#/$defs/Notification_transform_didMatchDeMorganDisjunction" },
+        { "$ref": "#/$defs/Notification_transform_didApplyDeMorganDisjunction" },
+        { "$ref": "#/$defs/Notification_transform_didMatchDoubleNegation" },
+        { "$ref": "#/$defs/Notification_transform_didEliminateDoubleNegation" },
+        { "$ref": "#/$defs/Notification_transform_didMatchInverter" },
+        { "$ref": "#/$defs/Notification_transform_didInvertConstant" },
+        { "$ref": "#/$defs/Notification_transform_didMatchNeutralElement" },
+        { "$ref": "#/$defs/Notification_transform_didCollapseToContradiction" },
+        { "$ref": "#/$defs/Notification_transform_didCollapseToTautology" },
+        { "$ref": "#/$defs/Notification_transform_didDropNeutralElement" },
+        { "$ref": "#/$defs/Notification_transform_didMatchAbsorption" },
+        { "$ref": "#/$defs/Notification_transform_didApplyAbsorption" },
+        { "$ref": "#/$defs/Notification_transform_didMatchAndDistribution" },
+        { "$ref": "#/$defs/Notification_transform_didDistributeAndOverOr" },
+        { "$ref": "#/$defs/Notification_transform_didMatchOrDistribution" },
+        { "$ref": "#/$defs/Notification_transform_didDistributeOrOverAnd" },
+        { "$ref": "#/$defs/Notification_transform_didCheckCNF" },
+        { "$ref": "#/$defs/Notification_transform_didCheckDNF" },
+
+        { "$ref": "#/$defs/Notification_mapper_didStart" },
+        { "$ref": "#/$defs/Notification_mapper_didFinish" },
+        { "$ref": "#/$defs/Notification_mapper_did_map_literals" },
+        { "$ref": "#/$defs/Notification_mapper_did_map_clauses" },
+
+        { "$ref": "#/$defs/Notification_sat_didStart" },
+        { "$ref": "#/$defs/Notification_sat_didFinish" },
+        { "$ref": "#/$defs/Notification_sat_didBuildHeuristicsDatabase" },
+        { "$ref": "#/$defs/Notification_sat_didFindUnitLiteral" },
+        { "$ref": "#/$defs/Notification_sat_didSatisfyClauseByUnitLiteral" },
+        { "$ref": "#/$defs/Notification_sat_didReduceClauseByUnitLiteral" },
+        { "$ref": "#/$defs/Notification_sat_didDeriveEmptyClauseFromUnitPropagation" },
+        { "$ref": "#/$defs/Notification_sat_didFindPureLiteral" },
+        { "$ref": "#/$defs/Notification_sat_didEliminateClauseByPureLiteral" },
+        { "$ref": "#/$defs/Notification_sat_didSelectResolutionCandidates" },
+        { "$ref": "#/$defs/Notification_sat_didComputeResolvent" },
+        { "$ref": "#/$defs/Notification_sat_didDeriveEmptyClauseFromResolution" },
+        { "$ref": "#/$defs/Notification_sat_didSkipDuplicateResolvent" },
+        { "$ref": "#/$defs/Notification_sat_didAddResolvent" },
+        { "$ref": "#/$defs/Notification_sat_didReachResolutionSaturation" },
+        { "$ref": "#/$defs/Notification_sat_didExceedClauseThreshold" },
+        { "$ref": "#/$defs/Notification_sat_didChooseBranchingLiteral" },
+        { "$ref": "#/$defs/Notification_sat_didChooseRandomLiteral" },
+        { "$ref": "#/$defs/Notification_sat_didEnterBranch" },
+        { "$ref": "#/$defs/Notification_sat_didPushBranchContext" },
+        { "$ref": "#/$defs/Notification_sat_didPopBranchContext" },
+        { "$ref": "#/$defs/Notification_sat_didFindSatisfyingAssignment" },
+        { "$ref": "#/$defs/Notification_sat_didDetectConflict" },
+        { "$ref": "#/$defs/Notification_sat_didBacktrack" },
+        { "$ref": "#/$defs/Notification_sat_didConcludeSat" },
+        { "$ref": "#/$defs/Notification_sat_didConcludeUnsat" },
+        { "$ref": "#/$defs/Notification_sat_didConcludeUnknown" },
+
+        { "$ref": "#/$defs/Notification_truth_table_didStart" },
+        { "$ref": "#/$defs/Notification_truth_table_didFinish" },
+        { "$ref": "#/$defs/Notification_truth_table_didFindUnknownVariable" },
+        { "$ref": "#/$defs/Notification_truth_table_didSetVariable" },
+        { "$ref": "#/$defs/Notification_truth_table_didComputeSubexpression" }
+      ]
+    }
+  },
+  "$ref": "#/$defs/AnyFeedbackNotification"
+}

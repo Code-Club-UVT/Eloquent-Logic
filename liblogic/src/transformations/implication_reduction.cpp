@@ -2,12 +2,13 @@
 // Created by xcell on 16.12.2024.
 //
 
-#include <liblogic/private/transformations/implication_reduction.h>
+#include "implication_reduction.h"
 
 namespace eloquent::logic {
-    bool ImplicationReduction::match(const NodeObsPtr subtree) {
-        const auto node = subtree.lock();
-        return node->type == NodeType::ImpliesOp;
+    bool ImplicationReduction::match(const NodeObsPtr subtree, const std::shared_ptr<node_transformation_listener_t>& listener) {
+        bool result = subtree->getType() == NodeType::ImpliesOp;
+        if (result) listener->didMatchImplication(subtree);
+        return result;
     }
 
     /*
@@ -24,23 +25,20 @@ namespace eloquent::logic {
      * This function feels ugly. Maybe it can be rewritten in a nicer way.
      */
 
-    void ImplicationReduction::replace(const NodeObsPtr target) {
-        const auto node = target.lock();
+    void ImplicationReduction::replace(const NodeObsPtr target, const std::shared_ptr<node_transformation_listener_t>& listener) {
+        const auto node = target;
 
-        const auto newNode = NodeBuilder::makeNewOrNode();
+        NodePtr left_subtree = target->disconnect(0);
+        // The right child shifts down to index 0 once the left child is
+        // removed, so this must disconnect(0), not disconnect(1).
+        NodePtr right_subtree = target->disconnect(0);
+        lexeme l = node->getLexeme();
+        node->set_lexeme(lexeme::make(lexeme_type::OrOp, symbols::SYMB_OR, l.start(), l.end()));
 
-        // add negation and copy the left branch
-        newNode->spawn_new_child();
-        newNode->children[0] = NodeBuilder::makeNewNotNode();
-        newNode->children[0]->spawn_new_child();
-        newNode->children[0]->children[0] = node->children[0];
+        node->spawn_new_child(lexeme::make(lexeme_type::NotOp, symbols::SYMB_NOT, 0,0));
+        node->childAt(0)->adopt(std::move(left_subtree));
+        node->adopt(std::move(right_subtree));
 
-        // copy right branch as is
-        newNode->spawn_new_child();
-        newNode->children[1] = node->children[1];
-
-        // give the original node the attributes of the created node
-        node->copy_from(newNode);
-        node->copy_children(newNode);
+        listener->didReduceImplication(node);
     }
 }
