@@ -36,7 +36,7 @@ public:
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
-
+    void showEvent(QShowEvent *event) override;
 private slots:
     void goToStep(int step);
 

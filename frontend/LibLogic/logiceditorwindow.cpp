@@ -206,6 +206,8 @@ void LogicEditorWindow::onAgentResponse(int id, const QJsonObject &result) {
     if (id == 1) {
         if (result.contains("tree")) {
             QJsonObject tree = result["tree"].toObject();
+            QString rootId = tree["id"].isString() ? tree["id"].toString() : tree["id"].toObject()["value"].toString();
+            m_astNodes[rootId] = tree;
             qDebug().noquote() << QJsonDocument(tree).toJson(QJsonDocument::Indented);
             resultOutput->setText("Succes! Arborele a fost generat.");
 
@@ -313,7 +315,8 @@ void LogicEditorWindow::onAgentNotification(const QString &method, const QJsonOb
 
     auto extractNode = [this](const QJsonObject &obj) {
         if (obj.contains("id")) {
-            m_astNodes[obj["id"].toObject()["value"].toString()] = obj;
+            QString idStr = obj["id"].isString() ? obj["id"].toString() : obj["id"].toObject()["value"].toString();
+            m_astNodes[idStr] = obj;
         }
     };
 
@@ -348,13 +351,14 @@ QString LogicEditorWindow::astToFormula(const QString &nodeId) {
     if (children.isEmpty()) {
         return token;
     } else if (children.size() == 1) {
-        QString childId = children[0].toObject()["value"].toString();
+        QString childId = children[0].isString() ? children[0].toString() : children[0].toObject()["value"].toString();
         return token + astToFormula(childId);
-    } else if (children.size() == 2) {
-        QString leftId = children[0].toObject()["value"].toString();
-        QString rightId = children[1].toObject()["value"].toString();
-        return "(" + astToFormula(leftId) + " " + token + " " + astToFormula(rightId) + ")";
+    } else {
+        QStringList childFormulas;
+        for (const QJsonValue &childVal : children) {
+            QString childId = childVal.isString() ? childVal.toString() : childVal.toObject()["value"].toString();
+            childFormulas.append(astToFormula(childId));
+        }
+        return "(" + childFormulas.join(" " + token + " ") + ")";
     }
-
-    return token;
 }

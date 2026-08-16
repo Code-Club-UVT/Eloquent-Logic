@@ -23,7 +23,7 @@ Node::Node(GraphWidget *graphWidget,
 {
     setFlag(ItemIsMovable);
     setFlag(ItemSendsGeometryChanges);
-    setCacheMode(DeviceCoordinateCache);
+    //setCacheMode(DeviceCoordinateCache);
     setZValue(-1);
 }
 

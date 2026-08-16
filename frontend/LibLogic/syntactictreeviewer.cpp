@@ -75,13 +75,18 @@ void SyntacticTreeViewer::loadHistory(const QJsonArray &events)
     QRectF fullTreeRect = scene->itemsBoundingRect().adjusted(-50, -50, 50, 50);
     scene->setSceneRect(fullTreeRect);
 
-    QTimer::singleShot(50, [this, fullTreeRect]() {
-        view->fitInView(fullTreeRect, Qt::KeepAspectRatio);
-    });
-
     lblStep->setText(QString("Pas %1 / %2").arg(m_currentStep).arg(m_history.size()));
     btnBack->setEnabled(true);
     btnNext->setEnabled(false);
+}
+
+void SyntacticTreeViewer::showEvent(QShowEvent *event)
+{
+    QWidget::showEvent(event);
+
+    if (scene && !scene->sceneRect().isEmpty()) {
+        view->fitInView(scene->sceneRect(), Qt::KeepAspectRatio);
+    }
 }
 
 void SyntacticTreeViewer::clearTree()
@@ -114,7 +119,8 @@ Node* SyntacticTreeViewer::createNodeRecursive(const QString &nodeId, const QMap
     QJsonArray childrenArr = obj["children"].toArray();
     QList<QUuid> childrenIds;
     for (const QJsonValue &val : childrenArr) {
-        childrenIds.append(QUuid(val.toObject()["value"].toString()));
+        QString childId = val.isString() ? val.toString() : val.toObject()["value"].toString();
+        childrenIds.append(QUuid(childId));
     }
 
     Node *node = new Node(nullptr, id, token, nType, parentId, childrenIds);
@@ -128,7 +134,7 @@ Node* SyntacticTreeViewer::createNodeRecursive(const QString &nodeId, const QMap
         int lastChildX = -1;
 
         for (const QJsonValue &val : childrenArr) {
-            QString childId = val.toObject()["value"].toString();
+            QString childId = val.isString() ? val.toString() : val.toObject()["value"].toString();
             Node *childNode = createNodeRecursive(childId, nodeMap, id, depth + 1, xOffset);
             if (childNode) {
                 scene->addItem(new Edge(node, childNode));
@@ -176,11 +182,14 @@ void SyntacticTreeViewer::rebuildMapAndDraw()
     if (m_currentStep > 0 && m_currentStep <= m_history.size()) {
         QJsonObject lastEvent = m_history[m_currentStep - 1].toObject();
         QString method = lastEvent["method"].toString();
+        QJsonValue idVal;
+
         if (method == "parser/didMakeNewSubtree") {
-            animatedNodeId = lastEvent["params"].toObject()["node"].toObject()["id"].toObject()["value"].toString();
+            idVal = lastEvent["params"].toObject()["node"].toObject()["id"];
         } else if (method == "parser/didJoin") {
-            animatedNodeId = lastEvent["params"].toObject()["target"].toObject()["id"].toObject()["value"].toString();
+            idVal = lastEvent["params"].toObject()["target"].toObject()["id"];
         }
+        animatedNodeId = idVal.isString() ? idVal.toString() : idVal.toObject()["value"].toString();
     }
 
     for (int i = 0; i < m_currentStep; ++i) {
@@ -190,10 +199,12 @@ void SyntacticTreeViewer::rebuildMapAndDraw()
 
         if (method == "parser/didMakeNewSubtree") {
             QJsonObject node = params["node"].toObject();
-            currentNodeMap[node["id"].toObject()["value"].toString()] = node;
+            QString idStr = node["id"].isString() ? node["id"].toString() : node["id"].toObject()["value"].toString();
+            currentNodeMap[idStr] = node;
         } else if (method == "parser/didJoin") {
             QJsonObject target = params["target"].toObject();
-            currentNodeMap[target["id"].toObject()["value"].toString()] = target;
+            QString idStr = target["id"].isString() ? target["id"].toString() : target["id"].toObject()["value"].toString();
+            currentNodeMap[idStr] = target;
         }
     }
 
@@ -201,7 +212,8 @@ void SyntacticTreeViewer::rebuildMapAndDraw()
     for (const QJsonObject &node : currentNodeMap) {
         QJsonArray children = node["children"].toArray();
         for (const QJsonValue &child : children) {
-            rootIds.removeAll(child.toObject()["value"].toString());
+            QString childId = child.isString() ? child.toString() : child.toObject()["value"].toString();
+            rootIds.removeAll(childId);
         }
     }
 
