@@ -147,6 +147,11 @@ namespace eloquent::logic
         return children[idx].get();
     }
 
+    NodeObsPtr Node::lastChild() const noexcept
+    {
+        return children.back().get();
+    }
+
     bool Node::allChildrenAreWritten() const noexcept
     {
         for (const auto & i : children)

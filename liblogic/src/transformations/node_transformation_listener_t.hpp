@@ -21,8 +21,13 @@ namespace eloquent
             // Node operation replication
             CB_FULL(didSpawnNewSubtree, (NodeObsPtr));
             CB_FULL(didAdoptNode, (NodeObsPtr, NodeObsPtr))
+            // This signal does NOT mean that the node has been discarded. A node may only
+            // be considered discarded once the transformation finalizer signal fires and
+            // the node is not a child of any parent node and is not the root node
             CB_FULL(didDisconnect, (NodeObsPtr, size_t))
             CB_FULL(didTransformNodeWithLexeme, (NodeObsPtr, lexeme))
+            CB_FULL(didTransferNode, (NodeObsPtr, size_t, NodeObsPtr))
+            CB_FULL(didDiscardAllChildren, (NodeObsPtr))
 
             // Implication-family reductions
             CB_FULL(didMatchLogicalImplication, (NodeObsPtr))

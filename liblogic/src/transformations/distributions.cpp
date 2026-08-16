@@ -42,7 +42,10 @@ namespace eloquent::logic
         // at index 0, so we always drain front-to-back rather than indexing in.
         std::vector<NodePtr> others;
         while (target->num_children() > 0)
+        {
             others.push_back(target->disconnect(0));
+            listener->didDisconnect(target, 0);
+        }
 
         size_t or_idx = 0;
         while (others[or_idx]->getType() != NodeType::OrOp) ++or_idx;
@@ -52,21 +55,32 @@ namespace eloquent::logic
 
         std::vector<NodePtr> disjuncts;
         while (or_child->num_children() > 0)
+        {
             disjuncts.push_back(or_child->disconnect(0));
-
+            listener->didDisconnect(or_child.get(),0);
+        }
         const lexeme l = target->getLexeme();
+
         target->set_lexeme(lexeme::make(lexeme_type::OrOp, symbols::SYMB_OR, l.start(), l.end()));
+        listener->didTransformNodeWithLexeme(target, target->getLexeme());
 
         for (size_t i = 0; i < disjuncts.size(); ++i)
         {
             target->spawn_new_child(lexeme::make(lexeme_type::AndOp, symbols::SYMB_AND, 0, 0));
+            listener->didSpawnNewSubtree(target->childAt(target->num_children()-1));
+
             const NodeObsPtr conjunction = target->childAt(target->num_children() - 1);
 
             const bool last = (i + 1 == disjuncts.size());
             for (auto& other : others)
+            {
                 conjunction->adopt(last ? std::move(other) : Node::duplicate_node(other.get()));
-
+                listener->didSpawnNewSubtree(conjunction->childAt(conjunction->num_children()-1));
+                listener->didAdoptNode(conjunction, conjunction->childAt(conjunction->num_children()-1));
+            }
             conjunction->adopt(std::move(disjuncts[i]));
+            listener->didSpawnNewSubtree(conjunction->childAt(conjunction->num_children()-1));
+            listener->didAdoptNode(conjunction, conjunction->childAt(conjunction->num_children()-1));
         }
 
         listener->didDistributeAndOverOr(target);
@@ -106,8 +120,10 @@ namespace eloquent::logic
     {
         std::vector<NodePtr> others;
         while (target->num_children() > 0)
+        {
             others.push_back(target->disconnect(0));
-
+            listener->didDisconnect(target, 0);
+        }
         size_t and_idx = 0;
         while (others[and_idx]->getType() != NodeType::AndOp) ++and_idx;
 
@@ -116,21 +132,33 @@ namespace eloquent::logic
 
         std::vector<NodePtr> conjuncts;
         while (and_child->num_children() > 0)
+        {
             conjuncts.push_back(and_child->disconnect(0));
+            listener->didDisconnect(and_child.get(), 0);
+        }
 
         const lexeme l = target->getLexeme();
         target->set_lexeme(lexeme::make(lexeme_type::AndOp, symbols::SYMB_AND, l.start(), l.end()));
+        listener->didTransformNodeWithLexeme(target, target->getLexeme());
 
         for (size_t i = 0; i < conjuncts.size(); ++i)
         {
             target->spawn_new_child(lexeme::make(lexeme_type::OrOp, symbols::SYMB_OR, 0, 0));
+            listener->didSpawnNewSubtree(target->childAt(target->num_children()-1));
+            listener->didAdoptNode(target, target->childAt(target->num_children()-1));
+
             const NodeObsPtr disjunction = target->childAt(target->num_children() - 1);
 
             const bool last = (i + 1 == conjuncts.size());
             for (auto& other : others)
+            {
                 disjunction->adopt(last ? std::move(other) : Node::duplicate_node(other.get()));
-
+                listener->didSpawnNewSubtree(disjunction->childAt(disjunction->num_children()-1));
+                listener->didAdoptNode(disjunction, disjunction->childAt(disjunction->num_children()-1));
+            }
             disjunction->adopt(std::move(conjuncts[i]));
+            listener->didSpawnNewSubtree(disjunction->childAt(disjunction->num_children()-1));
+            listener->didAdoptNode(disjunction, disjunction->childAt(disjunction->num_children()-1));
         }
 
         listener->didDistributeOrOverAnd(target);

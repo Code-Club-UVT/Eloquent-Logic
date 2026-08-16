@@ -56,10 +56,13 @@ namespace eloquent
         void absorption_transformation::replace(NodeObsPtr target, const std::shared_ptr<node_transformation_listener_t>& listener)
         {
             (void)target->disconnect(idx);
+            listener->didDisconnect(target, idx);
             if (target->num_children() == 1)
             {
                 NodePtr node = target->disconnect(0);
+                listener->didDisconnect(target, 0);
                 target->set_lexeme(node->getLexeme());
+                listener->didTransformNodeWithLexeme(target, target->getLexeme());
             }
 
             listener->didApplyAbsorption(target);

@@ -42,6 +42,7 @@ namespace eloquent::logic {
         [[nodiscard]] size_t num_children() const noexcept;
         [[nodiscard]] size_t arity() const noexcept;
         [[nodiscard]] NodeObsPtr childAt(size_t idx) const;
+        [[nodiscard]] NodeObsPtr lastChild() const noexcept;
         [[nodiscard]] bool allChildrenAreWritten() const noexcept;
         [[nodiscard]] size_t find_by_uuid(CppCommon::UUID id) const noexcept;
         [[nodiscard]] NodePtr disconnect(size_t idx);

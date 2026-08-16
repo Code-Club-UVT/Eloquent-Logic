@@ -94,13 +94,18 @@ namespace eloquent::logic {
             if (flag == Signal::CONJUNCTION_CONTRADICTION) {
                 // code to free children here
                 target->set_lexeme(lexeme::make(lexeme_type::Contradiction, symbols::SYMB_CONTRADICTION, 0,0));
+                listener->didTransformNodeWithLexeme(target, target->getLexeme());
+
                 target->clear_children();
+                listener->didDiscardAllChildren(target);
                 listener->didCollapseToContradiction(target);
             }
 
             else if (flag == Signal::DISJUNCTION_TAUTOLOGY) {
                 target->set_lexeme(lexeme::make(lexeme_type::Tautology, symbols::SYMB_TAUTOLOGY, 0,0));
+                listener->didTransformNodeWithLexeme(target, target->getLexeme());
                 target->clear_children();
+                listener->didDiscardAllChildren(target);
                 listener->didCollapseToTautology(target);
             }
             else {
@@ -120,6 +125,7 @@ namespace eloquent::logic {
                     if (!ok)
                     {
                         (void)target->disconnect(delete_idx);
+                        listener->didDisconnect(target, delete_idx);
                         listener->didDropNeutralElement(target);
                     }
                 }
