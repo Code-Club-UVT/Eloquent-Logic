@@ -70,7 +70,7 @@ namespace logic_agent::types
         dto.children.reserve(node.num_children());
         for (size_t i = 0; i < node.num_children(); ++i)
         {
-            dto.children.push_back(to_dto(node.childAt(i)->getUUID()));
+            dto.children.push_back(to_dto(*(node.childAt(i))));
         }
         return dto;
     }

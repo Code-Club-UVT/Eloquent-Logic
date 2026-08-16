@@ -303,7 +303,7 @@
           "lexeme": { "$ref": "#/components/schemas/Lexeme" },
           "children": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/Uuid" }
+            "items": { "$ref": "#/components/schemas/Node" }
           }
         }
       }
