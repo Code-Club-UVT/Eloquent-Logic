@@ -175,6 +175,48 @@
       }
     },
 
+    "AdoptNodeEvent": {
+      "description": "logic_agent/types/transformations/node_transformation_events.hpp::adopt_node_event_t — node_transformation_listener_t::didAdoptNode(NodeObsPtr parent, NodeObsPtr child); parent has just taken ownership of child as a new/relocated subtree.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["parent", "child"],
+      "properties": {
+        "parent": { "$ref": "#/$defs/OptionalNode" },
+        "child": { "$ref": "#/$defs/OptionalNode" }
+      }
+    },
+    "DisconnectEvent": {
+      "description": "logic_agent/types/transformations/node_transformation_events.hpp::disconnect_event_t — node_transformation_listener_t::didDisconnect(NodeObsPtr node, size_t index); the child at `index` was removed from `node`. This signal does NOT mean that the node has been discarded. A node may only be considered discarded once the transformation finalizer signal fires and the node is not a child of any parent node and is not the root node.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["node", "index"],
+      "properties": {
+        "node": { "$ref": "#/$defs/OptionalNode" },
+        "index": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "TransformLexemeEvent": {
+      "description": "logic_agent/types/transformations/node_transformation_events.hpp::transform_lexeme_event_t — node_transformation_listener_t::didTransformNodeWithLexeme(NodeObsPtr node, lexeme); node's lexeme was just set to `lexeme` in place.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["node", "lexeme"],
+      "properties": {
+        "node": { "$ref": "#/$defs/OptionalNode" },
+        "lexeme": { "$ref": "#/$defs/Lexeme" }
+      }
+    },
+    "TransferNodeEvent": {
+      "description": "logic_agent/types/transformations/node_transformation_events.hpp::transfer_node_event_t — node_transformation_listener_t::didTransferNode(NodeObsPtr source, size_t index, NodeObsPtr destination); the child of `source` at `index` was moved to become a child of `destination`.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "index", "destination"],
+      "properties": {
+        "source": { "$ref": "#/$defs/OptionalNode" },
+        "index": { "type": "integer", "minimum": 0 },
+        "destination": { "$ref": "#/$defs/OptionalNode" }
+      }
+    },
+
     "AstErrorEvent": {
       "description": "logic_agent/types/parser/strict_parser_events.hpp::ast_error_event_t — strict_parser_listener_t::foundAstError(const Cursor&).",
       "type": "object",
@@ -416,6 +458,12 @@
 
     "Notification_transform_didStart": { "$ref": "#/$defs/_NotificationTemplates/Empty", "properties": { "method": { "const": "transform/didStart" } }, "description": "node_transformation_listener_t::didStart() (streaming_transformation_listener.cpp)." },
     "Notification_transform_didFinish": { "$ref": "#/$defs/_NotificationTemplates/Empty", "properties": { "method": { "const": "transform/didFinish" } }, "description": "node_transformation_listener_t::didFinish() (streaming_transformation_listener.cpp)." },
+    "Notification_transform_didSpawnNewSubtree": { "$ref": "#/$defs/_NotificationTemplates/SingleNodeEvent", "properties": { "method": { "const": "transform/didSpawnNewSubtree" } }, "description": "node_transformation_listener_t::didSpawnNewSubtree(NodeObsPtr) (streaming_transformation_listener.cpp)." },
+    "Notification_transform_didAdoptNode": { "$ref": "#/$defs/_NotificationTemplates/AdoptNodeEvent", "properties": { "method": { "const": "transform/didAdoptNode" } }, "description": "node_transformation_listener_t::didAdoptNode(NodeObsPtr parent, NodeObsPtr child) (streaming_transformation_listener.cpp)." },
+    "Notification_transform_didDisconnect": { "$ref": "#/$defs/_NotificationTemplates/DisconnectEvent", "properties": { "method": { "const": "transform/didDisconnect" } }, "description": "node_transformation_listener_t::didDisconnect(NodeObsPtr, size_t) (streaming_transformation_listener.cpp). This signal does NOT mean that the node has been discarded. A node may only be considered discarded once the transformation finalizer signal fires and the node is not a child of any parent node and is not the root node." },
+    "Notification_transform_didTransformNodeWithLexeme": { "$ref": "#/$defs/_NotificationTemplates/TransformLexemeEvent", "properties": { "method": { "const": "transform/didTransformNodeWithLexeme" } }, "description": "node_transformation_listener_t::didTransformNodeWithLexeme(NodeObsPtr, lexeme) (streaming_transformation_listener.cpp)." },
+    "Notification_transform_didTransferNode": { "$ref": "#/$defs/_NotificationTemplates/TransferNodeEvent", "properties": { "method": { "const": "transform/didTransferNode" } }, "description": "node_transformation_listener_t::didTransferNode(NodeObsPtr source, size_t index, NodeObsPtr destination) (streaming_transformation_listener.cpp)." },
+    "Notification_transform_didDiscardAllChildren": { "$ref": "#/$defs/_NotificationTemplates/SingleNodeEvent", "properties": { "method": { "const": "transform/didDiscardAllChildren" } }, "description": "node_transformation_listener_t::didDiscardAllChildren(NodeObsPtr) (streaming_transformation_listener.cpp)." },
     "Notification_transform_didMatchLogicalImplication": { "$ref": "#/$defs/_NotificationTemplates/SingleNodeEvent", "properties": { "method": { "const": "transform/didMatchLogicalImplication" } }, "description": "node_transformation_listener_t::didMatchLogicalImplication(NodeObsPtr) (streaming_transformation_listener.cpp)." },
     "Notification_transform_didReduceLogicalImplication": { "$ref": "#/$defs/_NotificationTemplates/SingleNodeEvent", "properties": { "method": { "const": "transform/didReduceLogicalImplication" } }, "description": "node_transformation_listener_t::didReduceLogicalImplication(NodeObsPtr) (streaming_transformation_listener.cpp)." },
     "Notification_transform_didCondenseChild": { "$ref": "#/$defs/_NotificationTemplates/CondenseChildEvent", "properties": { "method": { "const": "transform/didCondenseChild" } }, "description": "node_transformation_listener_t::didCondenseChild(parent, merged) (streaming_transformation_listener.cpp)." },
@@ -519,6 +567,22 @@
       "SpawnedChildEvent": {
         "type": "object", "additionalProperties": false, "required": ["jsonrpc", "method", "params"],
         "properties": { "jsonrpc": { "const": "2.0" }, "method": {}, "params": { "$ref": "#/$defs/SpawnedChildEvent" } }
+      },
+      "AdoptNodeEvent": {
+        "type": "object", "additionalProperties": false, "required": ["jsonrpc", "method", "params"],
+        "properties": { "jsonrpc": { "const": "2.0" }, "method": {}, "params": { "$ref": "#/$defs/AdoptNodeEvent" } }
+      },
+      "DisconnectEvent": {
+        "type": "object", "additionalProperties": false, "required": ["jsonrpc", "method", "params"],
+        "properties": { "jsonrpc": { "const": "2.0" }, "method": {}, "params": { "$ref": "#/$defs/DisconnectEvent" } }
+      },
+      "TransformLexemeEvent": {
+        "type": "object", "additionalProperties": false, "required": ["jsonrpc", "method", "params"],
+        "properties": { "jsonrpc": { "const": "2.0" }, "method": {}, "params": { "$ref": "#/$defs/TransformLexemeEvent" } }
+      },
+      "TransferNodeEvent": {
+        "type": "object", "additionalProperties": false, "required": ["jsonrpc", "method", "params"],
+        "properties": { "jsonrpc": { "const": "2.0" }, "method": {}, "params": { "$ref": "#/$defs/TransferNodeEvent" } }
       },
       "AstErrorEvent": {
         "type": "object", "additionalProperties": false, "required": ["jsonrpc", "method", "params"],
@@ -645,6 +709,12 @@
 
         { "$ref": "#/$defs/Notification_transform_didStart" },
         { "$ref": "#/$defs/Notification_transform_didFinish" },
+        { "$ref": "#/$defs/Notification_transform_didSpawnNewSubtree" },
+        { "$ref": "#/$defs/Notification_transform_didAdoptNode" },
+        { "$ref": "#/$defs/Notification_transform_didDisconnect" },
+        { "$ref": "#/$defs/Notification_transform_didTransformNodeWithLexeme" },
+        { "$ref": "#/$defs/Notification_transform_didTransferNode" },
+        { "$ref": "#/$defs/Notification_transform_didDiscardAllChildren" },
         { "$ref": "#/$defs/Notification_transform_didMatchLogicalImplication" },
         { "$ref": "#/$defs/Notification_transform_didReduceLogicalImplication" },
         { "$ref": "#/$defs/Notification_transform_didCondenseChild" },
