@@ -46,7 +46,7 @@ namespace logic_agent::types
         uuid_t id;
         node_type_t type = node_type_t::Blank;
         lexeme_t lexeme;
-        std::vector<uuid_t> children;
+        std::vector<node_t> children;
     };
 
     NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(node_t, id, type, lexeme, children)

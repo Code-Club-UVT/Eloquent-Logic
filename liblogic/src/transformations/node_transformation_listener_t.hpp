@@ -17,6 +17,13 @@ namespace eloquent
         class node_transformation_listener_t : public feedback_listener
         {
         public:
+
+            // Node operation replication
+            CB_FULL(didSpawnNewSubtree, (NodeObsPtr));
+            CB_FULL(didAdoptNode, (NodeObsPtr, NodeObsPtr))
+            CB_FULL(didDisconnect, (NodeObsPtr, size_t))
+            CB_FULL(didTransformNodeWithLexeme, (NodeObsPtr, lexeme))
+
             // Implication-family reductions
             CB_FULL(didMatchLogicalImplication, (NodeObsPtr))
             CB_FULL(didReduceLogicalImplication, (NodeObsPtr))
