@@ -4,36 +4,45 @@
 #include <QWidget>
 #include <QGraphicsView>
 #include <QGraphicsScene>
-#include <QPushButton>
-#include <QLabel>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QUuid>
 #include <QMap>
-#include "TreeStep.h"
+#include <QTimer>
 
 class Node;
+class QPushButton;
+class QLabel;
 
 class SyntacticTreeViewer : public QWidget
 {
     Q_OBJECT
-    QGraphicsScene *scene;
     QGraphicsView *view;
+    QGraphicsScene *scene;
 
-    QPushButton *btnPrev;
+    QPushButton *btnBack;
     QPushButton *btnNext;
-    QLabel *lblStatus;
+    QPushButton *btnPlay;
+    QLabel *lblStep;
+    QTimer *playTimer;
 
-    QMap<QUuid, Node*> nodeMap;
-    QList<TreeStep> history;
-    int currentStepIndex;
-
-private slots:
-    void nextStep();
-    void prevStep();
-    void updateUI();
+    QJsonArray m_history;
+    int m_currentStep;
 
 public:
     SyntacticTreeViewer(QWidget *parent = nullptr);
-    void buildDummyTree();
-    void recordStep(const QUuid& nodeId, const QColor& newColor, const QString& description = "");
+    void loadHistory(const QJsonArray &events);
+    void clearTree();
+
+protected:
+    bool eventFilter(QObject *obj, QEvent *event) override;
+    void showEvent(QShowEvent *event) override;
+private slots:
+    void goToStep(int step);
+
+private:
+    void rebuildMapAndDraw();
+    Node* createNodeRecursive(const QString &nodeId, const QMap<QString, QJsonObject> &nodeMap, const QUuid &parentId, int depth, int &xOffset, const QString &animatedNodeId = "");
 };
 
 #endif

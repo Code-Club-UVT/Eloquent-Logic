@@ -5,8 +5,6 @@
 #include <QList>
 #include <QString>
 #include <QUuid>
-#include <QGraphicsObject>
-#include <QColor>
 
 class Edge;
 class GraphWidget;
@@ -19,9 +17,6 @@ enum class NodeType {
 
 class Node : public QGraphicsObject
 {
-    Q_OBJECT
-    Q_PROPERTY(QColor highlightColor READ highlightColor WRITE setHighlightColor)
-
 public:
     Node(GraphWidget *graphWidget,
          const QUuid &id,
@@ -49,16 +44,13 @@ public:
     QUuid parentId() const { return m_parent; }
     QList<QUuid> childrenIds() const { return m_children; }
 
-    QColor highlightColor() const { return m_highlightColor; }
-    void setHighlightColor(const QColor &color);
-    void animateHighlight(const QColor &targetColor, int durationMs = 400);
-
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 
 private:
+    Q_OBJECT
     QList<Edge *> edgeList;
     QPointF newPos;
     GraphWidget *graph;
@@ -68,7 +60,6 @@ private:
     NodeType m_type;
     QUuid m_parent;
     QList<QUuid> m_children;
-    QColor m_highlightColor;
 };
 
 #endif // NODE_H

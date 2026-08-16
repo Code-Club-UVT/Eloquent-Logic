@@ -25,12 +25,16 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
         logiceditorwindow.h logiceditorwindow.cpp
         logiclineedit.h logiclineedit.cpp
+
+
+
         truthtableviewer.h truthtableviewer.cpp
         edge.h edge.cpp
         node.h node.cpp
-        launcherwidget.h launcherwidget.cpp
+
         syntactictreeviewer.h syntactictreeviewer.cpp
-        treestep.h
+        agentconnection.h agentconnection.cpp
+
 
     )
 # Define target properties for Android with Qt 6 as:
