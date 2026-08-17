@@ -14,7 +14,7 @@ That gives the protocol two distinct shapes, documented in two separate files:
 - **[`feedback-events.schema.json`](./feedback-events.schema.json)** — a plain
   [JSON Schema](https://json-schema.org/) (2020-12) document, *not* OpenRPC, because
   OpenRPC's method model is request/response and these are fire-and-forget
-  notifications. It catalogues all ~104 distinct `"<category>/<callbackName>"`
+  notifications. It catalogues all ~110 distinct `"<category>/<callbackName>"`
   notifications logic_agent can stream (lexer/parser/transform/sat/mapper/truth_table
   callbacks) and their payload shapes — `shutdown` streams none of its own, it's a bare
   control command. `$defs.AnyFeedbackNotification` validates any one parsed line of the
@@ -49,6 +49,13 @@ Final Response (matched by `openrpc.json`'s `parse` method result):
 ```json
 {"jsonrpc":"2.0","id":1,"result":{"tree":{"id":"...","type":"AndOp","lexeme":{"type":"AndOp","token":"\\wedge","start":2,"end":8},"children":["...","..."]}}}
 ```
+
+## Notes
+
+- `transform/didDisconnect` does **not** mean the node has been discarded. A
+  node is only considered discarded once the transformation's finalizer
+  signal fires and the node is neither a child of any parent node nor the
+  root node.
 
 ## Source of truth
 

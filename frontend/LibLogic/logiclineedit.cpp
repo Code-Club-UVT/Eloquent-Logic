@@ -8,7 +8,7 @@ LogicLineEdit::LogicLineEdit(QWidget *parent) : QLineEdit(parent), justReplaced(
     replacements["not"] = "¬";
     replacements["ent"] = "⊨";
     replacements["eq"] = "↔";
-    replacements["impl"] = "→";
+    replacements["im"] = "→";
 
     connect(this, &QLineEdit::textEdited, this, &LogicLineEdit::onTextEdited);
 }

@@ -17,6 +17,43 @@ namespace logic_agent::rpc
 
     void streaming_transformation_listener::didFinish() { sink.emit_empty("transform/didFinish"); }
 
+    void streaming_transformation_listener::didSpawnNewSubtree(eloquent::logic::NodeObsPtr node) { emit_single_node("transform/didSpawnNewSubtree", node); }
+
+    void streaming_transformation_listener::didAdoptNode(eloquent::logic::NodeObsPtr parent, eloquent::logic::NodeObsPtr child)
+    {
+        logic_agent::types::transformations::adopt_node_event_t dto;
+        dto.parent = logic_agent::types::to_dto(parent);
+        dto.child = logic_agent::types::to_dto(child);
+        sink.emit("transform/didAdoptNode", dto);
+    }
+
+    void streaming_transformation_listener::didDisconnect(eloquent::logic::NodeObsPtr node, size_t index)
+    {
+        logic_agent::types::transformations::disconnect_event_t dto;
+        dto.node = logic_agent::types::to_dto(node);
+        dto.index = index;
+        sink.emit("transform/didDisconnect", dto);
+    }
+
+    void streaming_transformation_listener::didTransformNodeWithLexeme(eloquent::logic::NodeObsPtr node, eloquent::logic::lexeme lexeme)
+    {
+        logic_agent::types::transformations::transform_lexeme_event_t dto;
+        dto.node = logic_agent::types::to_dto(node);
+        dto.lexeme = logic_agent::types::to_dto(lexeme);
+        sink.emit("transform/didTransformNodeWithLexeme", dto);
+    }
+
+    void streaming_transformation_listener::didTransferNode(eloquent::logic::NodeObsPtr source, size_t index, eloquent::logic::NodeObsPtr destination)
+    {
+        logic_agent::types::transformations::transfer_node_event_t dto;
+        dto.source = logic_agent::types::to_dto(source);
+        dto.index = index;
+        dto.destination = logic_agent::types::to_dto(destination);
+        sink.emit("transform/didTransferNode", dto);
+    }
+
+    void streaming_transformation_listener::didDiscardAllChildren(eloquent::logic::NodeObsPtr node) { emit_single_node("transform/didDiscardAllChildren", node); }
+
     void streaming_transformation_listener::didMatchLogicalImplication(eloquent::logic::NodeObsPtr node) { emit_single_node("transform/didMatchLogicalImplication", node); }
 
     void streaming_transformation_listener::didReduceLogicalImplication(eloquent::logic::NodeObsPtr node) { emit_single_node("transform/didReduceLogicalImplication", node); }

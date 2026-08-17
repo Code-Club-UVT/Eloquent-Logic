@@ -26,6 +26,13 @@ namespace logic_agent::rpc
         void didStart() override;
         void didFinish() override;
 
+        void didSpawnNewSubtree(eloquent::logic::NodeObsPtr node) override;
+        void didAdoptNode(eloquent::logic::NodeObsPtr parent, eloquent::logic::NodeObsPtr child) override;
+        void didDisconnect(eloquent::logic::NodeObsPtr node, size_t index) override;
+        void didTransformNodeWithLexeme(eloquent::logic::NodeObsPtr node, eloquent::logic::lexeme lexeme) override;
+        void didTransferNode(eloquent::logic::NodeObsPtr source, size_t index, eloquent::logic::NodeObsPtr destination) override;
+        void didDiscardAllChildren(eloquent::logic::NodeObsPtr node) override;
+
         void didMatchLogicalImplication(eloquent::logic::NodeObsPtr node) override;
         void didReduceLogicalImplication(eloquent::logic::NodeObsPtr node) override;
         void didCondenseChild(eloquent::logic::NodeObsPtr parent, eloquent::logic::NodeObsPtr merged) override;
