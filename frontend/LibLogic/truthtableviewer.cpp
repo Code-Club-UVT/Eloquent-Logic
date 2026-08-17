@@ -6,6 +6,8 @@
 TruthTableViewer::TruthTableViewer(const QStringList& headers, QWidget *parent)
     : QWidget(parent) {
 
+    setAttribute(Qt::WA_DeleteOnClose);
+
     QVBoxLayout *layout = new QVBoxLayout(this);
 
     table = new QTableWidget(this);

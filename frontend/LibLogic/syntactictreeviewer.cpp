@@ -11,6 +11,8 @@
 
 SyntacticTreeViewer::SyntacticTreeViewer(QWidget *parent) : QWidget(parent), m_currentStep(0)
 {
+    setAttribute(Qt::WA_DeleteOnClose);
+
     scene = new QGraphicsScene(this);
     view = new QGraphicsView(scene, this);
     view->setRenderHint(QPainter::Antialiasing);
@@ -25,7 +27,7 @@ SyntacticTreeViewer::SyntacticTreeViewer(QWidget *parent) : QWidget(parent), m_c
     btnNext = new QPushButton("Next →", this);
     lblStep = new QLabel("Pas 0 / 0", this);
     lblStep->setAlignment(Qt::AlignCenter);
-    btnPlay = new QPushButton("▶ Play", this);
+    btnPlay = new QPushButton("Play", this);
 
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     QHBoxLayout *controlsLayout = new QHBoxLayout();
@@ -43,18 +45,18 @@ SyntacticTreeViewer::SyntacticTreeViewer(QWidget *parent) : QWidget(parent), m_c
             goToStep(m_currentStep + 1);
         } else {
             playTimer->stop();
-            btnPlay->setText("▶ Play");
+            btnPlay->setText("Play");
         }
     });
 
     connect(btnPlay, &QPushButton::clicked, [this]() {
         if (playTimer->isActive()) {
             playTimer->stop();
-            btnPlay->setText("▶ Play");
+            btnPlay->setText("Play");
         } else {
             if (m_currentStep == m_history.size()) goToStep(0);
             playTimer->start();
-            btnPlay->setText("⏸ Pause");
+            btnPlay->setText("Pause");
         }
     });
 
@@ -68,7 +70,6 @@ SyntacticTreeViewer::SyntacticTreeViewer(QWidget *parent) : QWidget(parent), m_c
 void SyntacticTreeViewer::loadHistory(const QJsonArray &events)
 {
     m_history = events;
-
     m_currentStep = m_history.size();
     rebuildMapAndDraw();
 
@@ -83,7 +84,6 @@ void SyntacticTreeViewer::loadHistory(const QJsonArray &events)
 void SyntacticTreeViewer::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
-
     if (scene && !scene->sceneRect().isEmpty()) {
         view->fitInView(scene->sceneRect(), Qt::KeepAspectRatio);
     }
@@ -94,11 +94,22 @@ void SyntacticTreeViewer::clearTree()
     scene->clear();
 }
 
-Node* SyntacticTreeViewer::createNodeRecursive(const QString &nodeId, const QMap<QString, QJsonObject> &nodeMap, const QUuid &parentId, int depth, int &xOffset, const QString &animatedNodeId){
+void SyntacticTreeViewer::extractToMapRecursively(const QJsonObject &obj, QMap<QString, QJsonObject> &mapToFill) {
+    if (obj.contains("id") && obj.contains("lexeme")) {
+        QString idStr = obj["id"].isString() ? obj["id"].toString() : obj["id"].toObject()["value"].toString();
+        mapToFill[idStr] = obj;
+        if (obj.contains("children")) {
+            for (const QJsonValue &childVal : obj["children"].toArray()) {
+                if (childVal.isObject()) extractToMapRecursively(childVal.toObject(), mapToFill);
+            }
+        }
+    }
+}
+
+Node* SyntacticTreeViewer::createNodeRecursive(const QString &nodeId, const QMap<QString, QJsonObject> &nodeMap, const QUuid &parentId, int depth, int &xOffset, const QString &animatedNodeId) {
     if (!nodeMap.contains(nodeId)) return nullptr;
 
     QJsonObject obj = nodeMap[nodeId];
-
     QUuid id = QUuid(nodeId);
     QJsonObject lexeme = obj["lexeme"].toObject();
     QString token = lexeme["token"].toString();
@@ -118,9 +129,16 @@ Node* SyntacticTreeViewer::createNodeRecursive(const QString &nodeId, const QMap
 
     QJsonArray childrenArr = obj["children"].toArray();
     QList<QUuid> childrenIds;
+
+    auto getChildId = [](const QJsonValue &val) -> QString {
+        if (val.isString()) return val.toString();
+        QJsonObject cObj = val.toObject();
+        if (cObj.contains("id")) return cObj["id"].isString() ? cObj["id"].toString() : cObj["id"].toObject()["value"].toString();
+        return cObj["value"].toString();
+    };
+
     for (const QJsonValue &val : childrenArr) {
-        QString childId = val.isString() ? val.toString() : val.toObject()["value"].toString();
-        childrenIds.append(QUuid(childId));
+        childrenIds.append(QUuid(getChildId(val)));
     }
 
     Node *node = new Node(nullptr, id, token, nType, parentId, childrenIds);
@@ -134,7 +152,7 @@ Node* SyntacticTreeViewer::createNodeRecursive(const QString &nodeId, const QMap
         int lastChildX = -1;
 
         for (const QJsonValue &val : childrenArr) {
-            QString childId = val.isString() ? val.toString() : val.toObject()["value"].toString();
+            QString childId = getChildId(val);
             Node *childNode = createNodeRecursive(childId, nodeMap, id, depth + 1, xOffset);
             if (childNode) {
                 scene->addItem(new Edge(node, childNode));
@@ -152,7 +170,6 @@ Node* SyntacticTreeViewer::createNodeRecursive(const QString &nodeId, const QMap
         anim->setDuration(500);
         anim->setStartValue(0.0);
         anim->setEndValue(1.0);
-
         anim->setEasingCurve(QEasingCurve::OutBack);
         anim->start(QAbstractAnimation::DeleteWhenStopped);
     }
@@ -166,7 +183,6 @@ void SyntacticTreeViewer::goToStep(int step)
 
     m_currentStep = step;
     lblStep->setText(QString("Pas %1 / %2").arg(m_currentStep).arg(m_history.size()));
-
     btnBack->setEnabled(m_currentStep > 0);
     btnNext->setEnabled(m_currentStep < m_history.size());
 
@@ -189,30 +205,35 @@ void SyntacticTreeViewer::rebuildMapAndDraw()
         } else if (method == "parser/didJoin") {
             idVal = lastEvent["params"].toObject()["target"].toObject()["id"];
         }
-        animatedNodeId = idVal.isString() ? idVal.toString() : idVal.toObject()["value"].toString();
+        if (!idVal.isNull() && !idVal.isUndefined()) {
+            animatedNodeId = idVal.isString() ? idVal.toString() : idVal.toObject()["value"].toString();
+        }
     }
 
     for (int i = 0; i < m_currentStep; ++i) {
         QJsonObject ev = m_history[i].toObject();
-        QString method = ev["method"].toString();
         QJsonObject params = ev["params"].toObject();
 
-        if (method == "parser/didMakeNewSubtree") {
-            QJsonObject node = params["node"].toObject();
-            QString idStr = node["id"].isString() ? node["id"].toString() : node["id"].toObject()["value"].toString();
-            currentNodeMap[idStr] = node;
-        } else if (method == "parser/didJoin") {
-            QJsonObject target = params["target"].toObject();
-            QString idStr = target["id"].isString() ? target["id"].toString() : target["id"].toObject()["value"].toString();
-            currentNodeMap[idStr] = target;
-        }
+        if (params.contains("node")) extractToMapRecursively(params["node"].toObject(), currentNodeMap);
+        if (params.contains("target")) extractToMapRecursively(params["target"].toObject(), currentNodeMap);
+        if (params.contains("source")) extractToMapRecursively(params["source"].toObject(), currentNodeMap);
+        if (params.contains("new_tree")) extractToMapRecursively(params["new_tree"].toObject(), currentNodeMap);
+        if (params.contains("parent")) extractToMapRecursively(params["parent"].toObject(), currentNodeMap);
+        if (params.contains("child")) extractToMapRecursively(params["child"].toObject(), currentNodeMap);
+        if (params.contains("merged_child")) extractToMapRecursively(params["merged_child"].toObject(), currentNodeMap);
     }
 
     QList<QString> rootIds = currentNodeMap.keys();
     for (const QJsonObject &node : currentNodeMap) {
         QJsonArray children = node["children"].toArray();
         for (const QJsonValue &child : children) {
-            QString childId = child.isString() ? child.toString() : child.toObject()["value"].toString();
+            QString childId;
+            if (child.isString()) childId = child.toString();
+            else if (child.isObject()) {
+                QJsonObject cObj = child.toObject();
+                if (cObj.contains("id")) childId = cObj["id"].isString() ? cObj["id"].toString() : cObj["id"].toObject()["value"].toString();
+                else childId = cObj["value"].toString();
+            }
             rootIds.removeAll(childId);
         }
     }
@@ -228,15 +249,12 @@ bool SyntacticTreeViewer::eventFilter(QObject *obj, QEvent *event)
 {
     if (obj == view->viewport() && event->type() == QEvent::Wheel) {
         QWheelEvent *wheelEvent = static_cast<QWheelEvent*>(event);
-
         if (wheelEvent->angleDelta().y() > 0) {
             view->scale(1.1, 1.1);
         } else {
             view->scale(0.9, 0.9);
         }
-
         return true;
     }
-
     return QWidget::eventFilter(obj, event);
 }

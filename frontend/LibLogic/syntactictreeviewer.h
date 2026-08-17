@@ -37,11 +37,13 @@ public:
 protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
     void showEvent(QShowEvent *event) override;
+
 private slots:
     void goToStep(int step);
 
 private:
     void rebuildMapAndDraw();
+    void extractToMapRecursively(const QJsonObject &obj, QMap<QString, QJsonObject> &mapToFill);
     Node* createNodeRecursive(const QString &nodeId, const QMap<QString, QJsonObject> &nodeMap, const QUuid &parentId, int depth, int &xOffset, const QString &animatedNodeId = "");
 };
 
