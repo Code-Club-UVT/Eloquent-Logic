@@ -1,17 +1,13 @@
+#include <dp_naive.h>
 #include <gtest/gtest.h>
 #include <memory>
-#include <dp_naive.h>
 
 namespace {
-    auto listener = std::make_shared<eloquent::logic::sat_listener>();
+auto listener = std::make_shared<eloquent::logic::sat_listener>();
 }
 
 TEST(HeuristicsTest, GetLitTotalCount_Standard) {
-    ClauseSet cs = {
-        {1, -2, 3},
-        {-5, 4},
-        {2}
-    };
+    ClauseSet cs = {{1, -2, 3}, {-5, 4}, {2}};
 
     EXPECT_EQ(get_lit_total_count(cs), 5);
 }
@@ -53,11 +49,7 @@ TEST(HeuristicsTest, AnalyseClause_UpdatesCountsAndLiterals) {
 }
 
 TEST(HeuristicsTest, BuildHeuristicsDB_FullIntegration) {
-    ClauseSet cs = {
-        {1, -2},
-        {-1, -2, 3},
-        {3}
-    };
+    ClauseSet cs = {{1, -2}, {-1, -2, 3}, {3}};
 
     HeuristicsDB_DP db;
     build_heuristics_db(cs, db, listener);
@@ -80,25 +72,13 @@ TEST(HeuristicsTest, BuildHeuristicsDB_EmptyFormula) {
 }
 
 TEST(DPTest, SATSmallSet) {
-    ClauseSet clauses = {
-        {1, 2, 3},
-        {-1, 2},
-        {-2, 3},
-        {1, -3},
-        {-1, -2, 3}
-    };
+    ClauseSet clauses = {{1, 2, 3}, {-1, 2}, {-2, 3}, {1, -3}, {-1, -2, 3}};
 
     EXPECT_EQ(dp(clauses, listener), SatState::SAT);
 }
 
 TEST(DPTest, UNSATSmallSet) {
-    ClauseSet clauses = {
-        {1, 2},
-        {-1, 2},
-        {1, -2, 3},
-        {-3},
-        {-1}
-    };
+    ClauseSet clauses = {{1, 2}, {-1, 2}, {1, -2, 3}, {-3}, {-1}};
 
     EXPECT_EQ(dp(clauses, listener), SatState::UNSAT);
 }
@@ -106,12 +86,8 @@ TEST(DPTest, UNSATSmallSet) {
 // 10 var, 15 clauze
 TEST(DPTest, SATMediumSet) {
     ClauseSet clauses = {
-        {1, 2, 3},
-        {-1, -2, 4},
-        {2, -3, 5},
-        {-4, 6, 7},
-        {-5, -6, -8},
-        {8, 9, 10},
+        {1, 2, 3},  {-1, -2, 4},  {2, -3, 5},
+        {-4, 6, 7}, {-5, -6, -8}, {8, 9, 10},
     };
 
     EXPECT_EQ(dp(clauses, listener), SatState::SAT);

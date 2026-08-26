@@ -10,11 +10,10 @@
 // logic_agent::types::sat. These are the only places in
 // logic_agent/types/sat that depend on liblogic's real headers.
 // Literal needs no converter: it and literal_t are both std::int64_t.
-namespace logic_agent::types::sat
-{
-    clause_t to_dto(const Clause& clause);
+namespace logic_agent::types::sat {
+clause_t to_dto(const Clause &clause);
 
-    clause_set_t to_dto(const ClauseSet& clauses);
-}
+clause_set_t to_dto(const ClauseSet &clauses);
+} // namespace logic_agent::types::sat
 
-#endif //ELOQUENTLOGIC_AGENT_SAT_CONVERT_HPP
+#endif // ELOQUENTLOGIC_AGENT_SAT_CONVERT_HPP

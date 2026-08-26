@@ -8,33 +8,28 @@
 
 namespace eloquent::logic {
 
+class Cursor {
+  NodeObsPtr c_node;
+  std::shared_ptr<syntax_tree> tree;
+  std::shared_ptr<cursor_listener_t> listener;
 
-    class Cursor {
-        NodeObsPtr c_node;
-        std::shared_ptr<syntax_tree> tree;
-        std::shared_ptr<cursor_listener_t> listener;
+public:
+  void write_to_node(const lexeme &n);
 
-    public:
-        void write_to_node(const lexeme& n);
+  void up();
+  void spawn_new_child_node();
+  void grow_up_tree();
+  [[nodiscard]] size_t get_arity() const;
+  void move_to_child(size_t idx);
+  [[nodiscard]] bool has_child(size_t idx) const;
+  [[nodiscard]] bool tree_is_empty() const noexcept;
+  void replace_child_with_placeholders(lexeme l);
+  explicit Cursor(std::shared_ptr<syntax_tree> tree,
+                  std::shared_ptr<cursor_listener_t> listener)
+      : c_node(nullptr), tree(std::move(tree)), listener(std::move(listener)) {}
 
-        void up();
-        void spawn_new_child_node();
-        void grow_up_tree();
-        [[nodiscard]] size_t get_arity() const;
-        void move_to_child(size_t idx);
-        [[nodiscard]] bool has_child(size_t idx) const;
-        [[nodiscard]] bool tree_is_empty() const noexcept;
-        void replace_child_with_placeholders(lexeme l);
-        explicit Cursor(std::shared_ptr<syntax_tree> tree, std::shared_ptr<cursor_listener_t> listener): c_node(nullptr), tree(std::move(tree)), listener(std::move(listener)){}
+  [[nodiscard]] NodeObsPtr get_current_node() const { return c_node; }
 
-        [[nodiscard]] NodeObsPtr get_current_node() const
-        {
-            return c_node;
-        }
-
-        [[nodiscard]] std::shared_ptr<syntax_tree> get_tree() const
-        {
-            return tree;
-        }
-    };
+  [[nodiscard]] std::shared_ptr<syntax_tree> get_tree() const { return tree; }
 };
+}; // namespace eloquent::logic

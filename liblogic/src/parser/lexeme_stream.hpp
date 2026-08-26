@@ -6,20 +6,18 @@
 #define ELOQUENTLOGIC_LEXEME_STREAM_HPP
 #include "lexeme.hpp"
 #include <vector>
-namespace eloquent::logic
-{
-    class lexeme_stream
-    {
-        size_t idx = 0;
-        std::vector<lexeme> lexemes;
-    public:
-        [[nodiscard]] bool can_continue() const noexcept;
-        explicit lexeme_stream(std::vector<lexeme> lexemes);
-        [[nodiscard]] lexeme current();
-        [[nodiscard]] lexeme peek(size_t offset=1);
-        [[nodiscard]] lexeme next();
-    };
-}
+namespace eloquent::logic {
+class lexeme_stream {
+    size_t idx = 0;
+    std::vector<lexeme> lexemes;
 
+  public:
+    [[nodiscard]] bool can_continue() const noexcept;
+    explicit lexeme_stream(std::vector<lexeme> lexemes);
+    [[nodiscard]] lexeme current();
+    [[nodiscard]] lexeme peek(size_t offset = 1);
+    [[nodiscard]] lexeme next();
+};
+} // namespace eloquent::logic
 
-#endif //ELOQUENTLOGIC_LEXEME_STREAM_HPP
+#endif // ELOQUENTLOGIC_LEXEME_STREAM_HPP

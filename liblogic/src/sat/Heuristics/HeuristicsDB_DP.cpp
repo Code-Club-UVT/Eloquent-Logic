@@ -5,7 +5,7 @@ HeuristicsDB_DP::HeuristicsDB_DP(const size_t size) : size(size) {
     this->vector.resize(2 * size + 2);
 }
 
-HeuristicEntryDP& HeuristicsDB_DP::operator[](Literal lit) {
+HeuristicEntryDP &HeuristicsDB_DP::operator[](Literal lit) {
     if (lit < 0)
         return this->vector[2 * std::abs(lit) + 1];
     return this->vector[2 * lit];

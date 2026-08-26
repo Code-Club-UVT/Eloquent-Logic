@@ -14,15 +14,13 @@
 // rpc_exception(error_code::method_not_found, ...) for an unknown method;
 // anything a handler itself throws (rpc_exception or a liblogic exception)
 // simply propagates to the caller.
-namespace logic_agent::rpc
-{
-    struct dispatch_result
-    {
-        nlohmann::json result;
-        bool should_shutdown = false;
-    };
+namespace logic_agent::rpc {
+struct dispatch_result {
+    nlohmann::json result;
+    bool should_shutdown = false;
+};
 
-    dispatch_result dispatch(const rpc_request& request, event_sink& sink);
-}
+dispatch_result dispatch(const rpc_request &request, event_sink &sink);
+} // namespace logic_agent::rpc
 
-#endif //ELOQUENTLOGIC_AGENT_DISPATCHER_HPP
+#endif // ELOQUENTLOGIC_AGENT_DISPATCHER_HPP

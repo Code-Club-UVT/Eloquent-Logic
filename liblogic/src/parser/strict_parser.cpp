@@ -3,157 +3,141 @@
 //
 
 #include "strict_parser.hpp"
-#include "unknown_variable_error.hpp"
 #include "cursor.h"
+#include "unknown_variable_error.hpp"
 
-namespace eloquent::logic
-{
+namespace eloquent::logic {
 
-
-    std::shared_ptr<syntax_tree> strict_parser::parse(const std::vector<lexeme>& lexemes, const std::shared_ptr<strict_parser_listener_t>& listener)
-    {
-        listener->didStart();
-        std::shared_ptr<syntax_tree> result = std::make_shared<syntax_tree>();
-        lexeme_stream stream(lexemes);
-        Cursor cursor(result,listener);
-        lexeme l = stream.current();
-        bool found_lequi = false;
-        while (stream.can_continue())
+std::shared_ptr<syntax_tree> strict_parser::parse(
+    const std::vector<lexeme> &lexemes,
+    const std::shared_ptr<strict_parser_listener_t> &listener) {
+    listener->didStart();
+    std::shared_ptr<syntax_tree> result = std::make_shared<syntax_tree>();
+    lexeme_stream stream(lexemes);
+    Cursor cursor(result, listener);
+    lexeme l = stream.current();
+    bool found_lequi = false;
+    while (stream.can_continue()) {
+        switch (l.type()) {
+            using enum lexeme_type;
+        case LParen: // 2 posibilitati
         {
-            switch (l.type())
-            {
-                using enum lexeme_type;
-            case  LParen: // 2 posibilitati
-                {
-                    listener->startedProcessingParanthesis();
-                    bool unary  = stream.peek().type() == NotOp;
-                    bool binary = stream.peek().type() == LParen || is_atom(stream.peek().type());
-                    if (!unary && !binary)
-                        throw unknown_variable_error(l);
+            listener->startedProcessingParanthesis();
+            bool unary = stream.peek().type() == NotOp;
+            bool binary =
+                stream.peek().type() == LParen || is_atom(stream.peek().type());
+            if (!unary && !binary)
+                throw unknown_variable_error(l);
 
-                    if (cursor.tree_is_empty())
-                    {
-                        unary ? listener->acceptUnaryOpVariant() : listener->acceptBinaryOpVariant();
-                        cursor.grow_up_tree();
-                        cursor.spawn_new_child_node();
-                        if (binary) { cursor.spawn_new_child_node(); cursor.move_to_child(0); }
-                    }
-                    else
-                    {
-                        unary ? listener->acceptUnaryOpVariant() : listener->acceptBinaryOpVariant();
-                        lexeme arity_hint = lexeme::make(unary ? NotOp : AndOp, "", 0, 0);
-                        cursor.replace_child_with_placeholders(arity_hint);
-                        if (binary) cursor.move_to_child(0);
-                    }
-                    break;
-                }
-            case RParen:
-                {
-                    NodeObsPtr ptr = cursor.get_current_node();
-                    if (ptr->isRoot() && ptr->isBlank())
-                    {
-                        listener->foundAstError(cursor);
-                        throw unknown_variable_error(l);
-                    }
-                    if (!ptr->allChildrenAreWritten())
-                    {
-                        listener->foundAstError(cursor);
-                        throw unknown_variable_error(l);
-                    }
-                    cursor.up();
-                    break;
-                }
-            case Atom:
-            case Tautology:
-            case Contradiction:
-                {
-                    if (cursor.get_tree()->empty())
-                        cursor.grow_up_tree();
-                    if (cursor.get_arity() != 0)
-                    {
-                        listener->wrongArityForNode(cursor.get_current_node());
-                        throw unknown_variable_error(l);
-                    }
-                    cursor.write_to_node(l);
-                    cursor.up();
-                    break;
-                }
-            case AndOp:
-            case OrOp:
-            case ImpliesOp:
-            case IffOp:
-            case LEquiOp:
-                {
-                    if (l.type() == LEquiOp)
-                    {
-                        if (!found_lequi) found_lequi = true;
-                        else
-                        {
-                            listener->foundDoubleLEqui(l);
-                            throw unknown_variable_error(l);
-                        }
-                    }
-                    if (cursor.get_current_node() == nullptr)
-                    {
-                        listener->didTryInvalidPosition(nullptr, 0);
-                        throw unknown_variable_error(l);
-                    }
-                    if (!cursor.get_current_node()->isBlank())
-                    {
-                        listener->foundAstError(cursor);
-                        throw unknown_variable_error(l);
-                    }
-                    cursor.write_to_node(l);
-                    if (!cursor.has_child(1))
-                    {
-                        listener->wrongArityForNode(cursor.get_current_node());
-                        throw unknown_variable_error(l);
-                    }
-                    cursor.move_to_child(1); //right child
-                    break;
-                }
-            case NotOp:
-                {
-                    if (cursor.get_current_node() == nullptr)
-                    {
-                        listener->didTryInvalidPosition(nullptr, 0);
-                        throw unknown_variable_error(l);
-                    }
-                    if (!cursor.get_current_node()->isBlank())
-                    {
-                        listener->foundAstError(cursor);
-                        throw unknown_variable_error(l);
-                    }
-                    if (cursor.get_arity() != 1)
-                    {
-                        listener->wrongArityForNode(cursor.get_current_node());
-                        throw unknown_variable_error(l);
-                    }
-                    cursor.write_to_node(l);
+            if (cursor.tree_is_empty()) {
+                unary ? listener->acceptUnaryOpVariant()
+                      : listener->acceptBinaryOpVariant();
+                cursor.grow_up_tree();
+                cursor.spawn_new_child_node();
+                if (binary) {
+                    cursor.spawn_new_child_node();
                     cursor.move_to_child(0);
-                    break;
                 }
-            case Eof:
-                {
-                    if (cursor.get_current_node() != nullptr)
-                    {
-                        listener->foundAstError(cursor);
-                        throw unknown_variable_error(l);
-                    }
-                    break;
-                }
-            default:
-                {
-                    listener->foundUnexpectedToken(l);
+            } else {
+                unary ? listener->acceptUnaryOpVariant()
+                      : listener->acceptBinaryOpVariant();
+                lexeme arity_hint =
+                    lexeme::make(unary ? NotOp : AndOp, "", 0, 0);
+                cursor.replace_child_with_placeholders(arity_hint);
+                if (binary)
+                    cursor.move_to_child(0);
+            }
+            break;
+        }
+        case RParen: {
+            NodeObsPtr ptr = cursor.get_current_node();
+            if (ptr->isRoot() && ptr->isBlank()) {
+                listener->foundAstError(cursor);
+                throw unknown_variable_error(l);
+            }
+            if (!ptr->allChildrenAreWritten()) {
+                listener->foundAstError(cursor);
+                throw unknown_variable_error(l);
+            }
+            cursor.up();
+            break;
+        }
+        case Atom:
+        case Tautology:
+        case Contradiction: {
+            if (cursor.get_tree()->empty())
+                cursor.grow_up_tree();
+            if (cursor.get_arity() != 0) {
+                listener->wrongArityForNode(cursor.get_current_node());
+                throw unknown_variable_error(l);
+            }
+            cursor.write_to_node(l);
+            cursor.up();
+            break;
+        }
+        case AndOp:
+        case OrOp:
+        case ImpliesOp:
+        case IffOp:
+        case LEquiOp: {
+            if (l.type() == LEquiOp) {
+                if (!found_lequi)
+                    found_lequi = true;
+                else {
+                    listener->foundDoubleLEqui(l);
                     throw unknown_variable_error(l);
-                    break;
                 }
             }
-            l = stream.next();
+            if (cursor.get_current_node() == nullptr) {
+                listener->didTryInvalidPosition(nullptr, 0);
+                throw unknown_variable_error(l);
+            }
+            if (!cursor.get_current_node()->isBlank()) {
+                listener->foundAstError(cursor);
+                throw unknown_variable_error(l);
+            }
+            cursor.write_to_node(l);
+            if (!cursor.has_child(1)) {
+                listener->wrongArityForNode(cursor.get_current_node());
+                throw unknown_variable_error(l);
+            }
+            cursor.move_to_child(1); // right child
+            break;
         }
-        listener->didFinish();
-
-        return result;
-
+        case NotOp: {
+            if (cursor.get_current_node() == nullptr) {
+                listener->didTryInvalidPosition(nullptr, 0);
+                throw unknown_variable_error(l);
+            }
+            if (!cursor.get_current_node()->isBlank()) {
+                listener->foundAstError(cursor);
+                throw unknown_variable_error(l);
+            }
+            if (cursor.get_arity() != 1) {
+                listener->wrongArityForNode(cursor.get_current_node());
+                throw unknown_variable_error(l);
+            }
+            cursor.write_to_node(l);
+            cursor.move_to_child(0);
+            break;
+        }
+        case Eof: {
+            if (cursor.get_current_node() != nullptr) {
+                listener->foundAstError(cursor);
+                throw unknown_variable_error(l);
+            }
+            break;
+        }
+        default: {
+            listener->foundUnexpectedToken(l);
+            throw unknown_variable_error(l);
+            break;
+        }
+        }
+        l = stream.next();
     }
+    listener->didFinish();
+
+    return result;
 }
+} // namespace eloquent::logic

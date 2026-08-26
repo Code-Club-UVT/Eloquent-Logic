@@ -3,7 +3,7 @@
 #include <resolution_naive_first_fit.h>
 
 namespace {
-    auto listener = std::make_shared<eloquent::logic::sat_listener>();
+auto listener = std::make_shared<eloquent::logic::sat_listener>();
 }
 
 TEST(ResolutionUtilsTest, CanJoin_O_SinguraPerecheComplementara) {
@@ -93,25 +93,13 @@ TEST(ResolutionUtilsTest, Join_PivotNegativCaParametru) {
 }
 
 TEST(ResolutionTest, SATSmallSet) {
-    ClauseSet clauses = {
-        {1, 2, 3},
-        {-1, 2},
-        {-2, 3},
-        {1, -3},
-        {-1, -2, 3}
-    };
+    ClauseSet clauses = {{1, 2, 3}, {-1, 2}, {-2, 3}, {1, -3}, {-1, -2, 3}};
 
     EXPECT_EQ(res(clauses, listener), SatState::SAT);
 }
 
 TEST(ResolutionTest, UNSATSmallSet) {
-    ClauseSet clauses = {
-        {1, 2},
-        {-1, 2},
-        {1, -2, 3},
-        {-3},
-        {-1}
-    };
+    ClauseSet clauses = {{1, 2}, {-1, 2}, {1, -2, 3}, {-3}, {-1}};
 
     EXPECT_EQ(res(clauses, listener), SatState::UNSAT);
 }
@@ -119,12 +107,8 @@ TEST(ResolutionTest, UNSATSmallSet) {
 // 10 var, 6 clauze
 TEST(ResolutionTest, SATMediumSet) {
     ClauseSet clauses = {
-        {1, 2, 3},
-        {-1, -2, 4},
-        {2, -3, 5},
-        {-4, 6, 7},
-        {-5, -6, -8},
-        {8, 9, 10},
+        {1, 2, 3},  {-1, -2, 4},  {2, -3, 5},
+        {-4, 6, 7}, {-5, -6, -8}, {8, 9, 10},
     };
 
     EXPECT_EQ(res(clauses, listener), SatState::SAT);

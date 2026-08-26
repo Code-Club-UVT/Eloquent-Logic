@@ -4,16 +4,15 @@
 
 #include "rpc_response.hpp"
 
-rpc_response rpc_response::success(nlohmann::json id, nlohmann::json result)
-{
+rpc_response rpc_response::success(nlohmann::json id, nlohmann::json result) {
     rpc_response response;
     response.id = std::move(id);
     response.result = std::move(result);
     return response;
 }
 
-rpc_response rpc_response::failure(nlohmann::json id, int code, std::string message)
-{
+rpc_response rpc_response::failure(nlohmann::json id, int code,
+                                   std::string message) {
     rpc_response response;
     response.id = std::move(id);
     response.error = nlohmann::json{
@@ -23,18 +22,14 @@ rpc_response rpc_response::failure(nlohmann::json id, int code, std::string mess
     return response;
 }
 
-nlohmann::json rpc_response::to_json() const
-{
+nlohmann::json rpc_response::to_json() const {
     nlohmann::json j{
         {"jsonrpc", jsonrpc},
         {"id", id},
     };
-    if (!error.is_null())
-    {
+    if (!error.is_null()) {
         j["error"] = error;
-    }
-    else
-    {
+    } else {
         j["result"] = result;
     }
     return j;

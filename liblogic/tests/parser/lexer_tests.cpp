@@ -3,17 +3,15 @@
 #include <string>
 #include <vector>
 
-#include <lexer.hpp>
-#include "lexer_listener_t.hpp"
 #include "lexeme.hpp"
+#include "lexer_listener_t.hpp"
 #include <dictionary.h>
+#include <lexer.hpp>
 
-namespace eloquent::logic::testing
-{
+namespace eloquent::logic::testing {
 
-class mock_lexer_listener : public lexer_listener_t
-{
-public:
+class mock_lexer_listener : public lexer_listener_t {
+  public:
     bool started = false;
     bool finished = false;
     bool reached_eof = false;
@@ -24,27 +22,25 @@ public:
     void didStart() override { started = true; }
     void didFinish() override { finished = true; }
     void didReachEof() override { reached_eof = true; }
-    void didRecogniseLexeme(const lexeme& l) override { recognised.push_back(l); }
-    void didReadCharacter(const char& c) override { chars_read.push_back(c); }
-    void didFindUnexpectedSequence(std::string_view seq, size_t pos) override
-    {
+    void didRecogniseLexeme(const lexeme &l) override {
+        recognised.push_back(l);
+    }
+    void didReadCharacter(const char &c) override { chars_read.push_back(c); }
+    void didFindUnexpectedSequence(std::string_view seq, size_t pos) override {
         unexpected_sequences.emplace_back(std::string(seq), pos);
     }
 };
 
-class LexerTest : public ::testing::Test
-{
-protected:
+class LexerTest : public ::testing::Test {
+  protected:
     std::shared_ptr<mock_lexer_listener> listener;
 
-    void SetUp() override
-    {
+    void SetUp() override {
         listener = std::make_shared<mock_lexer_listener>();
     }
 };
 
-TEST_F(LexerTest, EmptyInputProducesOnlyEof)
-{
+TEST_F(LexerTest, EmptyInputProducesOnlyEof) {
     auto lexemes = lexer::lex("", listener);
 
     ASSERT_EQ(lexemes.size(), 1);
@@ -61,10 +57,10 @@ TEST_F(LexerTest, EmptyInputProducesOnlyEof)
     EXPECT_TRUE(listener->chars_read.empty());
 }
 
-TEST_F(LexerTest, WhitespaceIsSkippedButStillReported)
-{
+TEST_F(LexerTest, WhitespaceIsSkippedButStillReported) {
     // "(" and ")" surrounded by spaces: whitespace must not produce lexemes,
-    // but every character (including whitespace) is still reported via didReadCharacter.
+    // but every character (including whitespace) is still reported via
+    // didReadCharacter.
     auto lexemes = lexer::lex(" ( ) ", listener);
 
     ASSERT_EQ(lexemes.size(), 3);
@@ -77,10 +73,10 @@ TEST_F(LexerTest, WhitespaceIsSkippedButStillReported)
     EXPECT_EQ(listener->chars_read.size(), 5);
 }
 
-TEST_F(LexerTest, SingleLetterAtomFinalizedViaEof)
-{
-    // A bare atom name is only finalized once the lexer reaches end-of-text (ETX pass),
-    // since there's nothing after 'P' to signal the name is complete mid-stream.
+TEST_F(LexerTest, SingleLetterAtomFinalizedViaEof) {
+    // A bare atom name is only finalized once the lexer reaches end-of-text
+    // (ETX pass), since there's nothing after 'P' to signal the name is
+    // complete mid-stream.
     auto lexemes = lexer::lex("P", listener);
 
     ASSERT_EQ(lexemes.size(), 2);
@@ -97,8 +93,7 @@ TEST_F(LexerTest, SingleLetterAtomFinalizedViaEof)
     EXPECT_EQ(listener->recognised[0].token(), "P");
 }
 
-TEST_F(LexerTest, AtomWithSingleDigitSubscriptFinalizedMidStream)
-{
+TEST_F(LexerTest, AtomWithSingleDigitSubscriptFinalizedMidStream) {
     // Unlike the bare-name case, a single-digit subscript completes the atom
     // as soon as the digit is read, without needing the ETX pass.
     auto lexemes = lexer::lex("P_1", listener);
@@ -110,8 +105,7 @@ TEST_F(LexerTest, AtomWithSingleDigitSubscriptFinalizedMidStream)
     EXPECT_EQ(lexemes[0].end(), 2);
 }
 
-TEST_F(LexerTest, BracedSubscriptOddDigitCount)
-{
+TEST_F(LexerTest, BracedSubscriptOddDigitCount) {
     {
         auto lexemes = lexer::lex("P_{1}", listener);
         ASSERT_EQ(lexemes.size(), 2);
@@ -127,8 +121,7 @@ TEST_F(LexerTest, BracedSubscriptOddDigitCount)
     }
 }
 
-TEST_F(LexerTest, BracedSubscriptEvenDigitCountDoesNotThrow)
-{
+TEST_F(LexerTest, BracedSubscriptEvenDigitCountDoesNotThrow) {
     // Regression: atom_multichar_subscript_func used to ping-pong back into a
     // state that only accepted digits, so a closing '}' after an even number
     // of digits threw lexer_exception.
@@ -147,20 +140,23 @@ TEST_F(LexerTest, BracedSubscriptEvenDigitCountDoesNotThrow)
     }
 }
 
-TEST_F(LexerTest, ZeroSubscriptHandling)
-{
-    // Regression: the closing '}' branch used to drop the brace from the buffer,
-    // and leading-zero stripping used to operate on a temporary and do nothing.
-    struct Case { std::string input; std::string expected_token; };
+TEST_F(LexerTest, ZeroSubscriptHandling) {
+    // Regression: the closing '}' branch used to drop the brace from the
+    // buffer, and leading-zero stripping used to operate on a temporary and do
+    // nothing.
+    struct Case {
+        std::string input;
+        std::string expected_token;
+    };
     const std::vector<Case> cases = {
         {"P_{0}", "P_{0}"},
         {"P_{00}", "P_{0}"},
         {"P_{007}", "P_{7}"},
-        {"P_{102}", "P_{102}"}, // zero in the middle, not a leading zero: left untouched
+        {"P_{102}",
+         "P_{102}"}, // zero in the middle, not a leading zero: left untouched
     };
 
-    for (const auto& c : cases)
-    {
+    for (const auto &c : cases) {
         SCOPED_TRACE(c.input);
         auto fresh_listener = std::make_shared<mock_lexer_listener>();
         auto lexemes = lexer::lex(c.input, fresh_listener);
@@ -170,8 +166,7 @@ TEST_F(LexerTest, ZeroSubscriptHandling)
     }
 }
 
-TEST_F(LexerTest, Parentheses)
-{
+TEST_F(LexerTest, Parentheses) {
     auto lexemes = lexer::lex("()", listener);
 
     ASSERT_EQ(lexemes.size(), 3);
@@ -188,11 +183,13 @@ TEST_F(LexerTest, Parentheses)
     EXPECT_EQ(lexemes[2].type(), lexeme_type::Eof);
 }
 
-TEST_F(LexerTest, EveryOperatorSymbolStandalone)
-{
-    struct Case { std::string symbol; lexeme_type type; };
+TEST_F(LexerTest, EveryOperatorSymbolStandalone) {
+    struct Case {
+        std::string symbol;
+        lexeme_type type;
+    };
     const std::vector<Case> cases = {
-        {symbols::SYMB_NOT, lexeme_type::NotOp},           // regression: was unreachable
+        {symbols::SYMB_NOT, lexeme_type::NotOp}, // regression: was unreachable
         {symbols::SYMB_AND, lexeme_type::AndOp},
         {symbols::SYMB_OR, lexeme_type::OrOp},
         {symbols::SYMB_IMPL, lexeme_type::ImpliesOp},
@@ -202,8 +199,7 @@ TEST_F(LexerTest, EveryOperatorSymbolStandalone)
         {symbols::SYMB_CONTRADICTION, lexeme_type::Contradiction},
     };
 
-    for (const auto& c : cases)
-    {
+    for (const auto &c : cases) {
         SCOPED_TRACE(c.symbol);
         auto fresh_listener = std::make_shared<mock_lexer_listener>();
         auto lexemes = lexer::lex(c.symbol, fresh_listener);
@@ -216,10 +212,10 @@ TEST_F(LexerTest, EveryOperatorSymbolStandalone)
     }
 }
 
-TEST_F(LexerTest, OperatorImmediatelyAfterAtomNoSpace)
-{
+TEST_F(LexerTest, OperatorImmediatelyAfterAtomNoSpace) {
     // Regression: the operator's accumulation buffer wasn't re-seeded with the
-    // leading backslash after an atom->operator transition, so it never matched.
+    // leading backslash after an atom->operator transition, so it never
+    // matched.
     std::string input = "P" + std::string(symbols::SYMB_AND);
     auto lexemes = lexer::lex(input, listener);
 
@@ -231,8 +227,7 @@ TEST_F(LexerTest, OperatorImmediatelyAfterAtomNoSpace)
     EXPECT_EQ(lexemes[2].type(), lexeme_type::Eof);
 }
 
-TEST_F(LexerTest, OperatorAfterAtomWithSpace)
-{
+TEST_F(LexerTest, OperatorAfterAtomWithSpace) {
     std::string input = "P " + std::string(symbols::SYMB_AND) + " Q";
     auto lexemes = lexer::lex(input, listener);
 
@@ -242,16 +237,16 @@ TEST_F(LexerTest, OperatorAfterAtomWithSpace)
     EXPECT_EQ(lexemes[1].type(), lexeme_type::AndOp);
     EXPECT_EQ(lexemes[1].token(), symbols::SYMB_AND);
     // Known quirk (documented, not fixed): when an operator immediately follows
-    // an atom, in_lexeme/last_change get reset by the atom's own emission in the
-    // same loop iteration, so the operator's reported start lands on its second
-    // character rather than the leading backslash. Token type/text are unaffected.
+    // an atom, in_lexeme/last_change get reset by the atom's own emission in
+    // the same loop iteration, so the operator's reported start lands on its
+    // second character rather than the leading backslash. Token type/text are
+    // unaffected.
     EXPECT_EQ(lexemes[2].type(), lexeme_type::Atom);
     EXPECT_EQ(lexemes[2].token(), "Q");
     EXPECT_EQ(lexemes[3].type(), lexeme_type::Eof);
 }
 
-TEST_F(LexerTest, FullFormulaWithAnd)
-{
+TEST_F(LexerTest, FullFormulaWithAnd) {
     std::string input = "P " + std::string(symbols::SYMB_AND) + " Q";
     auto lexemes = lexer::lex(input, listener);
 
@@ -269,8 +264,7 @@ TEST_F(LexerTest, FullFormulaWithAnd)
     EXPECT_TRUE(listener->reached_eof);
 }
 
-TEST_F(LexerTest, FullFormulaWithNegation)
-{
+TEST_F(LexerTest, FullFormulaWithNegation) {
     std::string input = std::string(symbols::SYMB_NOT) + " P";
     auto lexemes = lexer::lex(input, listener);
 
@@ -282,8 +276,7 @@ TEST_F(LexerTest, FullFormulaWithNegation)
     EXPECT_EQ(lexemes[2].type(), lexeme_type::Eof);
 }
 
-TEST_F(LexerTest, UnrecognisedCharacterThrowsMidStream)
-{
+TEST_F(LexerTest, UnrecognisedCharacterThrowsMidStream) {
     EXPECT_THROW(lexer::lex("!", listener), lexer_exception);
 
     ASSERT_EQ(listener->unexpected_sequences.size(), 1);
@@ -294,8 +287,7 @@ TEST_F(LexerTest, UnrecognisedCharacterThrowsMidStream)
     EXPECT_FALSE(listener->reached_eof);
 }
 
-TEST_F(LexerTest, UnmatchedOperatorThrowsAtEndOfText)
-{
+TEST_F(LexerTest, UnmatchedOperatorThrowsAtEndOfText) {
     // "\bogus" is never a prefix match for any real operator symbol, so this is
     // only caught once the ETX pass confirms no symbol was ever completed.
     std::string input = "\\bogus";
@@ -307,15 +299,11 @@ TEST_F(LexerTest, UnmatchedOperatorThrowsAtEndOfText)
     EXPECT_TRUE(listener->finished);
 }
 
-TEST_F(LexerTest, LexerExceptionMessageContainsSequenceAndPosition)
-{
-    try
-    {
+TEST_F(LexerTest, LexerExceptionMessageContainsSequenceAndPosition) {
+    try {
         lexer::lex("!", listener);
         FAIL() << "expected lexer_exception to be thrown";
-    }
-    catch (const lexer_exception& ex)
-    {
+    } catch (const lexer_exception &ex) {
         std::string message = ex.what();
         EXPECT_NE(message.find('!'), std::string::npos);
         EXPECT_NE(message.find('0'), std::string::npos);

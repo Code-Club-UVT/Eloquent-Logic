@@ -4,125 +4,207 @@
 #include "../types/parser/cursor_events.hpp"
 #include "../types/transformations/node_transformation_events.hpp"
 
-namespace logic_agent::rpc
-{
-    void streaming_transformation_listener::emit_single_node(std::string_view method, eloquent::logic::NodeObsPtr node) const
-    {
-        logic_agent::types::parser::single_node_event_t dto;
-        dto.node = logic_agent::types::to_dto(node);
-        sink.emit(method, dto);
-    }
-
-    void streaming_transformation_listener::didStart() { sink.emit_empty("transform/didStart"); }
-
-    void streaming_transformation_listener::didFinish() { sink.emit_empty("transform/didFinish"); }
-
-    void streaming_transformation_listener::didSpawnNewSubtree(eloquent::logic::NodeObsPtr node) { emit_single_node("transform/didSpawnNewSubtree", node); }
-
-    void streaming_transformation_listener::didAdoptNode(eloquent::logic::NodeObsPtr parent, eloquent::logic::NodeObsPtr child)
-    {
-        logic_agent::types::transformations::adopt_node_event_t dto;
-        dto.parent = logic_agent::types::to_dto(parent);
-        dto.child = logic_agent::types::to_dto(child);
-        sink.emit("transform/didAdoptNode", dto);
-    }
-
-    void streaming_transformation_listener::didDisconnect(eloquent::logic::NodeObsPtr node, size_t index)
-    {
-        logic_agent::types::transformations::disconnect_event_t dto;
-        dto.node = logic_agent::types::to_dto(node);
-        dto.index = index;
-        sink.emit("transform/didDisconnect", dto);
-    }
-
-    void streaming_transformation_listener::didTransformNodeWithLexeme(eloquent::logic::NodeObsPtr node, eloquent::logic::lexeme lexeme)
-    {
-        logic_agent::types::transformations::transform_lexeme_event_t dto;
-        dto.node = logic_agent::types::to_dto(node);
-        dto.lexeme = logic_agent::types::to_dto(lexeme);
-        sink.emit("transform/didTransformNodeWithLexeme", dto);
-    }
-
-    void streaming_transformation_listener::didTransferNode(eloquent::logic::NodeObsPtr source, size_t index, eloquent::logic::NodeObsPtr destination)
-    {
-        logic_agent::types::transformations::transfer_node_event_t dto;
-        dto.source = logic_agent::types::to_dto(source);
-        dto.index = index;
-        dto.destination = logic_agent::types::to_dto(destination);
-        sink.emit("transform/didTransferNode", dto);
-    }
-
-    void streaming_transformation_listener::didDiscardAllChildren(eloquent::logic::NodeObsPtr node) { emit_single_node("transform/didDiscardAllChildren", node); }
-
-    void streaming_transformation_listener::didMatchLogicalImplication(eloquent::logic::NodeObsPtr node) { emit_single_node("transform/didMatchLogicalImplication", node); }
-
-    void streaming_transformation_listener::didReduceLogicalImplication(eloquent::logic::NodeObsPtr node) { emit_single_node("transform/didReduceLogicalImplication", node); }
-
-    void streaming_transformation_listener::didCondenseChild(eloquent::logic::NodeObsPtr parent, eloquent::logic::NodeObsPtr merged)
-    {
-        logic_agent::types::transformations::condense_child_event_t dto;
-        dto.parent = logic_agent::types::to_dto(parent);
-        dto.merged_child = logic_agent::types::to_dto(merged);
-        sink.emit("transform/didCondenseChild", dto);
-    }
-
-    void streaming_transformation_listener::didMatchEquivalence(eloquent::logic::NodeObsPtr node) { emit_single_node("transform/didMatchEquivalence", node); }
-
-    void streaming_transformation_listener::didReduceEquivalence(eloquent::logic::NodeObsPtr node) { emit_single_node("transform/didReduceEquivalence", node); }
-
-    void streaming_transformation_listener::didMatchImplication(eloquent::logic::NodeObsPtr node) { emit_single_node("transform/didMatchImplication", node); }
-
-    void streaming_transformation_listener::didReduceImplication(eloquent::logic::NodeObsPtr node) { emit_single_node("transform/didReduceImplication", node); }
-
-    void streaming_transformation_listener::didMatchDeMorganConjunction(eloquent::logic::NodeObsPtr node) { emit_single_node("transform/didMatchDeMorganConjunction", node); }
-
-    void streaming_transformation_listener::didApplyDeMorganConjunction(eloquent::logic::NodeObsPtr node) { emit_single_node("transform/didApplyDeMorganConjunction", node); }
-
-    void streaming_transformation_listener::didMatchDeMorganDisjunction(eloquent::logic::NodeObsPtr node) { emit_single_node("transform/didMatchDeMorganDisjunction", node); }
-
-    void streaming_transformation_listener::didApplyDeMorganDisjunction(eloquent::logic::NodeObsPtr node) { emit_single_node("transform/didApplyDeMorganDisjunction", node); }
-
-    void streaming_transformation_listener::didMatchDoubleNegation(eloquent::logic::NodeObsPtr node) { emit_single_node("transform/didMatchDoubleNegation", node); }
-
-    void streaming_transformation_listener::didEliminateDoubleNegation(eloquent::logic::NodeObsPtr node) { emit_single_node("transform/didEliminateDoubleNegation", node); }
-
-    void streaming_transformation_listener::didMatchInverter(eloquent::logic::NodeObsPtr node) { emit_single_node("transform/didMatchInverter", node); }
-
-    void streaming_transformation_listener::didInvertConstant(eloquent::logic::NodeObsPtr node) { emit_single_node("transform/didInvertConstant", node); }
-
-    void streaming_transformation_listener::didMatchNeutralElement(eloquent::logic::NodeObsPtr node) { emit_single_node("transform/didMatchNeutralElement", node); }
-
-    void streaming_transformation_listener::didCollapseToContradiction(eloquent::logic::NodeObsPtr node) { emit_single_node("transform/didCollapseToContradiction", node); }
-
-    void streaming_transformation_listener::didCollapseToTautology(eloquent::logic::NodeObsPtr node) { emit_single_node("transform/didCollapseToTautology", node); }
-
-    void streaming_transformation_listener::didDropNeutralElement(eloquent::logic::NodeObsPtr node) { emit_single_node("transform/didDropNeutralElement", node); }
-
-    void streaming_transformation_listener::didMatchAbsorption(eloquent::logic::NodeObsPtr node) { emit_single_node("transform/didMatchAbsorption", node); }
-
-    void streaming_transformation_listener::didApplyAbsorption(eloquent::logic::NodeObsPtr node) { emit_single_node("transform/didApplyAbsorption", node); }
-
-    void streaming_transformation_listener::didMatchAndDistribution(eloquent::logic::NodeObsPtr node) { emit_single_node("transform/didMatchAndDistribution", node); }
-
-    void streaming_transformation_listener::didDistributeAndOverOr(eloquent::logic::NodeObsPtr node) { emit_single_node("transform/didDistributeAndOverOr", node); }
-
-    void streaming_transformation_listener::didMatchOrDistribution(eloquent::logic::NodeObsPtr node) { emit_single_node("transform/didMatchOrDistribution", node); }
-
-    void streaming_transformation_listener::didDistributeOrOverAnd(eloquent::logic::NodeObsPtr node) { emit_single_node("transform/didDistributeOrOverAnd", node); }
-
-    void streaming_transformation_listener::didCheckCNF(eloquent::logic::NodeObsPtr node, bool result)
-    {
-        logic_agent::types::transformations::normal_form_check_event_t dto;
-        dto.node = logic_agent::types::to_dto(node);
-        dto.is_normal_form = result;
-        sink.emit("transform/didCheckCNF", dto);
-    }
-
-    void streaming_transformation_listener::didCheckDNF(eloquent::logic::NodeObsPtr node, bool result)
-    {
-        logic_agent::types::transformations::normal_form_check_event_t dto;
-        dto.node = logic_agent::types::to_dto(node);
-        dto.is_normal_form = result;
-        sink.emit("transform/didCheckDNF", dto);
-    }
+namespace logic_agent::rpc {
+void streaming_transformation_listener::emit_single_node(
+    std::string_view method, eloquent::logic::NodeObsPtr node) const {
+    logic_agent::types::parser::single_node_event_t dto;
+    dto.node = logic_agent::types::to_dto(node);
+    sink.emit(method, dto);
 }
+
+void streaming_transformation_listener::didStart() {
+    sink.emit_empty("transform/didStart");
+}
+
+void streaming_transformation_listener::didFinish() {
+    sink.emit_empty("transform/didFinish");
+}
+
+void streaming_transformation_listener::didSpawnNewSubtree(
+    eloquent::logic::NodeObsPtr node) {
+    emit_single_node("transform/didSpawnNewSubtree", node);
+}
+
+void streaming_transformation_listener::didAdoptNode(
+    eloquent::logic::NodeObsPtr parent, eloquent::logic::NodeObsPtr child) {
+    logic_agent::types::transformations::adopt_node_event_t dto;
+    dto.parent = logic_agent::types::to_dto(parent);
+    dto.child = logic_agent::types::to_dto(child);
+    sink.emit("transform/didAdoptNode", dto);
+}
+
+void streaming_transformation_listener::didDisconnect(
+    eloquent::logic::NodeObsPtr node, size_t index) {
+    logic_agent::types::transformations::disconnect_event_t dto;
+    dto.node = logic_agent::types::to_dto(node);
+    dto.index = index;
+    sink.emit("transform/didDisconnect", dto);
+}
+
+void streaming_transformation_listener::didTransformNodeWithLexeme(
+    eloquent::logic::NodeObsPtr node, eloquent::logic::lexeme lexeme) {
+    logic_agent::types::transformations::transform_lexeme_event_t dto;
+    dto.node = logic_agent::types::to_dto(node);
+    dto.lexeme = logic_agent::types::to_dto(lexeme);
+    sink.emit("transform/didTransformNodeWithLexeme", dto);
+}
+
+void streaming_transformation_listener::didTransferNode(
+    eloquent::logic::NodeObsPtr source, size_t index,
+    eloquent::logic::NodeObsPtr destination) {
+    logic_agent::types::transformations::transfer_node_event_t dto;
+    dto.source = logic_agent::types::to_dto(source);
+    dto.index = index;
+    dto.destination = logic_agent::types::to_dto(destination);
+    sink.emit("transform/didTransferNode", dto);
+}
+
+void streaming_transformation_listener::didDiscardAllChildren(
+    eloquent::logic::NodeObsPtr node) {
+    emit_single_node("transform/didDiscardAllChildren", node);
+}
+
+void streaming_transformation_listener::didMatchLogicalImplication(
+    eloquent::logic::NodeObsPtr node) {
+    emit_single_node("transform/didMatchLogicalImplication", node);
+}
+
+void streaming_transformation_listener::didReduceLogicalImplication(
+    eloquent::logic::NodeObsPtr node) {
+    emit_single_node("transform/didReduceLogicalImplication", node);
+}
+
+void streaming_transformation_listener::didCondenseChild(
+    eloquent::logic::NodeObsPtr parent, eloquent::logic::NodeObsPtr merged) {
+    logic_agent::types::transformations::condense_child_event_t dto;
+    dto.parent = logic_agent::types::to_dto(parent);
+    dto.merged_child = logic_agent::types::to_dto(merged);
+    sink.emit("transform/didCondenseChild", dto);
+}
+
+void streaming_transformation_listener::didMatchEquivalence(
+    eloquent::logic::NodeObsPtr node) {
+    emit_single_node("transform/didMatchEquivalence", node);
+}
+
+void streaming_transformation_listener::didReduceEquivalence(
+    eloquent::logic::NodeObsPtr node) {
+    emit_single_node("transform/didReduceEquivalence", node);
+}
+
+void streaming_transformation_listener::didMatchImplication(
+    eloquent::logic::NodeObsPtr node) {
+    emit_single_node("transform/didMatchImplication", node);
+}
+
+void streaming_transformation_listener::didReduceImplication(
+    eloquent::logic::NodeObsPtr node) {
+    emit_single_node("transform/didReduceImplication", node);
+}
+
+void streaming_transformation_listener::didMatchDeMorganConjunction(
+    eloquent::logic::NodeObsPtr node) {
+    emit_single_node("transform/didMatchDeMorganConjunction", node);
+}
+
+void streaming_transformation_listener::didApplyDeMorganConjunction(
+    eloquent::logic::NodeObsPtr node) {
+    emit_single_node("transform/didApplyDeMorganConjunction", node);
+}
+
+void streaming_transformation_listener::didMatchDeMorganDisjunction(
+    eloquent::logic::NodeObsPtr node) {
+    emit_single_node("transform/didMatchDeMorganDisjunction", node);
+}
+
+void streaming_transformation_listener::didApplyDeMorganDisjunction(
+    eloquent::logic::NodeObsPtr node) {
+    emit_single_node("transform/didApplyDeMorganDisjunction", node);
+}
+
+void streaming_transformation_listener::didMatchDoubleNegation(
+    eloquent::logic::NodeObsPtr node) {
+    emit_single_node("transform/didMatchDoubleNegation", node);
+}
+
+void streaming_transformation_listener::didEliminateDoubleNegation(
+    eloquent::logic::NodeObsPtr node) {
+    emit_single_node("transform/didEliminateDoubleNegation", node);
+}
+
+void streaming_transformation_listener::didMatchInverter(
+    eloquent::logic::NodeObsPtr node) {
+    emit_single_node("transform/didMatchInverter", node);
+}
+
+void streaming_transformation_listener::didInvertConstant(
+    eloquent::logic::NodeObsPtr node) {
+    emit_single_node("transform/didInvertConstant", node);
+}
+
+void streaming_transformation_listener::didMatchNeutralElement(
+    eloquent::logic::NodeObsPtr node) {
+    emit_single_node("transform/didMatchNeutralElement", node);
+}
+
+void streaming_transformation_listener::didCollapseToContradiction(
+    eloquent::logic::NodeObsPtr node) {
+    emit_single_node("transform/didCollapseToContradiction", node);
+}
+
+void streaming_transformation_listener::didCollapseToTautology(
+    eloquent::logic::NodeObsPtr node) {
+    emit_single_node("transform/didCollapseToTautology", node);
+}
+
+void streaming_transformation_listener::didDropNeutralElement(
+    eloquent::logic::NodeObsPtr node) {
+    emit_single_node("transform/didDropNeutralElement", node);
+}
+
+void streaming_transformation_listener::didMatchAbsorption(
+    eloquent::logic::NodeObsPtr node) {
+    emit_single_node("transform/didMatchAbsorption", node);
+}
+
+void streaming_transformation_listener::didApplyAbsorption(
+    eloquent::logic::NodeObsPtr node) {
+    emit_single_node("transform/didApplyAbsorption", node);
+}
+
+void streaming_transformation_listener::didMatchAndDistribution(
+    eloquent::logic::NodeObsPtr node) {
+    emit_single_node("transform/didMatchAndDistribution", node);
+}
+
+void streaming_transformation_listener::didDistributeAndOverOr(
+    eloquent::logic::NodeObsPtr node) {
+    emit_single_node("transform/didDistributeAndOverOr", node);
+}
+
+void streaming_transformation_listener::didMatchOrDistribution(
+    eloquent::logic::NodeObsPtr node) {
+    emit_single_node("transform/didMatchOrDistribution", node);
+}
+
+void streaming_transformation_listener::didDistributeOrOverAnd(
+    eloquent::logic::NodeObsPtr node) {
+    emit_single_node("transform/didDistributeOrOverAnd", node);
+}
+
+void streaming_transformation_listener::didCheckCNF(
+    eloquent::logic::NodeObsPtr node, bool result) {
+    logic_agent::types::transformations::normal_form_check_event_t dto;
+    dto.node = logic_agent::types::to_dto(node);
+    dto.is_normal_form = result;
+    sink.emit("transform/didCheckCNF", dto);
+}
+
+void streaming_transformation_listener::didCheckDNF(
+    eloquent::logic::NodeObsPtr node, bool result) {
+    logic_agent::types::transformations::normal_form_check_event_t dto;
+    dto.node = logic_agent::types::to_dto(node);
+    dto.is_normal_form = result;
+    sink.emit("transform/didCheckDNF", dto);
+}
+} // namespace logic_agent::rpc

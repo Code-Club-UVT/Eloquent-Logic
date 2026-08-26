@@ -10,11 +10,10 @@
 // vectors so they serialize as plain JSON arrays. All three are plain
 // container/alias types nlohmann::json already knows how to (de)serialize,
 // so no NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE macro is needed here.
-namespace logic_agent::types::sat
-{
-    using literal_t = std::int64_t;
-    using clause_t = std::vector<literal_t>;
-    using clause_set_t = std::vector<clause_t>;
-}
+namespace logic_agent::types::sat {
+using literal_t = std::int64_t;
+using clause_t = std::vector<literal_t>;
+using clause_set_t = std::vector<clause_t>;
+} // namespace logic_agent::types::sat
 
-#endif //ELOQUENTLOGIC_AGENT_SAT_COMMON_T_HPP
+#endif // ELOQUENTLOGIC_AGENT_SAT_COMMON_T_HPP

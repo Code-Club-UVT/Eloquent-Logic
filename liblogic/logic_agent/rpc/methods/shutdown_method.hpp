@@ -10,9 +10,8 @@
 // to report steps from). The server sends this method's Response as normal;
 // dispatcher.cpp's registry then tells agent.cpp's main loop to exit after
 // that Response is flushed — no further Requests are read from STDIN.
-namespace logic_agent::rpc::methods
-{
-    nlohmann::json handle_shutdown(const nlohmann::json& params, event_sink& sink);
+namespace logic_agent::rpc::methods {
+nlohmann::json handle_shutdown(const nlohmann::json &params, event_sink &sink);
 }
 
-#endif //ELOQUENTLOGIC_AGENT_SHUTDOWN_METHOD_HPP
+#endif // ELOQUENTLOGIC_AGENT_SHUTDOWN_METHOD_HPP

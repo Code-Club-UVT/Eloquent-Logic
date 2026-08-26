@@ -4,9 +4,6 @@
 
 #include "node_transformation_listener_t.hpp"
 
-namespace eloquent
-{
-    namespace logic
-    {
-    } // logic
-} // eloquent
+namespace eloquent {
+namespace logic {} // namespace logic
+} // namespace eloquent

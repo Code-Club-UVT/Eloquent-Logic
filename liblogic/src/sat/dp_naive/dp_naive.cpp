@@ -1,8 +1,8 @@
-#include <vector>
-#include <chrono>
-#include <map>
-#include <fstream>
 #include "dp_naive.h"
+#include <chrono>
+#include <fstream>
+#include <map>
+#include <vector>
 
 using eloquent::logic::sat_listener;
 
@@ -15,40 +15,45 @@ static std::size_t max_clauses = 0;
 
 constexpr std::size_t THRESHOLD = 71000000;
 
-void analyse(const Clause& c, HeuristicsDB_DP& db) {
-    for (auto& literal: c) {
+void analyse(const Clause &c, HeuristicsDB_DP &db) {
+    for (auto &literal : c) {
         ++db[literal];
         db[literal].set_literal(literal);
         db[-literal].set_literal(-literal);
     }
 }
 
-bool resolution(ClauseSet& cs, HeuristicsDB_DP& hdb, std::set<Literal>& single_polarity_literals, std::set<Literal>& single_literals, SatState& sat_result, const std::shared_ptr<sat_listener>& listener);
-static std::pair<bool,int64_t> can_join(const Clause& c1, const Clause& c2) {
+bool resolution(ClauseSet &cs, HeuristicsDB_DP &hdb,
+                std::set<Literal> &single_polarity_literals,
+                std::set<Literal> &single_literals, SatState &sat_result,
+                const std::shared_ptr<sat_listener> &listener);
+static std::pair<bool, int64_t> can_join(const Clause &c1, const Clause &c2) {
     size_t pairs = 0;
     int64_t lit = 0;
-    for (auto& literal: c1) {
-        if (c2.contains(literal*-1)) {
+    for (auto &literal : c1) {
+        if (c2.contains(literal * -1)) {
             ++pairs;
             lit = literal;
         }
     }
-    return {pairs == 1,lit};
+    return {pairs == 1, lit};
 }
 
-void process_clause_removal(HeuristicsDB_DP &db, const Clause& clause) {
-    for (auto &c_lit: clause)
+void process_clause_removal(HeuristicsDB_DP &db, const Clause &clause) {
+    for (auto &c_lit : clause)
         --db[c_lit];
 }
 
-bool one_literal_clause_rule(ClauseSet &cs, std::set<Literal>& single_literals, SatState &result, HeuristicsDB_DP& db, const std::shared_ptr<sat_listener>& listener) {
+bool one_literal_clause_rule(ClauseSet &cs, std::set<Literal> &single_literals,
+                             SatState &result, HeuristicsDB_DP &db,
+                             const std::shared_ptr<sat_listener> &listener) {
     while (!single_literals.empty()) {
-        for (const auto& lit: single_literals) {
+        for (const auto &lit : single_literals) {
             listener->didFindUnitLiteral(lit);
             std::vector<Clause> satisfied;
             std::vector<Clause> to_reduce;
 
-            for (const auto& clause : cs) {
+            for (const auto &clause : cs) {
                 if (clause.contains(lit)) {
                     satisfied.push_back(clause);
                     continue;
@@ -58,7 +63,7 @@ bool one_literal_clause_rule(ClauseSet &cs, std::set<Literal>& single_literals, 
                 }
             }
 
-            for (const auto& clause : satisfied) {
+            for (const auto &clause : satisfied) {
                 cs.erase(clause);
                 listener->didSatisfyClauseByUnitLiteral(clause, lit);
                 if (cs.empty()) {
@@ -66,13 +71,13 @@ bool one_literal_clause_rule(ClauseSet &cs, std::set<Literal>& single_literals, 
                     listener->didConcludeSat();
                     return true;
                 }
-                //std::cerr<<"Șterg clauza prin literal pur\n";
+                // std::cerr<<"Șterg clauza prin literal pur\n";
                 process_clause_removal(db, clause);
             }
 
-            for (const auto& clause : to_reduce) {
+            for (const auto &clause : to_reduce) {
                 cs.erase(clause);
-                //std::cerr<<"Șterg complementarul prin literal pur\n";
+                // std::cerr<<"Șterg complementarul prin literal pur\n";
                 Clause reduced = clause;
                 reduced.erase(-lit);
                 if (reduced.empty()) {
@@ -87,7 +92,7 @@ bool one_literal_clause_rule(ClauseSet &cs, std::set<Literal>& single_literals, 
             }
         }
         single_literals.clear();
-        for (const auto& clause: cs) {
+        for (const auto &clause : cs) {
             if (clause.size() == 1) {
                 single_literals.emplace(*clause.begin());
             }
@@ -96,19 +101,23 @@ bool one_literal_clause_rule(ClauseSet &cs, std::set<Literal>& single_literals, 
     return false;
 }
 
-bool single_polarity_rule(ClauseSet &cs, HeuristicsDB_DP &db, std::set<Literal>& single_polarity_literals, SatState &result, const std::shared_ptr<sat_listener>& listener) {
+bool single_polarity_rule(ClauseSet &cs, HeuristicsDB_DP &db,
+                          std::set<Literal> &single_polarity_literals,
+                          SatState &result,
+                          const std::shared_ptr<sat_listener> &listener) {
     while (!single_polarity_literals.empty()) {
-        for (const auto& literal: single_polarity_literals) {
+        for (const auto &literal : single_polarity_literals) {
             listener->didFindPureLiteral(literal);
             std::vector<Clause> to_erase;
-            for (const auto& clause : cs) {
+            for (const auto &clause : cs) {
                 if (clause.contains(literal)) {
                     to_erase.push_back(clause);
                 }
             }
-            for (const auto& clause : to_erase) {
+            for (const auto &clause : to_erase) {
                 cs.erase(clause);
-                //std::cerr<<"Șterg clauza prin literal cu aceiași polaritate\n";
+                // std::cerr<<"Șterg clauza prin literal cu aceiași
+                // polaritate\n";
                 process_clause_removal(db, clause);
                 listener->didEliminateClauseByPureLiteral(clause, literal);
                 if (cs.empty()) {
@@ -119,8 +128,8 @@ bool single_polarity_rule(ClauseSet &cs, HeuristicsDB_DP &db, std::set<Literal>&
             }
         }
         single_polarity_literals.clear();
-        for (const auto& clause: cs) {
-            for (const auto& literal: clause) {
+        for (const auto &clause : cs) {
+            for (const auto &literal : clause) {
                 if (db[-literal] == 0) {
                     single_polarity_literals.emplace(literal);
                 }
@@ -130,16 +139,17 @@ bool single_polarity_rule(ClauseSet &cs, HeuristicsDB_DP &db, std::set<Literal>&
     return false;
 }
 
-SatState davis_putnam(ClauseSet& cs, HeuristicsDB_DP& db, const std::shared_ptr<sat_listener>& listener) {
+SatState davis_putnam(ClauseSet &cs, HeuristicsDB_DP &db,
+                      const std::shared_ptr<sat_listener> &listener) {
 
     SatState result = SatState::UNKNOWN;
     std::set<Literal> single_polarity_literals;
     std::set<Literal> single_literals;
-    for (const auto& clause: cs) {
+    for (const auto &clause : cs) {
         if (clause.size() == 1) {
             single_literals.emplace(*clause.begin());
         }
-        for (const auto& literal: clause) {
+        for (const auto &literal : clause) {
             if (db[-literal] == 0) {
                 single_polarity_literals.emplace(literal);
             }
@@ -147,47 +157,56 @@ SatState davis_putnam(ClauseSet& cs, HeuristicsDB_DP& db, const std::shared_ptr<
     }
 
     while (true) {
-        if (one_literal_clause_rule(cs, single_literals, result, db, listener)) return result;
-        if (single_polarity_rule(cs, db, single_polarity_literals, result, listener)) return result;
-        if (resolution(cs,db,single_polarity_literals,single_literals,result, listener)) return result;
+        if (one_literal_clause_rule(cs, single_literals, result, db, listener))
+            return result;
+        if (single_polarity_rule(cs, db, single_polarity_literals, result,
+                                 listener))
+            return result;
+        if (resolution(cs, db, single_polarity_literals, single_literals,
+                       result, listener))
+            return result;
     }
 }
 
-static Clause join(const Clause& c1, const Clause& c2, const Literal l) {
+static Clause join(const Clause &c1, const Clause &c2, const Literal l) {
     Clause c12;
-    for (auto& lit : c1) {
+    for (auto &lit : c1) {
         c12.emplace(lit);
     }
-    for (auto& lit : c2) {
+    for (auto &lit : c2) {
         c12.emplace(lit);
     }
     c12.erase(l);
     c12.erase(-l);
     return c12;
 }
-bool resolution(ClauseSet& cs, HeuristicsDB_DP& hdb, std::set<Literal>& single_polarity_literals, std::set<Literal>& single_literals, SatState& sat_result, const std::shared_ptr<sat_listener>& listener) {
+bool resolution(ClauseSet &cs, HeuristicsDB_DP &hdb,
+                std::set<Literal> &single_polarity_literals,
+                std::set<Literal> &single_literals, SatState &sat_result,
+                const std::shared_ptr<sat_listener> &listener) {
     bool canMakeNewClause = false;
-    do
-    {
+    do {
         canMakeNewClause = false;
-        size_t iindex = 0,jindex=0;
-        for (auto i = cs.begin(); i != cs.end(); ++i,++iindex) {
+        size_t iindex = 0, jindex = 0;
+        for (auto i = cs.begin(); i != cs.end(); ++i, ++iindex) {
             auto j = i;
-            std::advance(j,1);
+            std::advance(j, 1);
 
-            for (jindex=iindex+1; j != cs.end(); ++j,++jindex) {
+            for (jindex = iindex + 1; j != cs.end(); ++j, ++jindex) {
                 if (cs.size() >= THRESHOLD) {
                     sat_result = SatState::UNKNOWN;
                     listener->didExceedClauseThreshold(cs.size());
                     listener->didConcludeUnknown();
                     return true;
                 }
-                auto result = can_join(*i,*j);
-                if (result.first == false) continue;
+                auto result = can_join(*i, *j);
+                if (result.first == false)
+                    continue;
 
                 listener->didSelectResolutionCandidates(*i, *j);
-                auto new_clause = join(*i,*j,result.second);
-                listener->didComputeResolvent(*i, *j, result.second, new_clause);
+                auto new_clause = join(*i, *j, result.second);
+                listener->didComputeResolvent(*i, *j, result.second,
+                                              new_clause);
 
                 if (new_clause.empty()) {
                     sat_result = SatState::UNSAT;
@@ -201,15 +220,14 @@ bool resolution(ClauseSet& cs, HeuristicsDB_DP& hdb, std::set<Literal>& single_p
                     continue;
                 }
 
-                for (const auto& lit: new_clause) {
+                for (const auto &lit : new_clause) {
                     ++hdb[lit];
                 }
                 bool should_repeat_dp = false;
                 if (hdb[result.second] > 0 && hdb[-result.second] == 0) {
                     single_polarity_literals.emplace(result.second);
                     should_repeat_dp = true;
-                }
-                else if (hdb[-result.second] > 0 && hdb[result.second] == 0) {
+                } else if (hdb[-result.second] > 0 && hdb[result.second] == 0) {
                     single_polarity_literals.emplace(-result.second);
                     should_repeat_dp = true;
                 }
@@ -220,26 +238,26 @@ bool resolution(ClauseSet& cs, HeuristicsDB_DP& hdb, std::set<Literal>& single_p
                 canMakeNewClause = true;
                 cs.emplace(new_clause);
                 listener->didAddResolvent(new_clause);
-                //reset_flag = true;
+                // reset_flag = true;
 
-                max_clauses = std::max(max_clauses,clauses.size());
-                if (should_repeat_dp) //nu am rezolvat, dar am găsit ceva "interesant"
+                max_clauses = std::max(max_clauses, clauses.size());
+                if (should_repeat_dp) // nu am rezolvat, dar am găsit ceva
+                                      // "interesant"
                     return false;
-
             }
         }
-    }
-    while (canMakeNewClause);
+    } while (canMakeNewClause);
     sat_result = SatState::SAT;
     listener->didReachResolutionSaturation();
     listener->didConcludeSat();
     return true;
 }
-int get_lit_total_count(const ClauseSet& c) {
+int get_lit_total_count(const ClauseSet &c) {
     int lit_total_count = 0;
 
-    for (const auto& clause : c) {
-        if (clause.empty()) continue;
+    for (const auto &clause : c) {
+        if (clause.empty())
+            continue;
 
         int first_abs = std::abs(*clause.begin());
         int last_abs = std::abs(*clause.rbegin());
@@ -252,16 +270,17 @@ int get_lit_total_count(const ClauseSet& c) {
 
     return lit_total_count;
 }
-void build_heuristics_db(const ClauseSet& c, HeuristicsDB_DP& db, const std::shared_ptr<sat_listener>& listener) {
+void build_heuristics_db(const ClauseSet &c, HeuristicsDB_DP &db,
+                         const std::shared_ptr<sat_listener> &listener) {
     int max_lit = get_lit_total_count(c);
     db.resize(max_lit);
 
-    for (const auto& clause : c) {
+    for (const auto &clause : c) {
         analyse(clause, db);
     }
     listener->didBuildHeuristicsDatabase(c);
 }
-SatState dp(ClauseSet c, const std::shared_ptr<sat_listener>& listener) {
+SatState dp(ClauseSet c, const std::shared_ptr<sat_listener> &listener) {
     listener->didStart();
     HeuristicsDB_DP db;
     build_heuristics_db(c, db, listener);
