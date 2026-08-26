@@ -16,6 +16,7 @@ namespace eloquent::logic {
 class node_transformation_listener_t;
 
 class logical_consequence {
+public:
     static bool solve_logical_consequence(
         std::shared_ptr<syntax_tree> &tree,
         const std::shared_ptr<logical_consequence_listener_t> &listener,

@@ -9,6 +9,7 @@
 #include "logical_implication.hpp"
 #include "mapping_generator.hpp"
 #include "transformation_runner.hpp"
+#include "../sat/resolution_naive_first_fit/resolution_naive_first_fit.h"
 
 namespace eloquent::logic {
 
@@ -31,11 +32,15 @@ bool logical_consequence::solve_logical_consequence(
     auto mappings = mapping_generator::gen_map(tree, mapper_listener);
     auto state = dpll_mcl(mappings.clauses, sat_listener);
 
+    bool result = false;
     if (state == SatState::UNSAT) {
-        listener->finalised_with_result(true);
+        result = true;
     } else {
-        listener->finalised_with_result(false);
+        result = false;
     }
+    listener->finalised_with_result(result);
     listener->didFinish();
+
+    return result;
 }
 } // namespace eloquent::logic
