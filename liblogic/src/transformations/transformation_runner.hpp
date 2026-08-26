@@ -25,8 +25,7 @@ namespace eloquent
     {
         class transformation_runner
         {
-            std::array<std::unique_ptr<tree_operation_base>, 8> transformations = {
-                std::make_unique<logical_implication>(),
+            std::array<std::unique_ptr<tree_operation_base>, 7> transformations = {
                 std::make_unique<EquivalenceReduction>(),
                 std::make_unique<ImplicationReduction>(),
                 std::make_unique<DeMorganConjunction>(),

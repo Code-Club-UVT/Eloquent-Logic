@@ -72,7 +72,7 @@ target_include_directories(logic_agent PRIVATE
 # exports its headers (transformation_runner.hpp, cnf_recogniser.hpp, ...)
 # via a PUBLIC FILE_SET, so linking it needs no extra include dir above.
 target_link_libraries(logic_agent PRIVATE
-        memutils
+        satutils
         dp_naive
         dpll_mcl
         dpll_rand

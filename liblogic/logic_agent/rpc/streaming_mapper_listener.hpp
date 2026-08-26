@@ -24,6 +24,7 @@ namespace logic_agent::rpc
         void didFinish() override;
         void did_map_literals(const std::map<std::string, Literal>& mapping) override;
         void did_map_clauses(const ClauseSet& clauses) override;
+
     };
 }
 
