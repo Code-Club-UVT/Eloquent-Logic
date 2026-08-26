@@ -12,7 +12,7 @@
 
 namespace eloquent {
 namespace logic {
-class incompatible_top_level_operator : std::exception {
+class incompatible_top_level_operator : public std::exception {
     std::string message;
 
   public:
