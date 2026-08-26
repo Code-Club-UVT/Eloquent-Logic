@@ -17,6 +17,7 @@ namespace eloquent::logic
         lexeme_stream stream(lexemes);
         Cursor cursor(result,listener);
         lexeme l = stream.current();
+        bool found_lequi = false;
         while (stream.can_continue())
         {
             switch (l.type())
@@ -83,6 +84,15 @@ namespace eloquent::logic
             case IffOp:
             case LEquiOp:
                 {
+                    if (l.type() == LEquiOp)
+                    {
+                        if (!found_lequi) found_lequi = true;
+                        else
+                        {
+                            listener->foundDoubleLEqui(l);
+                            throw unknown_variable_error(l);
+                        }
+                    }
                     if (cursor.get_current_node() == nullptr)
                     {
                         listener->didTryInvalidPosition(nullptr, 0);

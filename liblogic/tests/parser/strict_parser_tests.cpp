@@ -14,6 +14,7 @@ namespace eloquent::logic::testing
 class mock_parser_listener : public strict_parser_listener_t
 {
 public:
+    bool found_double_lequi = false;
     void didStart() override {}
     void didFinish() override {}
     void startedProcessingParanthesis() override {}
@@ -23,6 +24,7 @@ public:
     void didTryInvalidPosition(NodeObsPtr, size_t) override {}
     void wrongArityForNode(NodeObsPtr) override {}
     void foundUnexpectedToken(const lexeme&) override {}
+    void foundDoubleLEqui(const lexeme&) override {found_double_lequi = true;};
 };
 
 class StrictParserTest : public ::testing::Test
@@ -91,7 +93,24 @@ TEST_F(StrictParserTest, ParsesUnaryOperator)
     ASSERT_EQ(root->num_children(), 1);
     EXPECT_EQ(root->childAt(0)->getLexeme().type(), lexeme_type::Atom);
 }
+TEST_F(StrictParserTest, RejectsDoubleLEqui)
+{
+    // Formula: P \lequi Q \lequi R -> disallowed because of double logical consequence operators
+    auto tokens = make_stream({
+        Sym(lexeme_type::LParen),
+            Atom("P"),
+            Sym(lexeme_type::LEquiOp),
+            Sym(lexeme_type::LParen),
+                Atom("Q"),
+                Sym(lexeme_type::LEquiOp),
+                Atom("R"),
+            Sym(lexeme_type::RParen),
+        Sym(lexeme_type::RParen)
+    });
 
+    EXPECT_THROW(strict_parser::parse(tokens, listener), unknown_variable_error);
+    EXPECT_TRUE(listener->found_double_lequi);
+}
 TEST_F(StrictParserTest, ParsesBinaryOperator)
 {
     // Formula: (P & Q)

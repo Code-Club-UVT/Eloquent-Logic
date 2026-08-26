@@ -89,6 +89,7 @@ namespace eloquent::logic
         return lhs;
     }
 
+    bool found_lequi = false;
     NodePtr expr(size_t min_binding, lexeme_stream& stream, const std::shared_ptr<relaxed_parser_listener_t>& listener)
     {
         lexeme l = stream.current();
@@ -101,6 +102,15 @@ namespace eloquent::logic
             listener->didReadLexeme(l);
             if (l.type() == lexeme_type::Eof || l.type() == lexeme_type::RParen)
                 return lhs;
+            if (l.type() == lexeme_type::LEquiOp)
+            {
+                if (!found_lequi) found_lequi = true;
+                else
+                {
+                    listener->foundDoubleLEqui(l);
+                    throw unknown_variable_error(l);
+                }
+            }
             if (is_nary_operator(l.type()))
             {
                 lexeme op = l;
@@ -137,6 +147,7 @@ namespace eloquent::logic
     std::shared_ptr<syntax_tree> relaxed_parser::parse(const std::vector<lexeme>& lexemes, const std::shared_ptr<relaxed_parser_listener_t>& listener)
     {
         listener->didStart();
+        found_lequi = false;
         std::shared_ptr<syntax_tree> result = std::make_shared<syntax_tree>();
         lexeme_stream stream(lexemes);
         lexeme l = stream.current();

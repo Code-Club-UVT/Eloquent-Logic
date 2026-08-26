@@ -21,6 +21,7 @@ public:
     int pure_atom_in_parens_count = 0;
     int mismatched_parens_count = 0;
     int unexpected_token_count = 0;
+    bool found_dequi = false;
 
     void didStart() override { started = true; }
     void didFinish() override { finished = true; }
@@ -28,6 +29,7 @@ public:
     void didFindPureAtomInParens(const lexeme&, const lexeme&, const lexeme&) override { pure_atom_in_parens_count++; }
     void mismatchedParens(const lexeme&) override { mismatched_parens_count++; }
     void foundUnexpectedToken(const lexeme&) override { unexpected_token_count++; }
+    void foundDoubleLEqui(const lexeme&) override { found_dequi = true; };
 };
 
 class RelaxedParserTest : public ::testing::Test
@@ -38,6 +40,7 @@ protected:
     void SetUp() override
     {
         listener = std::make_shared<mock_relaxed_parser_listener>();
+
     }
 
     std::vector<lexeme> make_stream(const std::vector<lexeme>& tokens)
@@ -309,6 +312,20 @@ TEST_F(RelaxedParserTest, RejectsPureAtomInParens)
 
     EXPECT_THROW(relaxed_parser::parse(tokens, listener), unknown_variable_error);
     EXPECT_GT(listener->pure_atom_in_parens_count, 0);
+}
+TEST_F(RelaxedParserTest, RejectsDoubleLEqui)
+{
+    // Formula: P \lequi Q \lequi R -> disallowed because of double logical consequence operators
+    auto tokens = make_stream({
+        Atom("P"),
+        Sym(lexeme_type::LEquiOp),
+        Atom("Q"),
+        Sym(lexeme_type::LEquiOp),
+        Atom("R")
+    });
+
+    EXPECT_THROW(relaxed_parser::parse(tokens, listener), unknown_variable_error);
+    EXPECT_TRUE(listener->found_dequi);
 }
 
 TEST_F(RelaxedParserTest, RejectsMismatchedParens)

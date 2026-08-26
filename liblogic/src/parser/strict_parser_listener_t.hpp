@@ -19,6 +19,11 @@ namespace eloquent::logic
         virtual void didMakeNode(const NodeObsPtr&) {}
         virtual void didPlaceNodeAtCursor(const NodeObsPtr&) {}
         virtual void foundUnexpectedToken(const lexeme&) {}
+        // Since the logical consequence (here defined as l_equi) resolves into
+        // one singular truth value, allowing for multiple logical equivalences might
+        // complicate the code too much
+        // TODO: remove this restriction
+        virtual void foundDoubleLEqui(const lexeme&) {}
         virtual void foundMismatchedParanthesis() {}
         virtual void startedProcessingParanthesis() {}
         virtual void foundAstError(const Cursor&) {}
