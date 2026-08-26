@@ -39,6 +39,9 @@ add_executable(logic_agent agent.cpp
         rpc/streaming_mapper_listener.cpp
         rpc/streaming_sat_listener.hpp
         rpc/streaming_sat_listener.cpp
+        rpc/streaming_logical_consequence_listener.hpp
+        rpc/streaming_logical_consequence_listener.cpp
+        types/logical_consequence/logical_consequence_events.hpp
         rpc/methods/truth_table_method.hpp
         rpc/methods/truth_table_method.cpp
         rpc/methods/parse_method.hpp
@@ -47,6 +50,8 @@ add_executable(logic_agent agent.cpp
         rpc/methods/transform_method.cpp
         rpc/methods/sat_method.hpp
         rpc/methods/sat_method.cpp
+        rpc/methods/logical_consequence_method.hpp
+        rpc/methods/logical_consequence_method.cpp
         rpc/methods/shutdown_method.hpp
         rpc/methods/shutdown_method.cpp
         rpc/dispatcher.hpp
@@ -64,6 +69,7 @@ target_include_directories(logic_agent PRIVATE
         ${CMAKE_SOURCE_DIR}/src/sat/dpll_mcl
         ${CMAKE_SOURCE_DIR}/src/sat/dpll_rand
         ${CMAKE_SOURCE_DIR}/src/sat/resolution_naive_first_fit
+        ${CMAKE_SOURCE_DIR}/src/logical_consequence
 )
 
 # The "sat"/"transform" RPC methods call real (non-header-only) symbols from
@@ -78,6 +84,7 @@ target_link_libraries(logic_agent PRIVATE
         dpll_rand
         resolution_naive_first_fit
         libLogicTransformations
+        liblogic_logical_consequence
 )
 
 find_package(nlohmann_json)

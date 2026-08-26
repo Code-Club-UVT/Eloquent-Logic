@@ -99,20 +99,31 @@ NodePtr expr(size_t min_binding, lexeme_stream &stream,
         listener->didReadLexeme(l);
         if (l.type() == lexeme_type::Eof || l.type() == lexeme_type::RParen)
             return lhs;
-        if (l.type() == lexeme_type::LEquiOp) {
-            if (!found_lequi)
-                found_lequi = true;
-            else {
-                listener->foundDoubleLEqui(l);
-                throw unknown_variable_error(l);
-            }
-        }
         if (is_nary_operator(l.type())) {
             lexeme op = l;
             binding_power bp = binding_map.at(op.type());
             if (bp.left < min_binding) {
                 listener->didFindLowerPrecendenceOperator(op);
                 break;
+            }
+            // Only counts as "seeing" \models once we know it will actually
+            // be consumed as an operator at this recursion level (i.e. its
+            // binding power cleared the check above) -- not merely on the
+            // first peek at it, which happens once per enclosing recursion
+            // level while a higher-precedence operator's right-hand side is
+            // being parsed (see e.g. "A \vee B \models A": the inner expr()
+            // call parsing B's continuation peeks at \models, sees its
+            // binding power is too low, and breaks without consuming it;
+            // the outer call then peeks the same still-unconsumed token
+            // again to actually consume it). Checking on every peek instead
+            // of only on consumption made that a false "double \models".
+            if (op.type() == lexeme_type::LEquiOp) {
+                if (!found_lequi)
+                    found_lequi = true;
+                else {
+                    listener->foundDoubleLEqui(op);
+                    throw unknown_variable_error(op);
+                }
             }
             (void)stream.next(); // Consume operator token
             NodePtr root = Node::make_node(op);

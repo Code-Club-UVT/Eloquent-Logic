@@ -3,6 +3,7 @@
 #include <string>
 #include <unordered_map>
 
+#include "methods/logical_consequence_method.hpp"
 #include "methods/parse_method.hpp"
 #include "methods/sat_method.hpp"
 #include "methods/shutdown_method.hpp"
@@ -29,6 +30,7 @@ const std::unordered_map<std::string, registered_method> &method_registry() {
         {"parse", {&methods::handle_parse}},
         {"transform", {&methods::handle_transform}},
         {"sat", {&methods::handle_sat}},
+        {"logical_consequence", {&methods::handle_logical_consequence}},
         {"shutdown", {&methods::handle_shutdown, true}},
     };
     return registry;
