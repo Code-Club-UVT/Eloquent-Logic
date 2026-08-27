@@ -153,6 +153,9 @@ LogicEditorWindow::LogicEditorWindow(QWidget *parent) : QWidget(parent) {
     QPushButton *btnEval = new QPushButton("Syntactic Tree", this);
     QPushButton *btnSat = new QPushButton("SAT", this);
 
+    QPushButton *btnLogicalConseq = new QPushButton("Entailment (⊨)", this);
+    btnLogicalConseq->setFont(font);
+
     btnFNC->setObjectName("btnFNC");
 
     satAlgoSelector = new QComboBox(this);
@@ -172,6 +175,7 @@ LogicEditorWindow::LogicEditorWindow(QWidget *parent) : QWidget(parent) {
 
     actionLayout->addWidget(satAlgoSelector);
     actionLayout->addWidget(btnSat);
+    actionLayout->addWidget(btnLogicalConseq);
     actionLayout->addWidget(btnFNN);
     actionLayout->addWidget(btnFNC);
     actionLayout->addWidget(btnFND);
@@ -243,6 +247,17 @@ LogicEditorWindow::LogicEditorWindow(QWidget *parent) : QWidget(parent) {
         params["target"] = "dnf";
         resultOutput->setText("Computing DNF...");
         m_agent->sendRequest("transform", params, 5);
+    });
+
+    connect(btnLogicalConseq, &QPushButton::clicked, [this]() {
+        QJsonObject params;
+        params["formula"] = getFormulaWithSymbols();
+
+        resultOutput->setText("Checking logical consequence...");
+        resultOutput->setStyleSheet("color: black;");
+        logOutput->clear();
+
+        m_agent->sendRequest("logical_consequence", params, 7);
     });
 
     connect(m_agent, &AgentConnection::responseReceived, this, &LogicEditorWindow::onAgentResponse);
@@ -383,29 +398,38 @@ void LogicEditorWindow::onAgentResponse(int id, const QJsonObject &result) {
             resultOutput->setText("Response received, but it does not contain a tree.");
         }
     } else if (id == 6) {
-    bool isSat = false;
+        bool isSat = false;
 
-    // Citim varianta trimisă de backend-ul tău: "state": "SAT"
-    if (result.contains("state")) {
-        QString stateStr = result["state"].toString().toUpper();
-        if (stateStr == "SAT") {
-            isSat = true;
+        if (result.contains("state")) {
+            QString stateStr = result["state"].toString().toUpper();
+            if (stateStr == "SAT") {
+                isSat = true;
+            }
+        }
+        else if (result.contains("satisfiable")) {
+            isSat = result["satisfiable"].toBool();
+        }
+
+        if (isSat) {
+            resultOutput->setText("SAT Result: The formula is SATISFIABLE.");
+            resultOutput->setStyleSheet("color: green; font-weight: bold;");
+        } else {
+            resultOutput->setText("SAT Result: The formula is UNSATISFIABLE (Contradiction).");
+            resultOutput->setStyleSheet("color: red; font-weight: bold;");
+        }
+    } else if (id == 7) {
+        if (result.contains("result")) {
+            bool entails = result["result"].toBool();
+
+            if (entails) {
+                resultOutput->setText("Entailment Result: The logical consequence HOLDS (Valid).");
+                resultOutput->setStyleSheet("color: green; font-weight: bold;");
+            } else {
+                resultOutput->setText("Entailment Result: The logical consequence DOES NOT HOLD (Invalid).");
+                resultOutput->setStyleSheet("color: red; font-weight: bold;");
+            }
         }
     }
-    // Fallback în caz că în viitor modifici backend-ul să trimită boolean
-    else if (result.contains("satisfiable")) {
-        isSat = result["satisfiable"].toBool();
-    }
-
-    // Actualizăm interfața grafică
-    if (isSat) {
-        resultOutput->setText("SAT Result: The formula is SATISFIABLE.");
-        resultOutput->setStyleSheet("color: green; font-weight: bold;");
-    } else {
-        resultOutput->setText("SAT Result: The formula is UNSATISFIABLE (Contradiction).");
-        resultOutput->setStyleSheet("color: red; font-weight: bold;");
-    }
-}
 }
 
 void LogicEditorWindow::onAgentError(int id, const QJsonObject &error) {
