@@ -15,9 +15,8 @@
 // notification), so this is hand-parsed with nlohmann::json::value(...)
 // rather than NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE, whose generated
 // from_json uses .at() and throws on any missing key.
-class rpc_request
-{
-public:
+class rpc_request {
+  public:
     std::string jsonrpc = "2.0";
     std::string method;
     nlohmann::json params = nlohmann::json::object();
@@ -26,7 +25,7 @@ public:
     // Throws logic_agent::rpc::rpc_exception(-32600, ...) (see
     // logic_agent/rpc/rpc_exception.hpp) if `j` isn't a well-formed Request
     // object (not an object, wrong/missing "jsonrpc", or missing "method").
-    static rpc_request from_json(const nlohmann::json& j);
+    static rpc_request from_json(const nlohmann::json &j);
 };
 
-#endif //ELOQUENTLOGIC_RPC_REQUEST_HPP
+#endif // ELOQUENTLOGIC_RPC_REQUEST_HPP

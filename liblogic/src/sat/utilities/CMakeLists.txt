@@ -1,4 +1,4 @@
-add_library(memutils STATIC
+add_library(satutils STATIC
         common.h
         mapping_generator.cpp
         mapping_generator.hpp
@@ -6,5 +6,5 @@ add_library(memutils STATIC
         mapper_listener.hpp
         sat_listener.cpp
         sat_listener.hpp)
-target_link_libraries(memutils PRIVATE libLogicTransformations eloquent_logic_parser)
-target_link_libraries(memutils PUBLIC liblogicCommon)
+target_link_libraries(satutils PRIVATE libLogicTransformations eloquent_logic_parser)
+target_link_libraries(satutils PUBLIC liblogicCommon)

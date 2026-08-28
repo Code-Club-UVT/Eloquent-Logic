@@ -5,10 +5,6 @@
 #ifndef ELOQUENTLOGIC_FEEDBACK_BASE_HPP
 #define ELOQUENTLOGIC_FEEDBACK_BASE_HPP
 
+class feedback_base {};
 
-class feedback_base
-{
-};
-
-
-#endif //ELOQUENTLOGIC_FEEDBACK_BASE_HPP
+#endif // ELOQUENTLOGIC_FEEDBACK_BASE_HPP

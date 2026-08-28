@@ -20,4 +20,12 @@ class ConanApplication(ConanFile):
     def requirements(self):
         requirements = self.conan_data.get('requirements', [])
         for requirement in requirements:
-            self.requires(requirement)
+            # override=True for nlohmann_json only: json-schema-validator
+            # transitively requires an older nlohmann_json than this
+            # project pins directly, and override=True is how Conan is
+            # told our version should win that conflict. It still ends up
+            # a real, consumable dependency here because
+            # json-schema-validator's own (non-override) requirement
+            # supplies the real graph edge; override only repins its
+            # version.
+            self.requires(requirement, override=requirement.startswith("nlohmann_json/"))

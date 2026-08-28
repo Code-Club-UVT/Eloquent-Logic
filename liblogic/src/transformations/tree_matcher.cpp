@@ -4,9 +4,6 @@
 
 #include "tree_matcher.hpp"
 
-namespace eloquent
-{
-    namespace logic
-    {
-    } // logic
-} // eloquent
+namespace eloquent {
+namespace logic {} // namespace logic
+} // namespace eloquent

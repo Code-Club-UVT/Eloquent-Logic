@@ -183,6 +183,53 @@
       ]
     },
     {
+      "name": "logical_consequence",
+      "summary": "Parse a \\models formula and decide whether the entailment holds.",
+      "description": "Parses `formula`, which must have \"\\\\models\" as its single top-level operator (splitting it into Premises \\models Conclusion), then decides the entailment by rewriting it to Premises & ~Conclusion and checking that for unsatisfiability (streamed under transform/*, mapper/*, sat/* like the `sat` method, plus logical_consequence/* for the entailment-level callbacks themselves). UNSAT means the entailment holds. Throws incompatible_top_level_operator (reported as -32000 Server error) if `formula`'s top-level operator isn't \"\\\\models\". (logic_agent/rpc/methods/logical_consequence_method.cpp)",
+      "params": [
+        {
+          "name": "params",
+          "description": "The JSON-RPC \"params\" object.",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["formula"],
+            "properties": {
+              "formula": {
+                "type": "string",
+                "description": "A formula with \"\\\\models\" as its single top-level operator, e.g. \"A \\\\wedge (A \\\\implies B) \\\\models B\"."
+              },
+              "strict": {
+                "type": "boolean",
+                "default": false,
+                "description": "When true, use strict_parser instead of the default relaxed_parser."
+              }
+            }
+          }
+        }
+      ],
+      "result": {
+        "name": "logicalConsequenceResult",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["result"],
+          "properties": {
+            "result": {
+              "type": "boolean",
+              "description": "true iff Premises \\models Conclusion holds, i.e. Premises & ~Conclusion is unsatisfiable."
+            }
+          }
+        }
+      },
+      "errors": [
+        { "$ref": "#/components/errors/InvalidParams" },
+        { "$ref": "#/components/errors/ServerError" },
+        { "$ref": "#/components/errors/InternalError" }
+      ]
+    },
+    {
       "name": "truth_table",
       "summary": "Parse a formula and compute its full truth table.",
       "description": "Parses `formula` then evaluates it under every assignment of its variables, streaming every parser and truth-table-evaluation callback as a notification (categories lexer/*, parser/*|parser/strict/*, truth_table/* — see feedback-events.schema.json). (logic_agent/rpc/methods/truth_table_method.cpp)",
@@ -322,7 +369,7 @@
       "MethodNotFound": {
         "code": -32601,
         "message": "Method not found",
-        "data": "\"method\" is not one of parse, transform, sat, truth_table (logic_agent/rpc/dispatcher.cpp)."
+        "data": "\"method\" is not one of parse, transform, sat, logical_consequence, truth_table, shutdown (logic_agent/rpc/dispatcher.cpp)."
       },
       "InvalidParams": {
         "code": -32602,

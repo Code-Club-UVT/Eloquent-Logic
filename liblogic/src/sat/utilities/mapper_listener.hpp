@@ -10,17 +10,14 @@
 #include "feedback_listener.hpp"
 #include "node_transformation_listener_t.hpp"
 
-namespace eloquent
-{
-    namespace logic
-    {
-        class mapper_listener : public feedback_listener
-        {
-        public:
-            CB_FULL(did_map_literals,(const std::map<std::string,Literal>&))
-            CB_FULL(did_map_clauses,(const ClauseSet&))
-        };
-    } // logic
-} // eloquent
+namespace eloquent {
+namespace logic {
+class mapper_listener : public feedback_listener {
+  public:
+    CB_FULL(did_map_literals, (const std::map<std::string, Literal> &))
+    CB_FULL(did_map_clauses, (const ClauseSet &))
+};
+} // namespace logic
+} // namespace eloquent
 
-#endif //ELOQUENTLOGIC_MAPPING_LISTENER_HPP
+#endif // ELOQUENTLOGIC_MAPPING_LISTENER_HPP

@@ -1,66 +1,67 @@
 #include <gtest/gtest.h>
 #include <memory>
-#include <vector>
 #include <string>
+#include <vector>
 
-#include <relaxed_parser.hpp>
-#include "relaxed_parser_listener.hpp"
-#include <unknown_variable_error.hpp>
 #include "lexeme.hpp"
+#include "relaxed_parser_listener.hpp"
 #include <dictionary.h>
+#include <relaxed_parser.hpp>
+#include <unknown_variable_error.hpp>
 
-namespace eloquent::logic::testing
-{
+namespace eloquent::logic::testing {
 
-class mock_relaxed_parser_listener : public relaxed_parser_listener_t
-{
-public:
+class mock_relaxed_parser_listener : public relaxed_parser_listener_t {
+  public:
     bool started = false;
     bool finished = false;
     int parens_started = 0;
     int pure_atom_in_parens_count = 0;
     int mismatched_parens_count = 0;
     int unexpected_token_count = 0;
+    bool found_dequi = false;
 
     void didStart() override { started = true; }
     void didFinish() override { finished = true; }
-    void startParsingParens(const lexeme&) override { parens_started++; }
-    void didFindPureAtomInParens(const lexeme&, const lexeme&, const lexeme&) override { pure_atom_in_parens_count++; }
-    void mismatchedParens(const lexeme&) override { mismatched_parens_count++; }
-    void foundUnexpectedToken(const lexeme&) override { unexpected_token_count++; }
+    void startParsingParens(const lexeme &) override { parens_started++; }
+    void didFindPureAtomInParens(const lexeme &, const lexeme &,
+                                 const lexeme &) override {
+        pure_atom_in_parens_count++;
+    }
+    void mismatchedParens(const lexeme &) override {
+        mismatched_parens_count++;
+    }
+    void foundUnexpectedToken(const lexeme &) override {
+        unexpected_token_count++;
+    }
+    void foundDoubleLEqui(const lexeme &) override { found_dequi = true; };
 };
 
-class RelaxedParserTest : public ::testing::Test
-{
-protected:
+class RelaxedParserTest : public ::testing::Test {
+  protected:
     std::shared_ptr<mock_relaxed_parser_listener> listener;
 
-    void SetUp() override
-    {
+    void SetUp() override {
         listener = std::make_shared<mock_relaxed_parser_listener>();
     }
 
-    std::vector<lexeme> make_stream(const std::vector<lexeme>& tokens)
-    {
+    std::vector<lexeme> make_stream(const std::vector<lexeme> &tokens) {
         std::vector<lexeme> stream = tokens;
         stream.push_back(lexeme::make(lexeme_type::Eof, "", 0, 0));
         return stream;
     }
 
-    lexeme Atom(const std::string& name)
-    {
+    lexeme Atom(const std::string &name) {
         return lexeme::make(lexeme_type::Atom, name, 0, 0);
     }
 
-    lexeme Sym(lexeme_type type, const std::string& val = "")
-    {
+    lexeme Sym(lexeme_type type, const std::string &val = "") {
         return lexeme::make(type, val, 0, 0);
     }
 };
 
-TEST_F(RelaxedParserTest, ParsesSingleAtom)
-{
-    auto tokens = make_stream({ Atom("P") });
+TEST_F(RelaxedParserTest, ParsesSingleAtom) {
+    auto tokens = make_stream({Atom("P")});
 
     std::shared_ptr<syntax_tree> tree;
     EXPECT_NO_THROW(tree = relaxed_parser::parse(tokens, listener));
@@ -73,13 +74,10 @@ TEST_F(RelaxedParserTest, ParsesSingleAtom)
     EXPECT_TRUE(listener->finished);
 }
 
-TEST_F(RelaxedParserTest, ParsesUnaryNot)
-{
+TEST_F(RelaxedParserTest, ParsesUnaryNot) {
     // Formula: ~P
-    auto tokens = make_stream({
-        Sym(lexeme_type::NotOp, symbols::SYMB_NOT),
-        Atom("P")
-    });
+    auto tokens =
+        make_stream({Sym(lexeme_type::NotOp, symbols::SYMB_NOT), Atom("P")});
 
     std::shared_ptr<syntax_tree> tree;
     EXPECT_NO_THROW(tree = relaxed_parser::parse(tokens, listener));
@@ -93,14 +91,11 @@ TEST_F(RelaxedParserTest, ParsesUnaryNot)
     EXPECT_EQ(root->childAt(0)->getLexeme().token(), "P");
 }
 
-TEST_F(RelaxedParserTest, ParsesDoubleNegation)
-{
+TEST_F(RelaxedParserTest, ParsesDoubleNegation) {
     // Formula: ~~P
-    auto tokens = make_stream({
-        Sym(lexeme_type::NotOp, symbols::SYMB_NOT),
-        Sym(lexeme_type::NotOp, symbols::SYMB_NOT),
-        Atom("P")
-    });
+    auto tokens =
+        make_stream({Sym(lexeme_type::NotOp, symbols::SYMB_NOT),
+                     Sym(lexeme_type::NotOp, symbols::SYMB_NOT), Atom("P")});
 
     std::shared_ptr<syntax_tree> tree;
     EXPECT_NO_THROW(tree = relaxed_parser::parse(tokens, listener));
@@ -117,14 +112,10 @@ TEST_F(RelaxedParserTest, ParsesDoubleNegation)
     EXPECT_EQ(child->childAt(0)->getLexeme().token(), "P");
 }
 
-TEST_F(RelaxedParserTest, ParsesBinaryAnd)
-{
+TEST_F(RelaxedParserTest, ParsesBinaryAnd) {
     // Formula: P & Q
-    auto tokens = make_stream({
-        Atom("P"),
-        Sym(lexeme_type::AndOp, symbols::SYMB_AND),
-        Atom("Q")
-    });
+    auto tokens = make_stream(
+        {Atom("P"), Sym(lexeme_type::AndOp, symbols::SYMB_AND), Atom("Q")});
 
     std::shared_ptr<syntax_tree> tree;
     EXPECT_NO_THROW(tree = relaxed_parser::parse(tokens, listener));
@@ -138,14 +129,10 @@ TEST_F(RelaxedParserTest, ParsesBinaryAnd)
     EXPECT_EQ(root->childAt(1)->getLexeme().token(), "Q");
 }
 
-TEST_F(RelaxedParserTest, ParsesBinaryOr)
-{
+TEST_F(RelaxedParserTest, ParsesBinaryOr) {
     // Formula: P | Q
-    auto tokens = make_stream({
-        Atom("P"),
-        Sym(lexeme_type::OrOp, symbols::SYMB_OR),
-        Atom("Q")
-    });
+    auto tokens = make_stream(
+        {Atom("P"), Sym(lexeme_type::OrOp, symbols::SYMB_OR), Atom("Q")});
 
     std::shared_ptr<syntax_tree> tree;
     EXPECT_NO_THROW(tree = relaxed_parser::parse(tokens, listener));
@@ -159,14 +146,11 @@ TEST_F(RelaxedParserTest, ParsesBinaryOr)
     EXPECT_EQ(root->childAt(1)->getLexeme().token(), "Q");
 }
 
-TEST_F(RelaxedParserTest, ParsesBinaryImplies)
-{
+TEST_F(RelaxedParserTest, ParsesBinaryImplies) {
     // Formula: P -> Q
-    auto tokens = make_stream({
-        Atom("P"),
-        Sym(lexeme_type::ImpliesOp, symbols::SYMB_IMPL),
-        Atom("Q")
-    });
+    auto tokens =
+        make_stream({Atom("P"), Sym(lexeme_type::ImpliesOp, symbols::SYMB_IMPL),
+                     Atom("Q")});
 
     std::shared_ptr<syntax_tree> tree;
     EXPECT_NO_THROW(tree = relaxed_parser::parse(tokens, listener));
@@ -180,14 +164,10 @@ TEST_F(RelaxedParserTest, ParsesBinaryImplies)
     EXPECT_EQ(root->childAt(1)->getLexeme().token(), "Q");
 }
 
-TEST_F(RelaxedParserTest, ParsesBinaryIff)
-{
+TEST_F(RelaxedParserTest, ParsesBinaryIff) {
     // Formula: P <-> Q
-    auto tokens = make_stream({
-        Atom("P"),
-        Sym(lexeme_type::IffOp, symbols::SYMB_IFF),
-        Atom("Q")
-    });
+    auto tokens = make_stream(
+        {Atom("P"), Sym(lexeme_type::IffOp, symbols::SYMB_IFF), Atom("Q")});
 
     std::shared_ptr<syntax_tree> tree;
     EXPECT_NO_THROW(tree = relaxed_parser::parse(tokens, listener));
@@ -201,16 +181,11 @@ TEST_F(RelaxedParserTest, ParsesBinaryIff)
     EXPECT_EQ(root->childAt(1)->getLexeme().token(), "Q");
 }
 
-TEST_F(RelaxedParserTest, OperatorPrecedenceAndOr)
-{
+TEST_F(RelaxedParserTest, OperatorPrecedenceAndOr) {
     // Formula: P & Q | R  =>  (P & Q) | R because & (power 10) > | (power 9)
-    auto tokens = make_stream({
-        Atom("P"),
-        Sym(lexeme_type::AndOp, symbols::SYMB_AND),
-        Atom("Q"),
-        Sym(lexeme_type::OrOp, symbols::SYMB_OR),
-        Atom("R")
-    });
+    auto tokens = make_stream(
+        {Atom("P"), Sym(lexeme_type::AndOp, symbols::SYMB_AND), Atom("Q"),
+         Sym(lexeme_type::OrOp, symbols::SYMB_OR), Atom("R")});
 
     std::shared_ptr<syntax_tree> tree;
     EXPECT_NO_THROW(tree = relaxed_parser::parse(tokens, listener));
@@ -234,15 +209,11 @@ TEST_F(RelaxedParserTest, OperatorPrecedenceAndOr)
     EXPECT_EQ(root->childAt(1)->getLexeme().token(), "R");
 }
 
-TEST_F(RelaxedParserTest, OperatorPrecedenceNotAnd)
-{
+TEST_F(RelaxedParserTest, OperatorPrecedenceNotAnd) {
     // Formula: ~P & Q  =>  (~P) & Q
-    auto tokens = make_stream({
-        Sym(lexeme_type::NotOp, symbols::SYMB_NOT),
-        Atom("P"),
-        Sym(lexeme_type::AndOp, symbols::SYMB_AND),
-        Atom("Q")
-    });
+    auto tokens =
+        make_stream({Sym(lexeme_type::NotOp, symbols::SYMB_NOT), Atom("P"),
+                     Sym(lexeme_type::AndOp, symbols::SYMB_AND), Atom("Q")});
 
     std::shared_ptr<syntax_tree> tree;
     EXPECT_NO_THROW(tree = relaxed_parser::parse(tokens, listener));
@@ -265,18 +236,13 @@ TEST_F(RelaxedParserTest, OperatorPrecedenceNotAnd)
     EXPECT_EQ(root->childAt(1)->getLexeme().token(), "Q");
 }
 
-TEST_F(RelaxedParserTest, ParsesParenthesizedExpression)
-{
+TEST_F(RelaxedParserTest, ParsesParenthesizedExpression) {
     // Formula: P & (Q | R)  =>  overrides default precedence
-    auto tokens = make_stream({
-        Atom("P"),
-        Sym(lexeme_type::AndOp, symbols::SYMB_AND),
-        Sym(lexeme_type::LParen),
-        Atom("Q"),
-        Sym(lexeme_type::OrOp, symbols::SYMB_OR),
-        Atom("R"),
-        Sym(lexeme_type::RParen)
-    });
+    auto tokens =
+        make_stream({Atom("P"), Sym(lexeme_type::AndOp, symbols::SYMB_AND),
+                     Sym(lexeme_type::LParen), Atom("Q"),
+                     Sym(lexeme_type::OrOp, symbols::SYMB_OR), Atom("R"),
+                     Sym(lexeme_type::RParen)});
 
     std::shared_ptr<syntax_tree> tree;
     EXPECT_NO_THROW(tree = relaxed_parser::parse(tokens, listener));
@@ -298,75 +264,71 @@ TEST_F(RelaxedParserTest, ParsesParenthesizedExpression)
     EXPECT_EQ(right->childAt(1)->getLexeme().token(), "R");
 }
 
-TEST_F(RelaxedParserTest, RejectsPureAtomInParens)
-{
+TEST_F(RelaxedParserTest, RejectsPureAtomInParens) {
     // Formula: (P) -> disallowed in relaxed syntax
-    auto tokens = make_stream({
-        Sym(lexeme_type::LParen),
-        Atom("P"),
-        Sym(lexeme_type::RParen)
-    });
+    auto tokens = make_stream(
+        {Sym(lexeme_type::LParen), Atom("P"), Sym(lexeme_type::RParen)});
 
-    EXPECT_THROW(relaxed_parser::parse(tokens, listener), unknown_variable_error);
+    EXPECT_THROW(relaxed_parser::parse(tokens, listener),
+                 unknown_variable_error);
     EXPECT_GT(listener->pure_atom_in_parens_count, 0);
 }
+TEST_F(RelaxedParserTest, RejectsDoubleLEqui) {
+    // Formula: P \lequi Q \lequi R -> disallowed because of double logical
+    // consequence operators
+    auto tokens = make_stream({Atom("P"), Sym(lexeme_type::LEquiOp), Atom("Q"),
+                               Sym(lexeme_type::LEquiOp), Atom("R")});
 
-TEST_F(RelaxedParserTest, RejectsMismatchedParens)
-{
+    EXPECT_THROW(relaxed_parser::parse(tokens, listener),
+                 unknown_variable_error);
+    EXPECT_TRUE(listener->found_dequi);
+}
+
+TEST_F(RelaxedParserTest, RejectsMismatchedParens) {
     // Formula: (P & Q (missing closing paren)
-    auto tokens = make_stream({
-        Sym(lexeme_type::LParen),
-        Atom("P"),
-        Sym(lexeme_type::AndOp, symbols::SYMB_AND),
-        Atom("Q")
-    });
+    auto tokens =
+        make_stream({Sym(lexeme_type::LParen), Atom("P"),
+                     Sym(lexeme_type::AndOp, symbols::SYMB_AND), Atom("Q")});
 
-    EXPECT_THROW(relaxed_parser::parse(tokens, listener), unknown_variable_error);
+    EXPECT_THROW(relaxed_parser::parse(tokens, listener),
+                 unknown_variable_error);
     EXPECT_GT(listener->mismatched_parens_count, 0);
 }
 
-TEST_F(RelaxedParserTest, RejectsEmptyParens)
-{
+TEST_F(RelaxedParserTest, RejectsEmptyParens) {
     // Formula: ()
-    auto tokens = make_stream({
-        Sym(lexeme_type::LParen),
-        Sym(lexeme_type::RParen)
-    });
+    auto tokens =
+        make_stream({Sym(lexeme_type::LParen), Sym(lexeme_type::RParen)});
 
-    EXPECT_THROW(relaxed_parser::parse(tokens, listener), unknown_variable_error);
+    EXPECT_THROW(relaxed_parser::parse(tokens, listener),
+                 unknown_variable_error);
 }
 
-TEST_F(RelaxedParserTest, RejectsTrailingOperator)
-{
+TEST_F(RelaxedParserTest, RejectsTrailingOperator) {
     // Formula: P &
-    auto tokens = make_stream({
-        Atom("P"),
-        Sym(lexeme_type::AndOp, symbols::SYMB_AND)
-    });
+    auto tokens =
+        make_stream({Atom("P"), Sym(lexeme_type::AndOp, symbols::SYMB_AND)});
 
-    EXPECT_THROW(relaxed_parser::parse(tokens, listener), unknown_variable_error);
+    EXPECT_THROW(relaxed_parser::parse(tokens, listener),
+                 unknown_variable_error);
 }
 
-TEST_F(RelaxedParserTest, ParsesMultipleNegations)
-{
+TEST_F(RelaxedParserTest, ParsesMultipleNegations) {
     // Formula: ~~~~~~P (6 negations)
-    auto tokens = make_stream({
-        Sym(lexeme_type::NotOp, symbols::SYMB_NOT),
-        Sym(lexeme_type::NotOp, symbols::SYMB_NOT),
-        Sym(lexeme_type::NotOp, symbols::SYMB_NOT),
-        Sym(lexeme_type::NotOp, symbols::SYMB_NOT),
-        Sym(lexeme_type::NotOp, symbols::SYMB_NOT),
-        Sym(lexeme_type::NotOp, symbols::SYMB_NOT),
-        Atom("P")
-    });
+    auto tokens =
+        make_stream({Sym(lexeme_type::NotOp, symbols::SYMB_NOT),
+                     Sym(lexeme_type::NotOp, symbols::SYMB_NOT),
+                     Sym(lexeme_type::NotOp, symbols::SYMB_NOT),
+                     Sym(lexeme_type::NotOp, symbols::SYMB_NOT),
+                     Sym(lexeme_type::NotOp, symbols::SYMB_NOT),
+                     Sym(lexeme_type::NotOp, symbols::SYMB_NOT), Atom("P")});
 
     std::shared_ptr<syntax_tree> tree;
     EXPECT_NO_THROW(tree = relaxed_parser::parse(tokens, listener));
 
     ASSERT_NE(tree, nullptr);
     auto curr = tree->rootRef();
-    for (int i = 0; i < 6; ++i)
-    {
+    for (int i = 0; i < 6; ++i) {
         ASSERT_NE(curr, nullptr);
         EXPECT_EQ(curr->getLexeme().type(), lexeme_type::NotOp);
         ASSERT_EQ(curr->num_children(), 1);
@@ -377,16 +339,11 @@ TEST_F(RelaxedParserTest, ParsesMultipleNegations)
     EXPECT_EQ(curr->getLexeme().token(), "P");
 }
 
-TEST_F(RelaxedParserTest, RightAssociationImplies)
-{
+TEST_F(RelaxedParserTest, RightAssociationImplies) {
     // Formula: P -> Q -> R  =>  P -> (Q -> R)
-    auto tokens = make_stream({
-        Atom("P"),
-        Sym(lexeme_type::ImpliesOp, symbols::SYMB_IMPL),
-        Atom("Q"),
-        Sym(lexeme_type::ImpliesOp, symbols::SYMB_IMPL),
-        Atom("R")
-    });
+    auto tokens = make_stream(
+        {Atom("P"), Sym(lexeme_type::ImpliesOp, symbols::SYMB_IMPL), Atom("Q"),
+         Sym(lexeme_type::ImpliesOp, symbols::SYMB_IMPL), Atom("R")});
 
     std::shared_ptr<syntax_tree> tree;
     EXPECT_NO_THROW(tree = relaxed_parser::parse(tokens, listener));
@@ -410,16 +367,12 @@ TEST_F(RelaxedParserTest, RightAssociationImplies)
     EXPECT_EQ(right->childAt(1)->getLexeme().token(), "R");
 }
 
-TEST_F(RelaxedParserTest, RightAssociationAnd)
-{
-    // Formula: P & Q & R  =>  P & (Q & R) since all n-ary operators are right-associative
-    auto tokens = make_stream({
-        Atom("P"),
-        Sym(lexeme_type::AndOp, symbols::SYMB_AND),
-        Atom("Q"),
-        Sym(lexeme_type::AndOp, symbols::SYMB_AND),
-        Atom("R")
-    });
+TEST_F(RelaxedParserTest, RightAssociationAnd) {
+    // Formula: P & Q & R  =>  P & (Q & R) since all n-ary operators are
+    // right-associative
+    auto tokens = make_stream(
+        {Atom("P"), Sym(lexeme_type::AndOp, symbols::SYMB_AND), Atom("Q"),
+         Sym(lexeme_type::AndOp, symbols::SYMB_AND), Atom("R")});
 
     std::shared_ptr<syntax_tree> tree;
     EXPECT_NO_THROW(tree = relaxed_parser::parse(tokens, listener));
@@ -443,15 +396,12 @@ TEST_F(RelaxedParserTest, RightAssociationAnd)
     EXPECT_EQ(right->childAt(1)->getLexeme().token(), "R");
 }
 
-TEST_F(RelaxedParserTest, RejectsMissingOperator)
-{
+TEST_F(RelaxedParserTest, RejectsMissingOperator) {
     // Formula: P Q
-    auto tokens = make_stream({
-        Atom("P"),
-        Atom("Q")
-    });
+    auto tokens = make_stream({Atom("P"), Atom("Q")});
 
-    EXPECT_THROW(relaxed_parser::parse(tokens, listener), unknown_variable_error);
+    EXPECT_THROW(relaxed_parser::parse(tokens, listener),
+                 unknown_variable_error);
 }
 
 } // namespace eloquent::logic::testing

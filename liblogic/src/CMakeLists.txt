@@ -9,6 +9,7 @@ target_link_libraries(eloquent_logic PUBLIC eloquent_logic_parser liblogicTruthT
 
 add_subdirectory(truth_table)
 add_subdirectory(transformations)
+add_subdirectory(logical_consequence)
 
 target_compile_options(eloquent_logic PRIVATE $<$<AND:$<CONFIG:Debug>,$<NOT:$<CXX_COMPILER_ID:MSVC>>>:-g -Wall -Wextra -Werror -Warray-bounds -Wno-unused-parameter >$<$<AND:$<CONFIG:Release>,$<NOT:$<CXX_COMPILER_ID:MSVC>>>:-O3>)
 

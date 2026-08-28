@@ -8,11 +8,10 @@
 
 #include <lexeme.hpp>
 
-namespace eloquent::logic::testing
-{
-    lexeme Atom(const std::string& name);
+namespace eloquent::logic::testing {
+lexeme Atom(const std::string &name);
 
-    lexeme Sym(lexeme_type type, const std::string& val = "");
+lexeme Sym(lexeme_type type, const std::string &val = "");
 
-    std::vector<lexeme> make_stream(const std::vector<lexeme>& tokens);
-}
+std::vector<lexeme> make_stream(const std::vector<lexeme> &tokens);
+} // namespace eloquent::logic::testing

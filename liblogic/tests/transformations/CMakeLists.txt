@@ -13,7 +13,7 @@ target_include_directories(transformations_test PRIVATE ${PROJECT_SOURCE_DIR}/sr
 # they share) don't export their headers via target_include_directories/
 # FILE_SET the way eloquent_logic_parser does, so the include dirs below are
 # needed explicitly (mirrors logic_agent/CMakeLists.txt's own setup).
-target_link_libraries(transformations_test PRIVATE memutils dpll_mcl resolution_naive_first_fit)
+target_link_libraries(transformations_test PRIVATE satutils dpll_mcl resolution_naive_first_fit)
 target_include_directories(transformations_test PRIVATE
         ${PROJECT_SOURCE_DIR}/src/sat/utilities
         ${PROJECT_SOURCE_DIR}/src/sat/dpll_mcl

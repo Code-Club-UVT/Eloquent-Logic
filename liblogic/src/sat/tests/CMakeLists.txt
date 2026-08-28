@@ -44,25 +44,25 @@ target_include_directories(TestResolution PRIVATE
 target_link_libraries(TestResolution PRIVATE
         GTest::gtest
         GTest::gtest_main
-        memutils
+        satutils
 )
 
 target_link_libraries(TestDP PRIVATE
         GTest::gtest
         GTest::gtest_main
-        memutils
+        satutils
 )
 
 target_link_libraries(TestDPLL_RAND PRIVATE
         GTest::gtest
         GTest::gtest_main
-        memutils
+        satutils
 )
 
 target_link_libraries(TestDPLL_MCL PRIVATE
         GTest::gtest
         GTest::gtest_main
-        memutils
+        satutils
 )
 
 include(GoogleTest)

@@ -22,25 +22,22 @@
 #include "types/rpc_request.hpp"
 #include "types/rpc_response.hpp"
 
-int main()
-{
+int main() {
     // Skip whitespace first (including the trailing newline left after the
     // previous iteration's read) so peek() below sees a true EOF once STDIN
     // is genuinely exhausted, rather than one more (empty) round.
-    while (std::cin >> std::ws && std::cin.peek() != std::char_traits<char>::eof())
-    {
+    while (std::cin >> std::ws &&
+           std::cin.peek() != std::char_traits<char>::eof()) {
         nlohmann::json input;
         nlohmann::json id = nullptr;
         bool should_shutdown = false;
 
-        try
-        {
+        try {
             // nlohmann's operator>> throws json::parse_error (rather than
             // just failing the stream) on malformed input, so this has to
             // be inside the try block too, not just the dispatch below.
             std::cin >> input;
-            if (input.is_object() && input.contains("id"))
-            {
+            if (input.is_object() && input.contains("id")) {
                 id = input.at("id");
             }
 
@@ -51,32 +48,42 @@ int main()
             auto dispatched = logic_agent::rpc::dispatch(request, sink);
             should_shutdown = dispatched.should_shutdown;
 
-            std::cout << rpc_response::success(request.id, std::move(dispatched.result)).to_json().dump() << "\n";
-        }
-        catch (const nlohmann::json::parse_error& e)
-        {
-            std::cout << rpc_response::failure(id, logic_agent::rpc::error_code::parse_error, e.what()).to_json().dump() << "\n";
+            std::cout << rpc_response::success(request.id,
+                                               std::move(dispatched.result))
+                             .to_json()
+                             .dump()
+                      << "\n";
+        } catch (const nlohmann::json::parse_error &e) {
+            std::cout << rpc_response::failure(
+                             id, logic_agent::rpc::error_code::parse_error,
+                             e.what())
+                             .to_json()
+                             .dump()
+                      << "\n";
             // Give up on whatever's left of this line rather than retrying
             // byte-by-byte against the same garbage (which would otherwise
             // emit one parse_error per resync attempt).
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        }
-        catch (const logic_agent::rpc::rpc_exception& e)
-        {
-            std::cout << rpc_response::failure(id, e.code(), e.what()).to_json().dump() << "\n";
-        }
-        catch (const std::exception& e)
-        {
-            std::cout << rpc_response::failure(id, logic_agent::rpc::error_code::server_error, e.what()).to_json().dump() << "\n";
+        } catch (const logic_agent::rpc::rpc_exception &e) {
+            std::cout << rpc_response::failure(id, e.code(), e.what())
+                             .to_json()
+                             .dump()
+                      << "\n";
+        } catch (const std::exception &e) {
+            std::cout << rpc_response::failure(
+                             id, logic_agent::rpc::error_code::server_error,
+                             e.what())
+                             .to_json()
+                             .dump()
+                      << "\n";
         }
 
         std::cout.flush();
 
         // Only the success path above can set this — a "shutdown" request
         // that itself failed to parse/dispatch must not terminate the loop.
-        if (should_shutdown)
-        {
+        if (should_shutdown) {
             break;
         }
     }

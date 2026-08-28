@@ -1,3 +1,3 @@
 add_library(resolution_naive_first_fit resolution_naive_first_fit.cpp
         resolution_naive_first_fit.h)
-target_link_libraries(resolution_naive_first_fit PRIVATE memutils)
+target_link_libraries(resolution_naive_first_fit PRIVATE satutils)

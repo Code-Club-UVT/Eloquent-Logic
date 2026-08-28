@@ -2,8 +2,7 @@
 #include <iostream>
 
 HeuristicEntryDP::HeuristicEntryDP(Literal l, size_t occurences)
-    : literal(l), occurrences(occurences) {
-}
+    : literal(l), occurrences(occurences) {}
 
 HeuristicEntryDP::HeuristicEntryDP() {
     literal = 0;
@@ -21,17 +20,11 @@ HeuristicEntryDP &HeuristicEntryDP::operator++() {
     return *this;
 }
 
-Literal HeuristicEntryDP::get_literal() const {
-    return literal;
-}
+Literal HeuristicEntryDP::get_literal() const { return literal; }
 
-size_t HeuristicEntryDP::get_occurrences() const {
-    return occurrences;
-}
+size_t HeuristicEntryDP::get_occurrences() const { return occurrences; }
 
-void HeuristicEntryDP::set_literal(const Literal l) {
-    this->literal = l;
-}
+void HeuristicEntryDP::set_literal(const Literal l) { this->literal = l; }
 
 HeuristicEntryDP &HeuristicEntryDP::operator--() {
     if (occurrences != 0)
@@ -45,8 +38,7 @@ HeuristicEntryDP HeuristicEntryDP::operator--(int) {
     const HeuristicEntryDP e = *this;
     if (occurrences != 0) {
         this->occurrences--;
-    }
-    else [[unlikely]]
+    } else [[unlikely]]
         std::cerr << "Decrementare ilegală pentru " << this->literal << '\n';
 
     return e;

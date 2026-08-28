@@ -4,7 +4,7 @@ option(ENABLE_DPLL_RAND "Whether to build the Davis–Putnam–Logemann–Lovela
 option(ENABLE_DPLL_MCL "Whether to build the Davis–Putnam–Logemann–Loveland algorithm (Most common literal/MCL approach)" YES)
 
 add_subdirectory(utilities)
-target_sources(memutils PUBLIC FILE_SET HEADERS FILES BASE_DIRS utilities)
+target_sources(satutils PUBLIC FILE_SET HEADERS FILES BASE_DIRS utilities)
 if (ENABLE_RESOLUTION_NAIVE)
     add_subdirectory(resolution_naive_first_fit)
 endif ()

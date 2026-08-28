@@ -1,22 +1,23 @@
-#include <fstream>
-#include <filesystem>
-#include <sstream>
+#include "dpll_mcl.h"
+#include "dpll_utils.h"
+#include <algorithm>
 #include <chrono>
 #include <cmath>
-#include <algorithm>
 #include <cstring>
-#include "dpll_utils.h"
-#include "dpll_mcl.h"
+#include <filesystem>
+#include <fstream>
+#include <sstream>
 
 using eloquent::logic::sat_listener;
 
 namespace fs = std::filesystem;
 
-static int get_lit_total_count(const ClauseSet& c) {
+static int get_lit_total_count(const ClauseSet &c) {
     int lit_total_count = 0;
 
-    for (const auto& clause : c) {
-        if (clause.empty()) continue;
+    for (const auto &clause : c) {
+        if (clause.empty())
+            continue;
 
         int first_abs = std::abs(*clause.begin());
         int last_abs = std::abs(*clause.rbegin());
@@ -36,12 +37,14 @@ static int get_lit_total_count(const ClauseSet& c) {
     ClauseSet clauses;
     while (!f.eof()) {
         std::string line;
-        std::getline(f,line);
-        if (line.empty()) break;
-        if (line =="%" || line=="0") continue;
+        std::getline(f, line);
+        if (line.empty())
+            break;
+        if (line == "%" || line == "0")
+            continue;
 
         while (line.starts_with('c')) {
-            std::getline(f,line);
+            std::getline(f, line);
         }
         if (line.starts_with("p cnf ")) {
             line = line.substr(strlen("p cnf "));
@@ -52,8 +55,9 @@ static int get_lit_total_count(const ClauseSet& c) {
         std::istringstream is(line);
         Clause c;
         int64_t lit = 0;
-        while (is>>lit) {
-            if (lit == 0) break;
+        while (is >> lit) {
+            if (lit == 0)
+                break;
             c.emplace(lit);
         }
         clauses.emplace(c);
@@ -62,14 +66,15 @@ static int get_lit_total_count(const ClauseSet& c) {
     return clauses;
 }
 
-SatState dpll_mcl(ClauseSet c, const std::shared_ptr<sat_listener>& listener) {
+SatState dpll_mcl(ClauseSet c, const std::shared_ptr<sat_listener> &listener) {
     listener->didStart();
     SatState state = SatState::UNKNOWN;
     int clause_total_count = c.size();
     int lit_total_count = get_lit_total_count(c);
     Sat s(clause_total_count, lit_total_count, c);
 
-    state = det_satisfiability(s, listener) == true ? SatState::SAT : SatState::UNSAT;
+    state = det_satisfiability(s, listener) == true ? SatState::SAT
+                                                    : SatState::UNSAT;
     if (state == SatState::SAT) {
         listener->didConcludeSat();
     } else {
